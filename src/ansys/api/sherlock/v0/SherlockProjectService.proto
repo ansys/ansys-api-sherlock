@@ -1,0 +1,94 @@
+// © 2020 ANSYS, Inc.  Unauthorized use, distribution, or duplication is prohibited.
+syntax = "proto3";
+
+import "ansys/api/sherlock/v0/SherlockCommonService.proto";
+
+option java_package = "sherlock.grpc";
+option java_outer_classname = "SherlockProjectServiceProto";
+
+
+/**
+  * Request for project report.
+  */
+message GenReportRequest {
+  string project		= 1;	// Sherlock project name.
+  string author			= 2;	// Name of the author who generates the report.
+  string company		= 3;	// Name of author's company.
+}
+
+/**
+  * Streams the project report in chunks.
+  */
+message GenReportResponse {
+  bytes content			= 1;	// A chunk of the project report being returned in increments.
+  int32 size			= 2;	// Size of the chunk returned.
+  ReturnCode returnCode	= 3;	// Status code of response.
+}
+
+/**
+  * Request for project CCA report.
+  */
+message GenCCAReportRequest {
+  string project		= 1;	// Sherlock project name.
+  string cca			= 2;	// Project CCA name.
+  string author			= 3;	// Name of the author who generates the report.
+  string company		= 4;	// Name of author's company.
+}
+
+/**
+  * Streams the project CCA report in chunks.
+  */
+message GenCCAReportResponse {
+  bytes content			= 1;	// A chunk of the project CCA report being returned in increments.
+  int32 size			= 2;	// Size of the chunk returned.
+  ReturnCode returnCode	= 3;	// Status code of response.
+}
+
+/**
+  * Request for importing an ODB++ archive.
+  */
+message ImportODBRequest {
+  string archiveFile			= 1;		// Full path to the ODB++ arhicve file to be imported.
+  string project				= 2;		// Sherlock project name. If empty, the filename will be used for the project name.
+  string ccaName				= 3;		// Project CCA name. If empty, the filename will be used for the CCA name.	
+  bool processLayerThickness 	= 4;		// Option to assign stackup  thickness.		
+  bool includeOtherLayers 		= 5;		// Option to include other layers.
+  bool processCutoutFile 		= 6;		// Option to process cutouts.
+  bool guessPartProperties		= 7;		// Option to guess part properties
+}
+
+/**
+  * Request for importing an IPC-2581 archive.
+  */
+message ImportIPC2581Request {
+  string archiveFile			= 1;		// Full path to the IPC-2581 arhicve file to be imported.
+  string project				= 2;		// Sherlock project name. If empty, the filename will be used for the project name.
+  string ccaName				= 3;		// Project CCA name. If empty, the filename will be used for the CCA name.	
+  bool includeOtherLayers 		= 4;		// Option to include other layers.
+  bool guessPartProperties		= 5;		// Option to guess part properties
+}
+
+/**
+  * Request for deleting project
+  */
+message DeleteProjectRequest{
+  string project = 1;	// Project name of project to be deleted
+}
+
+service SherlockProjectService {
+  // Generates the project report and return it via streaming.
+  rpc genReport(GenReportRequest) returns (stream GenReportResponse);
+
+  // Generates the project CCA report and return it via streaming.
+  rpc genCCAReport(GenCCAReportRequest) returns (stream GenCCAReportResponse);
+  
+  // Imports an ODB++ archive.
+  rpc importODBArchive(ImportODBRequest) returns (ReturnCode);
+  
+  // Imports an ODB++ archive.
+  rpc importIPC2581Archive(ImportIPC2581Request) returns (ReturnCode);
+  
+  // Delete a project from Sherlock
+  rpc deleteProject(DeleteProjectRequest) returns (ReturnCode);
+  
+}

@@ -1,0 +1,48 @@
+// © 2020 ANSYS, Inc.  Unauthorized use, distribution, or duplication is prohibited.
+syntax = "proto3";
+
+option java_package = "sherlock.grpc";
+option java_outer_classname = "SherlockCommonServiceProto";
+
+/**
+ * Status response of a message. A value of 0 indicates a successful request. 
+ */
+message ReturnCode {
+  int32 value = 1;		// Status code of response. A value of 0 indicates success.
+  string message = 2;	// Message indicating the status of response including any error.
+}
+
+/**
+ * Empty request to exit the gRPC connection.
+ */
+message ExitRequest {
+   bool closeSherlockClient = 1;	// If set to true, exits the Sherlock client if it is opened. Otherwise, just closes the gRPC connection.
+}
+
+/**
+ * Empty request to check if the gRPC connection is open.
+ */
+message HealthCheckRequest {
+}
+
+/**
+ * Represents whether the gRPC connection is open.
+ */
+message HealthCheckResponse {
+  enum ServingStatus {
+    UNKNOWN = 0;		// Indicates an unknown connection status.
+    SERVING = 1;		// Indicates the connection is up and server is listening.
+    NOT_SERVING = 2;	// Indicates connection with server is closed.
+  }
+  ServingStatus status = 1;
+  int32 port = 2;		// Listening port number on server.
+}
+
+service SherlockCommonService {
+
+  // Returns health status of gRPC server.
+  rpc check(HealthCheckRequest) returns (HealthCheckResponse);
+  
+  // Signals for gRPC connection to shutdown.
+  rpc exit(ExitRequest) returns (ReturnCode);
+}

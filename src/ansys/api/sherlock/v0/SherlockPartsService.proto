@@ -1,0 +1,255 @@
+// © 2020 ANSYS, Inc.  Unauthorized use, distribution, or duplication is prohibited.
+syntax = "proto3";
+
+import "ansys/api/sherlock/v0/SherlockCommonService.proto";
+
+option java_package = "sherlock.grpc";
+option java_outer_classname = "SherlockPartsServiceProto";
+
+/**
+ * Empty request to list the available parts libraries.
+ */
+message ListPartsLibrariesRequest {
+}
+
+/**
+ * Represents a list of available parts libraries.
+ */
+message ListPartsLibrariesResponse {
+  ReturnCode returnCode			= 1;	// Status code of response.
+  repeated string partLibrary	= 2;	// Parts library name.
+}
+
+/**
+ * Request to update a parts list based on matching and duplication preference provided.
+ */
+message UpdatePartsListRequest {
+  string project				= 1;	// Sherlock project name.
+  string ccaName				= 2;	// The CCA name.
+  string partLibrary			= 3;	// Parts library name.
+  enum MatchingMode {
+    Both	= 0;		// Matches both part number and manufacturer.
+    Part	= 1;		// Matches part number only.
+  }
+  MatchingMode matching			= 4;	// Designates the matching mode for updates.
+  enum DuplicationMode {
+    First	= 0;					// Uses first matched when there is duplication.
+    Error	= 1;					// Generates an error when there is duplication.
+    Ignore	= 2;					// Ignore the matches when there is duplication.
+  }
+  DuplicationMode duplication 	= 5;	// Designates how to handle duplications during update.
+}
+
+/**
+ * Contains the status of the update as well as all the update error messages.
+ */
+message UpdatePartsListResponse {
+  ReturnCode returnCode 		= 1;	// Status code of response.
+  repeated string updateError	= 2;	// Parts update error messages.
+}
+
+/**
+ * Request to get a list of parts not updated from the Sherlock Part Library.
+ */
+message ListPartsNotUpdatedRequest {
+  string project		= 1;	// Sherlock project name.
+}
+
+/**
+ * Represents a list of parts not updated from the Sherlock Part Library.
+ */
+message ListPartsNotUpdatedResponse {
+  ReturnCode returnCode 	= 1;	// Status code of response.
+  message CCA {
+    string ccaName		= 1;		// Name of the CCA.
+    message Part {
+      string refDes		= 1;	// Reference Designator for the part.
+      string partNumber	= 2;	// Part number.
+    }
+    repeated Part parts	= 2;
+  }
+  repeated CCA ccas			= 2;
+}
+
+/**
+ * Request to enable lead modeling for all non LEADLESS parts leads.
+ */
+message UpdateLeadModelingRequest {
+  string project				= 1;	// Sherlock project name.
+  string ccaName				= 2;	// The CCA name.
+}
+
+/**
+ * Request to export the parts list for all parts for a project CCA.
+ */
+message ExportPartsListRequest {
+  string project				= 1;	// Sherlock project name.
+  string ccaName				= 2;	// The CCA name.
+  string exportFile		 		= 3;	// Full file path to the export parts list .csv file.
+}
+
+/**
+ * Request to import a parts list for a project CCA.
+ */
+message ImportPartsListRequest {
+  string project				= 1;	// Sherlock project name.
+  string ccaName				= 2;	// The CCA name.
+  string importFile		 		= 3;	// Full file path to the parts list .csv file.
+  bool importAsUserSrc			= 4;	// If true, set the data source of the properties to "User". Otherwise, set the data source to the name of the importFile.
+}
+
+/**
+ * Request to set a part's location.
+ */
+message SetPartLocationRequest {
+  option deprecated = true;
+  string project				= 1;	// Sherlock project name.
+  string ccaName				= 2;	// The CCA name.
+  string refDes					= 3;	// Ref Des of the part.
+  string x						= 4;	// Location of the part along the X axis.
+  string y						= 5;	// Location of the part along the Y axis.
+  string rotation				= 6;	// Orientation of the part on the board in degrees.
+  string locationUnits			= 7;	// Unit of length for the part location. Supported values are IN, MM, M, MIL, MICRON, and NM.
+  string boardSide				= 8;	// Side of board on which the component exists. Supported values are TOP, BOT, and BOTTOM.
+  string mirrored				= 9;	// Indicates if the component is mirrored across the Y-axis. Supported values are Y, and N.
+}
+
+/**
+ * Request to set a part's location.
+ */
+message UpdatePartsLocationsRequest {
+  string project				= 1;	// Sherlock project name.
+  string ccaName				= 2;	// The CCA name.
+  message PartLocation {
+    string refDes			= 1;	// Ref Des of the part.
+    string x				= 2;	// Location of the part along the X axis.
+    string y				= 3;	// Location of the part along the Y axis.
+    string rotation			= 4;	// Orientation of the part on the board in degrees.
+    string locationUnits	= 5;	// Unit of length for the part location. Supported values are IN, MM, M, MIL, MICRON, and NM.
+    string boardSide		= 6;	// Side of board on which the component exists. Supported values are TOP, BOT, and BOTTOM.
+    string mirrored			= 7;	// Indicates if the component is mirrored across the Y-axis. Supported values are Y, and N.
+  }
+  repeated PartLocation partLoc	= 3;
+}
+
+/**
+ * Contains the status of the parts locations update as well as all the update error messages.
+ */
+message UpdatePartsLocationsResponse {
+  ReturnCode returnCode 		= 1;	// Status code of response.
+  repeated string updateError	= 2;	// Parts locations update error messages.
+}
+
+/**
+ * Request to update one or more parts' locations using a CSV file.
+ */
+message UpdatePartsLocationsByFileRequest {
+  string project					= 1;	// Sherlock project name.
+  string ccaName					= 2;	// The CCA name.
+  string numericFormat				= 3;	// Numeric format for the file. If not provided, it will default to "English (United States)".
+  string filePath					= 4;	// File that contains the components and location properties.
+}
+
+/**
+ * Contains the status of the parts locations update as well as all the update error messages.
+ */
+message UpdatePartsLocationsByFileResponse {
+  ReturnCode returnCode 		= 1;	// Status code of response.
+  repeated string updateError	= 2;	// Parts locations update error messages.
+}
+
+/**
+ * Empty request to list valid location units.
+ */
+message GetPartLocationUnitsRequest {
+}
+
+/**
+ * Represents a list of valid location units.
+ */
+message GetPartLocationUnitsResponse {
+  ReturnCode returnCode 	= 1;	// Status code of response.
+  repeated string units		= 2;	// Location units.
+}
+
+/**
+ * Empty request to list valid board sides.
+ */
+message GetBoardSidesRequest {
+}
+
+/**
+ * Represents a list of valid board sides.
+ */
+message GetBoardSidesResponse {
+  ReturnCode returnCode 		= 1;	// Status code of response.
+  repeated string boardSides 	= 2;	// Board sides.
+}
+
+/**
+ * Request to get a part's location.
+ */
+message GetPartLocationRequest {
+  string project				= 1;	// Sherlock project name.
+  string ccaName				= 2;	// The CCA name.
+  string refDes					= 3;	// A comma separated list of ref des for a list of parts, or a ref des for one part.
+  string locationUnits			= 4;	// Unit of length for the part location. Supported values are IN, MM, M, MIL, MICRON, and NM.
+}
+
+/**
+ * Represents one or multiple parts' location properties
+ */
+message GetPartLocationResponse {
+  ReturnCode returnCode 		= 1;	// Status code of response.
+  message LocationData {
+    double x				= 1;	// Location of the part along the X axis.
+    double y				= 2;	// Location of the part along the Y axis.
+    double rotation			= 3;	// Orientation of the part on the board in degrees.
+    string locationUnits	= 4;	// Unit of length for the part location.
+    string boardSide		= 5;	// Side of board on which the component exists.
+    bool	mirrored		= 6;	// Indicates if the component is mirrored across the Y-axis.
+    string refDes			= 7;	// RefDes for the corresponding part.
+  }
+  repeated LocationData locationData = 2;
+}
+
+service SherlockPartsService {
+
+  // List the available parts libraries.
+  rpc listPartsLibraries(ListPartsLibrariesRequest) returns (ListPartsLibrariesResponse);
+
+  // Update the parts list for a project's CCA.
+  rpc updatePartsList(UpdatePartsListRequest) returns (UpdatePartsListResponse);
+  
+  // List the parts that have not been updated from the Sherlock Part Library.
+  rpc listPartsNotUpdated(ListPartsNotUpdatedRequest) returns (ListPartsNotUpdatedResponse);
+  
+  // Enable lead modeling for all non LEADLESS parts leads in a project's CCA.
+  rpc updateLeadModeling(UpdateLeadModelingRequest) returns (ReturnCode);
+  
+  // Export parts list for all parts given a project's CCA.
+  rpc exportPartsList(ExportPartsListRequest) returns (ReturnCode);
+  
+  // Import a parts list for a given a project's CCA.
+  rpc importPartsList(ImportPartsListRequest) returns (ReturnCode);
+    
+  // Set a part's location.
+  rpc setPartLocation(SetPartLocationRequest) returns (ReturnCode) {
+    option deprecated = true;
+  };
+
+  // Update one or more parts' locations.
+  rpc updatePartsLocations(UpdatePartsLocationsRequest) returns (UpdatePartsLocationsResponse);
+
+  // Update one or more parts' locations using a CSV file.
+  rpc updatePartsLocationsByFile(UpdatePartsLocationsByFileRequest) returns (UpdatePartsLocationsByFileResponse);
+    
+  // Get a list of valid part location units.
+  rpc getPartLocationUnits(GetPartLocationUnitsRequest) returns (GetPartLocationUnitsResponse);
+  
+  // Get a list of valid board side values.
+  rpc getBoardSides(GetBoardSidesRequest) returns (GetBoardSidesResponse);
+  
+  // Get the location properties for a part.
+  rpc getPartLocation(GetPartLocationRequest) returns (GetPartLocationResponse);
+}

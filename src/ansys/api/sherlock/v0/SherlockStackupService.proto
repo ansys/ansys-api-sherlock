@@ -1,0 +1,355 @@
+// © 2020 ANSYS, Inc.  Unauthorized use, distribution, or duplication is prohibited.
+syntax = "proto3";
+
+import "ansys/api/sherlock/v0/SherlockCommonService.proto";
+
+option java_package = "sherlock.grpc";
+option java_outer_classname = "SherlockStackupServiceProto";
+
+/**
+ * Request for a list of laminates.
+ */
+message ListLaminatesRequest {
+  string project		= 1;	// Sherlock project name.
+}
+
+/**
+ * Represents the properties for all CCAs and their corresponding laminates
+ */
+message ListLaminatesResponse {
+  ReturnCode returnCode = 1;	// Status code of response.
+  /** Represents a CCA and its laminates. */
+  message CCALaminateProp {
+    string ccaName = 1;		// The CCA name.
+    /** Represents a laminate layer and its properties. */
+    message LaminateProp {
+      string layer 					= 1;	// An internal layer ID associated with this laminate layer.
+      string manufacturer			= 2;	// Manufacturer name of this material.
+      string grade					= 3;	// Grade of this material.
+      string material 				= 4;	// Name of this material.
+      double thickness 				= 5;	// Laminate thickness.
+      string thicknessUnit			= 6;	// Laminate thickness unit.
+      string constructionStyle		= 7;	// Construction style.
+ 
+/** Represents the layers with a glass construction. */
+      message GlassConstruction {
+        string style 			= 1;	// Glass construction style.
+        double resinPercentage  = 2;	// Glass construction Resin percentage.
+        double thickness 		= 3;	// Glass construction thickness.
+        string thicknessUnit 	= 4;	// Glass construction thickness unit.
+      }
+      repeated GlassConstruction glassConstructions = 8;
+      string fiberMaterial			= 9;	// Fiber material if the construction style is glass.
+      string conductorMaterial 		= 10;	// Conductor material.
+      string conductorPercent 		= 11;	// Conductor percentage.
+      double density				= 12;	// Layer density.
+      double CTExy					= 13;	// CTExy.
+      double CTEz					= 14;	// CTEz.
+      double Exy					= 15;	// Exy.
+      double Ez						= 16;	// Ez.
+    }
+    repeated LaminateProp laminateProps = 2;
+  }
+  repeated CCALaminateProp ccaLaminateProps = 2;
+}
+
+/**
+ * Represents the laminate properties requested to be updated.
+ * To update the material, valid values must be provided for manufacturer, grade, and material.
+ * To update a thickness, a thickness unit must be provided also.
+ * Glass construction should only be set when the construction style is not the "DEFAULT" value.
+ * Any property left out or set to "" or 0.0 will not be updated.
+ */
+message UpdateLaminateRequest {
+  string project				= 1;	// Sherlock project name.
+  string ccaName				= 2;	// The CCA name.
+  string layer					= 3;	// The internal layer ID associated with this laminate layer.
+  string manufacturer			= 4;	// Manufacturer name of this material. Must be provided along with grade and material name.
+  string grade					= 5;	// Grade of this material.
+  string material				= 6;	// Name of this material.
+  double thickness				= 7;	// Laminate thickness.
+  string thicknessUnit			= 8;	// Laminate thickness unit.
+  string constructionStyle		= 9;	// Construction style.
+  /** Represents the layers with a glass construction. */
+  message GlassConstruction {
+    string style 			= 1;	// Glass construction style.
+    double resinPercentage	= 2;	// Glass construction resin percentage.
+    double thickness 		= 3;	// Glass construction thickness.
+    string thicknessUnit 	= 4;	// Glass construction thickness unit.
+  }
+  repeated GlassConstruction glassConstruction = 10;
+  string fiberMaterial			= 11;	// Fiber material. Only updated if glass construction is selected.
+  string conductorMaterial		= 12;	// Conductor material.
+  string conductorPercent		= 13;	// Conductor percentage.
+}
+
+/**
+ * Empty request to list valid laminate thickness units.
+ */
+message ListLaminateThicknessUnitsRequest {
+}
+
+/**
+ * Represents a list of valid laminate thickness units.
+ */
+message ListLaminateThicknessUnitsResponse {
+  ReturnCode returnCode = 1;	// Status code of response.
+  repeated string unit	= 2;	// Thickness unit.
+}
+
+/**
+ * Empty request to list valid conductor materials.
+ */
+message ListConductorMaterialsRequest {
+}
+
+/**
+ * Represents a list of valid conductor materials.
+ */
+message ListConductorMaterialsResponse {
+  ReturnCode returnCode 			= 1;	// Status code of response.
+  repeated string conductorMaterial	= 2;	// Conductor material name.
+}
+
+/**
+ * Empty request to list valid fiber materials.
+ */
+message ListFiberMaterialsRequest {
+}
+
+/**
+ * Represents a list of valid fiber materials.
+ */
+message ListFiberMaterialsResponse {
+  ReturnCode returnCode 			= 1;	// Status code of response.
+  repeated string fiberMaterial	= 2;		// Fiber material name.
+}
+
+/**
+ * Empty request to list valid materials manufacturers names.
+ */
+message ListLaminateMaterialsManufacturersRequest {
+}
+
+/**
+ * Represents a list of valid materials manufacturers names.
+ */
+message ListLaminateMaterialsManufacturersResponse {
+  ReturnCode returnCode 		= 1;	// Status code of response.
+  repeated string manufacturer 	= 2;	// Manufacturer name.
+}
+
+/**
+ * Request to list materials from a given manufacturer.
+ * If manufacturer is empty, all manufacturers and their materials will be returned.
+ */
+message ListLaminateMaterialsRequest {
+  string manufacturer	= 1;	// Manufacturer name.
+}
+
+/**
+ * Represents a list of manufacturers materials.
+ */
+message ListLaminateMaterialsResponse {
+  ReturnCode returnCode = 1;					// Status code of response.
+  message ManufacturerMaterials {
+    string manufacturer					= 1;	// Manufacturer name.
+    /** Represents a grade and the materials with this grade. */
+    message GradeMaterials {
+      string grade = 1;							// Grade.
+      repeated string laminateMaterial	= 2;	// Material name.
+    }
+    repeated GradeMaterials gradeMaterials = 2;
+  }
+  repeated ManufacturerMaterials manufacturerMaterials = 2;
+}
+
+/**
+ * Empty request to list valid construction styles.
+ */
+message ListConstructionStylesRequest {
+}
+
+/**
+ * Represents a list of valid construction styles.
+ */
+message ListConstructionStylesResponse {
+  ReturnCode returnCode 				= 1;	// Status code of response.
+  repeated string constructionStyle 	= 2;	// Construction style.
+}
+
+/**
+ * Request for a list of conductor layers.
+ */
+message ListConductorLayersRequest {
+  string project		= 1;	// Sherlock project name.
+}
+
+/**
+ * Represents the properties for all CCAs and their corresponding conductor layers.
+ */
+message ListConductorLayersResponse {
+  ReturnCode returnCode 									= 1;	// Status code of response.
+  /** Represents a CCA and its conductor layers. */
+  message CCAConductorLayerProp {
+    string ccaName 										= 1;	// The CCA name.
+    /** Represents a conductor layer and its properties. */
+    message ConductorLayerProp {
+      string layer 					= 1;	// An internal layer ID associated with this conductor layer.
+      string type					= 2;	// Layer type (i.e. SIGNAL, POWER, SUBSTRATE).
+      string material 				= 3;	// Name of this conductor material.
+      double thickness 				= 4;	// Conductor layer thickness.
+      string thicknessUnit			= 5;	// Conductor layer thickness unit.
+      string conductorPercent 		= 6;	// Conductor percentage.
+      string resinMaterial			= 7;	// Resin material.
+      double density				= 8;	// Layer density.
+      double CTExy					= 9;	// CTExy.
+      double CTEz					= 10;	// CTEz.
+      double Exy					= 11;	// Exy.
+      double Ez						= 12;	// Ez.
+    }
+    repeated ConductorLayerProp conductorLayerProps 	= 2;
+  }
+  repeated CCAConductorLayerProp ccaConductorLayerProps 	= 2;
+}
+
+/**
+ * Represents the conductor layer properties requested to be updated.
+ * To update a thickness, a thickness unit must be provided also.
+ * Any property left out or set to "" or 0.0 will not be updated.
+ */
+message UpdateConductorLayerRequest {
+  string project				= 1;	// Sherlock project name.
+  string ccaName				= 2;	// The CCA name.
+  string layer					= 3;	// The layer ID associated with this conductor layer.
+  string type					= 4;	// Layer type (i.e. SIGNAL, POWER, SUBSTRATE).
+  string material 				= 5;	// Name of this conductor material.
+  double thickness 				= 6;	// Conductor layer thickness.
+  string thicknessUnit			= 7;	// Conductor layer thickness unit.
+  string conductorPercent 		= 8;	// Conductor percentage.
+  string resinMaterial			= 9;	// Resin material.
+}
+
+/**
+ * Requests the number of layers in the stackup.
+ */
+message GetLayerCountRequest {
+  string project				= 1;	// Sherlock project name.
+  string ccaName				= 2;	// The CCA name.
+}
+
+/**
+ * Represents the number of layers in the stackup.
+ */
+message GetLayerCountResponse {
+  ReturnCode returnCode			= 1;	// Status code of response.
+  int32 count					= 2;	// Number of stackup layers.
+}
+
+/**
+ * Requests the total thickness on all conductor layers in a stackup.
+ */
+message GetTotalConductorThicknessRequest {
+  string project				= 1;	// Sherlock project name.
+  string ccaName				= 2;	// The CCA name.
+  string thicknessUnit			= 3;	// Conductor layer thickness unit.
+}
+
+/**
+ * Represents the number of layers in the stackup.
+ */
+message GetTotalConductorThicknessResponse {
+  ReturnCode returnCode			= 1;	// Status code of response.
+  double totalThickness 		= 2;	// Total thickness.
+}
+
+/**
+ * Requests a summary of the stackup properties.
+ */
+message GetStackupPropsRequest {
+  string project				= 1;	// Sherlock project name.
+  string ccaName				= 2;	// The CCA name.
+}
+
+/**
+ * Represents a summary of the stackup properties.
+ */
+message GetStackupPropsResponse {
+  ReturnCode returnCode			= 1;	// Status code of response.
+  string boardDimension			= 2;	// Board dimension.
+  string boardThickness			= 3;	// Board thickness.
+  string density				= 4;	// Board density.
+  string conductorLayersCnt		= 5;	// Number of conductor layers.
+  string ctExy					= 6;	// CTExy.
+  string ctEz					= 7;	// CTEz.
+  string exy					= 8;	// Exy.
+  string ez						= 9;	// Ez.
+}
+
+/**
+ * Represents the properties of a new stackup to be generated.
+ */
+message GenStackupRequest {
+  string project					= 1;	// Sherlock project name.
+  string ccaName					= 2;	// The CCA name.
+  double boardThickness				= 3;	// Board thickness.
+  string boardThicknessUnit 		= 4;	// Board thickness unit.
+  string pcbMaterialManufacturer	= 5;	// PCB material manufacturer.
+  string pcbMaterialGrade			= 6;	// PCB material grade.
+  string pcbMaterial				= 7;	// PCB material.
+  int32 conductorLayersCnt			= 8;	// Number of conductor layers.
+  double signalLayerThickness		= 9;	// Signal layer thickness.
+  string signalLayerThicknessUnit	= 10;	// Signal layer thickness unit.
+  double minLaminateThickness		= 11;	// Minimum laminate layer thickness.
+  string minLaminateThicknessUnit	= 12;	// Minimum laminate layer thickness unit.
+  bool maintainSymmetry				= 13;	// If set to true, maintain symmetry.
+  double powerLayerThickness		= 14;	// Power layer thickness.
+  string powerLayerThicknessUnit	= 15;	// Power layer thickness unit.
+}
+
+service SherlockStackupService {
+
+  // Returns a list of project's CCAs and their laminates.
+  rpc listLaminates(ListLaminatesRequest) returns (ListLaminatesResponse);
+  
+  // Update properties for a given laminate layer.
+  rpc updateLaminate(UpdateLaminateRequest) returns (ReturnCode);
+  
+  // List all the supported laminate layer thickness units.
+  rpc listLaminateThicknessUnits(ListLaminateThicknessUnitsRequest) returns (ListLaminateThicknessUnitsResponse);
+  
+  // List all conductor materials.
+  rpc listConductorMaterials(ListConductorMaterialsRequest) returns (ListConductorMaterialsResponse);
+  
+  // List all fiber materials.
+  rpc listFiberMaterials(ListFiberMaterialsRequest) returns (ListFiberMaterialsResponse);
+  
+  // List all laminate materials manufacturers
+  rpc listLaminateMaterialsManufacturers(ListLaminateMaterialsManufacturersRequest) returns (ListLaminateMaterialsManufacturersResponse);
+  
+  // List all laminate materials (both based on manufacturer specified or without).
+  // If manufacturer is empty or not provided, then all manufacturers and their laminate materials will be returned.
+  // If a manufacturer is provided, then only that manufacturer's laminate materials will be returned.
+  rpc listLaminateMaterials(ListLaminateMaterialsRequest) returns (ListLaminateMaterialsResponse);
+  
+  // List all construction styles. 
+  rpc listConstructionStyles(ListConstructionStylesRequest) returns (ListConstructionStylesResponse);
+  
+  // Returns a list of project's CCAs and their conductor layers.
+  rpc listConductorLayers(ListConductorLayersRequest) returns (ListConductorLayersResponse);
+  
+  // Update properties for a given conductor layer.
+  rpc updateConductorLayer(UpdateConductorLayerRequest) returns (ReturnCode);
+  
+  // Returns the number of stackup layers.
+  rpc getLayerCount(GetLayerCountRequest) returns (GetLayerCountResponse);
+
+  // Returns the total thickness for all conductor layers.
+  rpc getTotalConductorThickness(GetTotalConductorThicknessRequest) returns (GetTotalConductorThicknessResponse);
+  
+  // Returns a summary of the stackup properties
+  rpc getStackupProps(GetStackupPropsRequest) returns (GetStackupPropsResponse);
+  
+  // Generate stackup layers.
+  rpc genStackup(GenStackupRequest) returns (ReturnCode);
+}

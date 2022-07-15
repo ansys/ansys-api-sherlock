@@ -1,0 +1,313 @@
+// © 2020 ANSYS, Inc.  Unauthorized use, distribution, or duplication is prohibited.
+syntax = "proto3";
+
+import "ansys/api/sherlock/v0/SherlockCommonService.proto";
+
+option java_package = "sherlock.grpc";
+option java_outer_classname = "SherlockLayerServiceProto";
+
+/**
+ * Empty request to list the valid mount point types.
+ */
+message GetMountPointTypesRequest {
+}
+
+/**
+ * Represents a list of valid mount point types.
+ */
+message GetMountPointTypesResponse {
+  ReturnCode returnCode 	= 1;	// Status code of response.
+  repeated string type 		= 2;	// Mount Point Type.
+}
+
+/**
+ * Empty request to list the valid mount point shape types.
+ */
+message GetMountPointShapeTypesRequest {
+  string mountPointType		= 1;	// Mount Point Type. Supported values are: Mount Hole, Mount Pad, Standoff, and Support Pin.
+}
+
+/**
+ * Represents a list of valid mount point shape types.
+ */
+message GetMountPointShapeTypesResponse {
+  ReturnCode returnCode 	= 1;	// Status code of response.
+  repeated string type 		= 2;	// Mount Point Shape Type.
+}
+
+/**
+ * Empty request to list the valid mount point sides.
+ */
+message GetMountPointSidesRequest {
+}
+
+/**
+ * Represents a list of valid mount point sides.
+ */
+message GetMountPointSidesResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string side		= 2;	// Mount Point side.
+}
+
+/**
+ * Empty request to list the valid mount point units.
+ */
+message GetMountPointUnitsRequest {
+}
+
+/**
+ * Represents a list of valid mount point units.
+ */
+message GetMountPointUnitsResponse {
+  ReturnCode returnCode 	= 1;	// Status code of response.
+  repeated string units		= 2;	// Mount Point units.
+}
+
+/**
+ * Empty request to list the valid mount point boundaries.
+ */
+message GetMountPointBoundariesRequest {
+}
+
+/**
+ * Represents a list of valid mount point boundaries.
+ */
+message GetMountPointBoundariesResponse {
+  ReturnCode returnCode 	= 1;	// Status code of response.
+  repeated string boundary	= 2;	// Mount Point boundary.
+}
+
+/**
+ * Empty request to list the valid mount point chassis materials.
+ */
+message GetMountPointChassisMaterialsRequest {
+}
+
+/**
+ * Represents a list of valid mount point chassis materials.
+ */
+message GetMountPointChassisMaterialsResponse {
+  ReturnCode returnCode 			= 1;	// Status code of response.
+  repeated string chassisMaterial	= 2;	// Mount Point chassis material.
+}
+
+/**
+ * Request to delete all mount points in specific CCA of specific project.
+ */
+message DeleteAllMountPointsRequest {
+  string project = 1;	// Sherlock project name
+  string ccaName = 2;	// The cca Name
+}
+
+/**
+ * Request to export all mount points and their properties into a CSV formatted file
+ */
+message ExportAllMountPointsRequest {
+  string project 	= 1;	// Sherlock project name
+  string ccaName 	= 2;	// The cca Name
+  string units 		= 3;	// Units used in exporting
+  string filePath 	= 4;	// The filepath of the CSV file to be exported
+}
+
+/**
+ * Request to export all ICT fixtures and their properties into a CSV formatted file
+ */
+message ExportAllICTFixturesRequest {
+  string project 	= 1;	// Sherlock project name
+  string ccaName 	= 2;	// The cca Name
+  string units 		= 3;	// Units used in exporting
+  string filePath 	= 4;	// The filepath of the CSV file to be exported
+}
+
+/**
+ * Empty request to list the valid mount point chassis materials.
+ */
+message GetMountPointsPropertiesRequest {
+  string project				= 1;	// Sherlock project name.
+  string ccaName				= 2;	// The CCA name.
+  string mountPointIDs			= 3;	// A comma separated list of mount point id for a list of mount point, or a mount id for one part.
+}
+
+/**
+ * Represents a list of valid mount point properties.
+ */
+message GetMountPointsPropertiesResponse {
+  ReturnCode returnCode 		= 1;	// Status code of response.
+  repeated MountPointProperties mountPointsProperties 	= 2;	// Mount Point properties
+}
+
+/**
+ * Properties of mount point, the properties may varies from the mount point type and mount point shape
+ */	
+message MountPointProperties{
+  string ID					= 1;	// Mount Point ID
+  string type				= 2;	// Mount Point Type
+  string shape				= 3;	// Shape Type
+  string units 				= 4;	// Mount Point Units
+  string x 					= 5;	// Center X
+  string y 					= 6;	// Center Y
+  string length 			= 7;	// Length
+  string width				= 8;	// Width
+  string diameter			= 9;	// Diameter
+  string nodes				= 10;	// # of Nodes
+  string rotation			= 11;	// Rotation(degrees)
+  string side 				= 12;	// Mount Point Side
+  string height 			= 13;	// Mount Point Height
+  string material 			= 14;	// Mount Point Material
+  string boundary			= 15;	// Boundary Pt(s)
+  string constraints		= 16; 	// FEA Constraints
+  string polygon			= 17;	// Coordinates of points
+  string state				= 18;	// Mount Point State
+  string chassisMaterial 	= 19;	// Chassis Material
+}
+
+/**
+ * Request to update mount points properties of a CCA from a CSV formatted file
+ */
+message UpdateMountPointsByFileRequest {
+  string project 										= 1;	// Sherlock project name
+  string ccaName 										= 2;	// The cca Name
+  string filePath 										= 3;	// The filepath of the CSV file containing the mount points properties
+}
+
+/**
+ * Request to update mount points properties of a CCA from a CSV formatted file
+ */
+message UpdateMountPointsRequest {
+  string project 										= 1;	// Sherlock project name
+  string ccaName 										= 2;	// The cca Name
+  repeated MountPointProperties mountPointsProperties 	= 3;	// Mount Point properties
+}
+
+/**
+ * Contains the status of the update as well as all the update error messages.
+ */
+message UpdateMountPointsResponse {
+  ReturnCode returnCode 		= 1;	// Status code of response.
+  repeated string updateError	= 2;	// Mount Points update error messages.
+}
+
+/**
+ * Request to delete all ICT Fixtures in specific CCA of specific project.
+ */
+message DeleteAllICTFixturesRequest {
+  string project = 1;	// Sherlock project name.
+  string ccaName = 2;	// The cca Name.
+}
+
+/**
+ * Request to delete all ICT Fixtures in specific CCA of specific project.
+ */
+message DeleteAllTestPointsRequest {
+  string project = 1;	// Sherlock project name.
+  string ccaName = 2;	// The cca Name.
+}
+
+/**
+ * Request to update ICT fixtures properties of a CCA from a CSV formatted file
+ */
+message UpdateICTFixturesByFileRequest {
+  string project 										= 1;	// Sherlock project name
+  string ccaName 										= 2;	// The cca Name
+  string filePath 										= 3;	// The filepath of the CSV file containing the ICT fixtures properties
+}
+
+/**
+ * Contains the status of the update as well as all the update error messages.
+ */
+message UpdateICTFixturesResponse {
+  ReturnCode returnCode 		= 1;	// Status code of response.
+  repeated string updateError	= 2;	// ICT fixtures update error messages.
+}
+
+/**
+ * Request to export all test points and their properties into a CSV formatted file
+ */
+message ExportAllTestPointsRequest {
+  string project 		= 1;	// Sherlock project name
+  string ccaName 		= 2;	// The cca Name
+  string lengthUnits 	= 3;	// Length Units used in exporting
+  string displacementUnits = 4;	// Displacement Units used in exporting
+  string forceUnits 	= 5;	// Force Units used in exporting
+  string filePath 		= 6;	// The filepath of the CSV file to be exported
+}
+
+/**
+ * Request to update test points properties of a CCA from a CSV formatted file
+ */
+message UpdateTestPointsByFileRequest {
+  string project 										= 1;	// Sherlock project name
+  string ccaName 										= 2;	// The cca Name
+  string filePath 										= 3;	// The filepath of the CSV file containing the test points properties
+}
+
+/**
+ * Contains the status of the update as well as all the update error messages.
+ */
+message UpdateTestPointsResponse {
+  ReturnCode returnCode 		= 1;	// Status code of response.
+  repeated string updateError	= 2;	// Test Points update error messages.
+}
+
+
+service SherlockLayerService {
+  // Delete all ICT fixtures in specific cca of specific project.
+  rpc deleteAllICTFixtures(DeleteAllICTFixturesRequest) returns (ReturnCode);
+
+  // Delete all mount points in specific cca of specific project.
+  rpc deleteAllMountPoints(DeleteAllMountPointsRequest) returns (ReturnCode);
+  
+  // Delete all test points in specific cca of specific project.
+  rpc deleteAllTestPoints(DeleteAllTestPointsRequest) returns (ReturnCode);
+  
+  // Export all mount points and their properties into a CSV formatted file.
+  rpc exportAllMountPoints(ExportAllMountPointsRequest) returns (ReturnCode);
+  
+  // Export all ICT fixtures and their properties into a CSV formatted file.
+  rpc exportAllICTFixtures(ExportAllICTFixturesRequest) returns (ReturnCode);
+
+  // Export all test points and their properties into a CSV formatted file.
+  rpc exportAllTestPoints(ExportAllTestPointsRequest) returns (ReturnCode);
+
+  // Get a list of valid Mount Point Boundaries.
+  rpc getMountPointBoundaries(GetMountPointBoundariesRequest) returns (GetMountPointBoundariesResponse);
+
+  // Get a list of valid Mount Point chassis materials.
+  rpc getMountPointChassisMaterials(GetMountPointChassisMaterialsRequest) returns (GetMountPointChassisMaterialsResponse);
+  
+  // Get a list of valid Mount Point Properties
+  rpc getMountPointsProperties(GetMountPointsPropertiesRequest) returns (GetMountPointsPropertiesResponse);
+
+  // Get a list of valid Mount Point Shape Type values.
+  rpc getMountPointShapeTypes(GetMountPointShapeTypesRequest) returns (GetMountPointShapeTypesResponse);
+  
+  // Get a list of valid Mount Point Sides.
+  rpc getMountPointSides(GetMountPointSidesRequest) returns (GetMountPointSidesResponse);
+
+  // Get a list of valid Mount Point Type values.
+  rpc getMountPointTypes(GetMountPointTypesRequest) returns (GetMountPointTypesResponse);
+
+  // Get a list of valid Mount Point Units.
+  rpc getMountPointUnits(GetMountPointUnitsRequest) returns (GetMountPointUnitsResponse);
+  
+  // Update the ICT fixtures properties of a CCA from a CSV formatted file. This API could be used to add new ICT fixtures or update existing ones depending on the file contents.
+  // If the ID specified already exists, then the properties for that ICT fixture will be updated.
+  // If the ID specified does not already exist, or if the field is empty, then a new ICT fixture will be added with the specified properties.
+  // The file format should be the same as the one produced from CCA -> Export ICT Fixtures.
+  rpc updateICTFixturesByFile(UpdateICTFixturesByFileRequest) returns (UpdateICTFixturesResponse);
+
+  // Update mount points with specified properties
+  rpc updateMountPoints(UpdateMountPointsRequest) returns (UpdateMountPointsResponse);
+
+  // Update the mount points properties of a CCA from a CSV formatted file. This API could be used to add new mount points or update existing ones depending on the file contents.
+  // If the ID specified already exists, then the properties for that mount point will be updated.
+  // If the ID specified does not already exist, or if the field is empty, then a new mount point will be added with the specified properties.
+  // The file format should be the same as the one produced from CCA -> Export Mount Points.
+  rpc updateMountPointsByFile(UpdateMountPointsByFileRequest) returns (UpdateMountPointsResponse);
+  
+  // Update the test points properties of a CCA from a CSV formatted file. This API could be used to add new test points or update existing ones depending on the file contents.
+  // If the ID specified already exists, then the properties for that test point will be updated.
+  // If the ID specified does not already exist, or if the field is empty, then a new test point will be added with the specified properties.
+  // The file format should be the same as the one produced from CCA -> Export Test Points.
+  rpc updateTestPointsByFile(UpdateTestPointsByFileRequest) returns (UpdateTestPointsResponse);
+}

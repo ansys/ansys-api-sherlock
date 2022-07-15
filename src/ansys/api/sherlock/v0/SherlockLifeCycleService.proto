@@ -1,0 +1,826 @@
+// © 2020 ANSYS, Inc.  Unauthorized use, distribution, or duplication is prohibited.
+syntax = "proto3";
+
+import "ansys/api/sherlock/v0/SherlockCommonService.proto";
+
+option java_package = "sherlock.grpc";
+option java_outer_classname = "SherlockLifeCycleServiceProto";
+
+/**
+  * Request for a list of life cycle phases and events for a project.
+  */
+message ListLCEventsRequest {
+  string project		= 1;	// Sherlock project name.
+}
+
+/**
+  * Represents the life cycle phases and events for a Sherlock project.
+  */
+message ListLCEventsResponse {
+  ReturnCode returnCode					= 1;	// Status code of response.
+  message LifeCyclePhase {
+    string name						= 1;		// Life cycle phase name.
+    string description				= 2;		// Life cycle phase description.
+    message LifeCycleEvent {
+      string name			= 1;				// Life cycle event name.
+      string description	= 2;				// Life cycle event description.
+      string type			= 3;				// Life cycle type. For example: "Thermal Event", "Shock Event", "Random Vibe", "Harmonic Vibe".
+    }
+    repeated LifeCycleEvent lcEvents = 3;
+  }
+  repeated LifeCyclePhase lcPhases		= 2;
+}
+
+/**
+  * Request for a list of duration units for event settings.
+  */
+message ListDurationUnitsRequest {
+}
+
+/**
+  * Represents a list of duration units for event settings in Life Cycle.
+  */
+message ListDurationUnitsResponse{
+  ReturnCode returnCode 		= 1;           // Status code of response.
+  repeated string durationUnits = 2;           // List of duration units.
+}
+
+/**
+  * Request for a list of life cycle states.
+  */
+message ListLCStatesRequest {
+}
+
+/**
+  * Represents a list of life cycle states.
+  */
+message ListLCStatesResponse {
+  ReturnCode returnCode 	= 1;           // Status code of response.
+  repeated string states 	= 2;           // List of life cycle states. For example: "Operating", "Storage".
+}
+
+/**
+  * Request for a list of life cycle types.
+  */
+message ListLCTypesRequest {
+}
+
+/**
+  * Represents a list of life cycle types.
+  */
+message ListLCTypesResponse {
+  ReturnCode returnCode 	= 1;           // Status code of response.
+  repeated string types 	= 2;           // List of life cycle types. For example, "DUTY CYCLE", "PER YEAR", "PER HOUR", etc.
+}
+
+/**
+  * Request to define and add a new thermal life cycle event.
+  */
+message AddThermalEventRequest {
+  string project		= 1;		// Sherlock project name.
+  string phaseName		= 2;		// The name of the life cycle phase to add this event to.
+  string eventName		= 3;		// Name of the thermal event.
+  string description	= 4;		// Description of the thermal event.
+  double numOfCycles	= 5;		// Number of cycles defined for this thermal event.
+  string cycleType		= 6;		// The cycle type. For example: "COUNT", "DUTY CYCLE", "PER YEAR", "PER HOUR", etc.
+  string cycleState		= 7;		// The life cycle state. For example: "OPERATING", "STORAGE".
+}
+
+/**
+  * Response from adding a thermal event.
+  */
+message AddThermalEventResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string errors	= 2;	// List of validation errors.
+}
+
+/**
+  * Request for a list of Harmonic load profile types.
+  */
+message ListHarmonicProfileTypesRequest {
+}
+
+/**
+  * Represents a list of Harmonic load profile types.
+  */
+message ListHarmonicProfileTypesResponse {
+  ReturnCode returnCode 	= 1;           // Status code of response.
+  repeated string types 	= 2;           // List of Harmonic load profile types. "Uniaxial", "Triaxial".
+}
+
+/**
+  * Request for a list of Random Vibe profile types.
+  */
+message ListRandomProfileTypesRequest {
+  option deprecated = true;
+}
+
+/**
+  * Request for a list of Random Vibe profile types.
+  */
+message ListRandomVibeProfileTypesRequest {
+}
+
+/**
+  * Represents a list of Random Vibe profile types.
+  */
+message ListRandomProfileTypesResponse {
+  option deprecated = true;
+  ReturnCode returnCode 	= 1;           // Status code of response.
+  repeated string types 	= 2;           // List of Random Vibe profile types. Currently there is only one: "Uniaxial".
+}
+
+/**
+  * Represents a list of Random Vibe profile types.
+  */
+message ListRandomVibeProfileTypesResponse {
+  ReturnCode returnCode 	= 1;           // Status code of response.
+  repeated string types 	= 2;           // List of Random Vibe profile types. Currently there is only one: "Uniaxial".
+}
+
+/**
+  * Request for a list of Shock load units.
+  */
+message ListShockLoadUnitsRequest {
+}
+
+/**
+  * Represents a list of Shock load units.
+  */
+message ListShockLoadUnitsResponse {
+  ReturnCode returnCode 	= 1;           // Status code of response.
+  repeated string units 	= 2;           // List of Shock load units. For example: "G", "m/s2", "mm/s2".
+}
+
+/**
+  * Request to define and add a new thermal life cycle event profile.
+  */
+message AddThermalProfileRequest {
+  string project							= 1;		// Sherlock project name. 
+  string phaseName							= 2;		// The name of the life cycle phase this event is associated.
+  string eventName							= 3;		// Name of the thermal event.
+  string profileName						= 4;		// Name of the thermal profile.
+  string timeUnits							= 5;		// Time Units.
+  string tempUnits							= 6;		// Temperature units.
+  message Entry {
+    string step		= 1;	// Name of the step.
+    string type		= 2;	// Profile step type. "HOLD" or "RAMP".
+    double time		= 3;	// Time duration of the step.
+    double temp		= 4;	// Temperature of the step.
+  }
+  repeated Entry thermalProfileEntries		= 7;
+}
+
+/**
+  * Response from adding a thermal profile.
+  */
+message AddThermalProfileResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string errors	= 2;	// List of validation errors.
+}
+
+
+/**
+  * Request to load a thermal life cycle event profile from a .dat or .csv file.
+  */
+message LoadThermalProfileRequest {
+  string project					= 1;		// Sherlock project name.
+  string phaseName					= 2;		// The name of the life cycle phase this event is associated.
+  string eventName					= 3;		// Thermal event name.
+  string filePath					= 4;		// The full path for the .dat or .csv file.
+
+  // CSV file properties. This is only required for a CSV file load.
+  message CSVProps {
+    string profileName			= 1;		// Name of the thermal profile.
+    int32 headerRowNumber		= 2;		// Header row number in the .csv file.
+    string columnDelim			= 3;		// Delimiter to separate the columns.
+    string numericFormat		= 4;		// Numeric format.
+    string stepColumn			= 5;		// Step column name.
+    string typeColumn			= 6;		// Step type column name.
+    string timeColumn			= 7;		// Time duration column name.
+    string timeUnits			= 8;		// Time units column name.
+    string tempColumn			= 9;		// Temperature column name.
+    string tempUnits			= 10;		// Temperature units column name.
+  }
+  CSVProps csvProps					= 5;		// Properties for a CSV file load.
+}
+
+/**
+  * Response from loading a thermal profile from a .dat or .csv file.
+  */
+message LoadThermalProfileResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string errors	= 2;	// List of validation errors.
+}
+
+/**
+  * Request to define and add a new shock life cycle event.
+  */
+message AddShockEventRequest {
+  string project		= 1;		// Sherlock project name.
+  string phaseName		= 2;		// The name of the life cycle phase to add this event to.
+  string eventName		= 3;		// Name of the shock event.
+  string description	= 4;		// Description of the shock event.
+  double duration		= 5;		// Event duration length.
+  string durationUnits	= 6;		// Event duration length units.
+  double numOfCycles	= 7;		// Number of cycles defined for this shock event.
+  string cycleType		= 8;		// The cycle type. For example: "COUNT", "DUTY CYCLE", "PER YEAR", "PER HOUR", etc.
+  string orientation	= 9;		// PCB orientation in the format of azimuth, elevation. Example: 30,15
+  string loadDirection	= 10;		// Load direction in the format of x,y,z. Example: 0,0,1
+}
+
+/**
+  * Response from adding a shock event.
+  */
+message AddShockEventResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string errors	= 2;	// List of validation errors.
+}
+
+/**
+  * Request to define and add a new shock life cycle event profile.
+  */
+message AddShockProfileRequest {
+  string project							= 1;		// Sherlock project name.
+  string phaseName							= 2;		// The name of the life cycle phase this event is associated.
+  string eventName							= 3;		// Name of the shock event.
+  string profileName						= 4;		// Name of the shock profile.
+  double duration							= 5;		// Pulse duration.
+  string durationUnits						= 6;		// Pulse duration unit.
+  double sampleRate							= 7;		// Sample rate.
+  string sampleRateUnits					= 8;		// Sample rate unit.
+  string loadUnits							= 9;		// Load unit.
+  string freqUnits							= 10;		// Frequency unit.
+  message Entry {
+    string shape	= 1;	// Shape of the shock profile.
+    double load		= 2;	// Load.
+    double freq		= 3;	// Frequency rate.
+    double decay	= 4;	// Decay rate.
+  }
+  repeated Entry shockProfileEntries		= 11;		// Primary shape entry for the shock profile.
+}
+
+/**
+  * Response from adding a shock profile.
+  */
+message AddShockProfileResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string errors	= 2;	// List of validation errors.
+}
+
+/**
+  * Request for a list of temperature units.
+  */
+message ListTempUnitsRequest {
+}
+
+/**
+  * Represents a list of temperature units.
+  */
+message ListTempUnitsResponse {
+  ReturnCode returnCode 	= 1;           // Status code of response.
+  repeated string tempUnits = 2;           // List of temperature units. For example: "C", "F", "K".
+}
+
+/**
+  * Request to define and add a new harmonic vibe life cycle event.
+  */
+message AddHarmonicEventRequest {
+  string project		= 1;		// Sherlock project name.
+  string phaseName		= 2;		// The name of the life cycle phase to add this event to.
+  string eventName		= 3;		// Name of the harmonic event.
+  string description	= 4;		// Description of the harmonic event.
+  double duration		= 5;		// Event duration length.
+  string durationUnits	= 6;		// Event duration length units.
+  double numOfCycles	= 7;		// Number of cycles defined for this harmonic event.
+  string cycleType		= 8;		// The cycle type. For example: "COUNT", "DUTY CYCLE", "PER YEAR", "PER HOUR", etc.
+  double sweepRate		= 9;		// Sweep rate for the harmonic event
+  string orientation	= 10;		// PCB orientation in the format of azimuth, elevation. Example: 30,15
+  string profileType	= 11;		// Harmonic load profile types. Example valid values are "Uniaxial" and "Triaxial".
+  string loadDirection	= 12;		// Load direction in the format of x,y,z. Example: 0,0,1
+}
+
+/**
+  * Response from adding a harmonic vibe event.
+  */
+message AddHarmonicEventResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string errors	= 2;	// List of validation errors.
+}
+
+/**
+  * Request for a list of frequency units.
+  */
+message ListFreqUnitsRequest {
+}
+
+/**
+  * Represents a list of frequency units.
+  */
+message ListFreqUnitsResponse {
+  ReturnCode returnCode 	= 1;           // Status code of response.
+  repeated string freqUnits = 2;           // List of frequency units. For example: "HZ", "KHZ", "MHZ", "GHZ".
+}
+
+/**
+  * Request to define and add a new random vibe life cycle event.
+  */
+  
+
+message AddRandomVibeEventRequest {
+  string project		= 1;		// Sherlock project name. 
+  string phaseName		= 2;		// The name of the life cycle phase to add this event to.
+  string eventName		= 3;		// Name of the random vibe event.
+  string description	= 4;		// Description of the random vibe event.
+  double duration		= 5;		// Event duration length.
+  string durationUnits	= 6;		// Event duration length units.
+  double numOfCycles	= 7;		// Number of cycles defined for this random vibe event.
+  string cycleType		= 8;		// The cycle type. For example: "COUNT", "DUTY CYCLE", "PER YEAR", "PER HOUR", etc.
+  string orientation	= 9;		// PCB orientation in the format of azimuth, elevation. Example: 30,15
+  string profileType	= 10;		// Random load profile type. Example valid value is "Uniaxial".
+  string loadDirection	= 11;		// Load direction in the format of x,y,z. Example: 0,0,1
+}
+
+/**
+  * Response from adding a random vibe event.
+  */
+message AddRandomVibeEventResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string errors	= 2;	// List of validation errors.
+}
+
+/**
+  * Request for creating a life phase.
+  */
+message CreateLifePhaseRequest{
+  string project		= 1;		// Sherlock project name.
+  string phaseName		= 2;		// The name of new life phase.
+  string description	= 3;		// Description of new life phase.
+  double duration		= 4;		// Event duration length.
+  string durationUnits	= 5;		// Event duration length units.
+  double numOfCycles	= 6;		// Number of cycles defined for new life phase.
+  string cycleType		= 7;		// The cycle type. For example: "COUNT", "DUTY CYCLE", "PER YEAR", "PER HOUR", etc.
+}
+
+/**
+  * Response from creating a life phase.
+  */
+message CreateLifePhaseResponse{	
+  ReturnCode returnCode		= 1;			// Status code of response
+  repeated string errors	= 2;			// List of error messages
+}
+
+/**
+  * Request to define and add a new harmonic life cycle event profile.
+  */
+message AddHarmonicProfileRequest {
+  string project							= 1;		// Sherlock project name.
+  string phaseName							= 2;		// The name of the life cycle phase this event is associated.
+  string eventName							= 3;		// Name of the harmonic event.
+  string profileName						= 4;		// Name of the harmonic profile.
+  string freqUnits							= 5;		// Frequency Units.
+  string loadUnits							= 6;		// Load units.
+  message Entry {
+    double freq		= 1;	// Frequency.
+    double load		= 2;	// Load.
+  }
+  repeated Entry harmonicProfileEntries		= 7;
+  string triaxialAxis						= 8;		// If the harmonic profile type is "Triaxial", the axis this profile should be assigned to. Valid values are: x, y, z.
+}
+
+/**
+  * Response from adding a harmonic profile.
+  */
+message AddHarmonicProfileResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string errors	= 2;	// List of validation errors.
+}
+
+/**
+  * Request to load a harmonic life cycle event profile from a .dat or .csv file.
+  */
+message LoadHarmonicProfileRequest {
+  string project					= 1;		// Sherlock project name.
+  string phaseName					= 2;		// The name of the life cycle phase this event is associated.
+  string eventName					= 3;		// Harmonic event name.
+  string filePath					= 4;		// The full path for the .dat or .csv file.
+
+  // CSV file properties. This is only required for a CSV file load.
+  message CSVProps {
+    string profileName			= 1;		// Name of the harmonic profile.
+    int32 headerRowNumber		= 2;		// Header row number in the .csv file.
+    string columnDelim			= 3;		// Delimiter to separate the columns.
+    string numericFormat		= 4;		// Numeric format.
+    string freqColumn			= 5;		// Frequency column name.
+    string freqUnits			= 6;		// Frequency units.
+    string loadColumn			= 7;		// Load column name.
+    string loadUnits			= 8;		// Load units.
+  }
+  CSVProps harmonicCsvProps			= 5;		// Properties for a CSV file load.
+  string triaxialAxis				= 6;		// If the harmonic profile type is "Triaxial", the axis this profile should be assigned to. Valid values are: x, y, z.
+}
+
+/**
+  * Response from loading a harmonic profile from a .dat or .csv file.
+  */
+message LoadHarmonicProfileResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string errors	= 2;	// List of validation errors.
+}
+
+/**
+  * Request for a list of shock pulses.
+  */
+message ListShockPulsesRequest {
+}
+
+/**
+  * Represents a list of shock pulses.
+  */
+message ListShockPulsesResponse {
+  ReturnCode returnCode 		= 1;           // Status code of response.
+  repeated string shockPulse 	= 2;           // List of shock pulses. For example: "FullSine", "HalfSine", "Triangle", "Sawtooth", "FullSquare".
+}
+
+/**
+  * Request to load a random vibe life cycle event profile from a .dat or .csv file.
+  */
+message LoadRandomProfileRequest {
+  option deprecated = true;
+  string project					= 1;		// Sherlock project name.
+  string phaseName					= 2;		// The name of the life cycle phase this event is associated.
+  string eventName					= 3;		// Random vibe event name.
+  string filePath					= 4;		// The full path for the .dat or .csv file.
+
+ // CSV file properties. This is only required for a CSV file load.
+  message CSVProps {
+    string profileName			= 1;		// Name of the random vibe profile.
+    int32 headerRowNumber		= 2;		// Header row number in the .csv file.
+    string columnDelim			= 3;		// Delimiter to separate the columns.
+    string numericFormat		= 4;		// Numeric format.
+    string freqColumn			= 5;		// Frequency column name.
+    string freqUnits			= 6;		// Frequency units.
+    string amplColumn			= 7;		// Amplitude column name.
+    string amplUnits			= 8;		// Amplitude units.
+  }
+  CSVProps randomCsvProps		= 5;		// Properties for a CSV file load.
+}
+
+/**
+  * Request to load a random vibe life cycle event profile from a .dat or .csv file.
+  */
+message LoadRandomVibeProfileRequest {
+  string project					= 1;		// Sherlock project name.
+  string phaseName					= 2;		// The name of the life cycle phase this event is associated.
+  string eventName					= 3;		// Random vibe event name.
+  string filePath					= 4;		// The full path for the .dat or .csv file.
+
+ // CSV file properties. This is only required for a CSV file load.
+  message CSVProps {
+    string profileName			= 1;		// Name of the random vibe profile.
+    int32 headerRowNumber		= 2;		// Header row number in the .csv file.
+    string columnDelim			= 3;		// Delimiter to separate the columns.
+    string numericFormat		= 4;		// Numeric format.
+    string freqColumn			= 5;		// Frequency column name.
+    string freqUnits			= 6;		// Frequency units.
+    string amplColumn			= 7;		// Amplitude column name.
+    string amplUnits			= 8;		// Amplitude units.
+  }
+  CSVProps randomVibeCsvProps		= 5;		// Properties for a CSV file load.
+}
+
+/**
+  * Response from loading a random vibe profile from a .dat or .csv file.
+  */
+message LoadRandomProfileResponse {
+  option deprecated = true;
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string errors	= 2;	// List of validation errors.
+}
+
+/**
+  * Response from loading a random vibe profile from a .dat or .csv file.
+  */
+message LoadRandomVibeProfileResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string errors	= 2;	// List of validation errors.
+}
+
+/**
+  * Request to define and add a new random vibe life cycle event profile.
+  */
+message AddRandomProfileRequest {
+  option deprecated = true;
+  string project							= 1;		// Sherlock project name.
+  string phaseName							= 2;		// The name of the life cycle phase this event is associated.
+  string eventName							= 3;		// Name of the random vibe event.
+  string profileName						= 4;		// Name of the random vibe profile.
+  string freqUnits							= 5;		// Frequency Units.
+  string amplUnits							= 6;		// Amplitude units.
+  message Entry {
+    double freq		= 1;	// Frequency.
+    double ampl		= 2;	// Amplitude.
+  }
+  repeated Entry randomProfileEntries		= 7;
+}
+
+/**
+  * Request to define and add a new random vibe life cycle event profile.
+  */
+message AddRandomVibeProfileRequest {
+  string project							= 1;		// Sherlock project name.
+  string phaseName							= 2;		// The name of the life cycle phase this event is associated.
+  string eventName							= 3;		// Name of the random vibe event.
+  string profileName						= 4;		// Name of the random vibe profile.
+  string freqUnits							= 5;		// Frequency Units.
+  string amplUnits							= 6;		// Amplitude units.
+  message Entry {
+    double freq		= 1;	// Frequency.
+    double ampl		= 2;	// Amplitude.
+  }
+  repeated Entry randomVibeProfileEntries	= 7;
+}
+
+/**
+  * Response from adding a random vibe profile.
+  */
+message AddRandomProfileResponse {
+  option deprecated = true;
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string errors	= 2;	// List of validation errors.
+}
+
+/**
+  * Response from adding a random vibe profile.
+  */
+message AddRandomVibeProfileResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string errors	= 2;	// List of validation errors.
+}
+
+/**
+  * Request to load a shock life cycle event profile using dataset (time and load) from a .dat or .csv file.
+  */
+message LoadShockProfileDatasetRequest {
+  string project					= 1;		// Sherlock project name.
+  string phaseName					= 2;		// The name of the life cycle phase this event is associated.
+  string eventName					= 3;		// Shock event name.
+  string filePath					= 4;		// The full path for the .dat or .csv file.
+
+ // CSV file properties. This is only required for a CSV file load.
+  message CSVProps {
+    string profileName			= 1;		// Name of the shock profile.
+    int32 headerRowNumber		= 2;		// Header row number in the .csv file.
+    string columnDelim			= 3;		// Delimiter to separate the columns.
+    string numericFormat		= 4;		// Numeric format.
+    string timeColumn			= 5;		// Time column name.
+    string timeUnits			= 6;		// Time units.
+    string loadColumn			= 7;		// Load column name.
+    string loadUnits			= 8;		// Load units.
+  }
+  CSVProps shockDsCsvProps			= 5;		// Properties for a CSV file load.
+}
+
+/**
+  * Response from loading a shock profile using dataset from a .dat or .csv file.
+  */
+message LoadShockProfileDatasetResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string errors	= 2;	// List of validation errors.
+}
+
+/**
+  * Request to load a shock life cycle event profile using pulses from a .dat or .csv file.
+  */
+message LoadShockProfilePulsesRequest {
+  string project					= 1;		// Sherlock project name.
+  string phaseName					= 2;		// The name of the life cycle phase this event is associated.
+  string eventName					= 3;		// Shock event name.
+  string filePath					= 4;		// The full path for the .dat or .csv file.
+
+ // CSV file properties. This is only required for a CSV file load.
+  message CSVProps {
+    string profileName			= 1;		// Name of the shock profile.
+    int32 headerRowNumber		= 2;		// Header row number in the .csv file.
+    string columnDelim			= 3;		// Delimiter to separate the columns.
+    string numericFormat		= 4;		// Numeric format.
+    double duration				= 5;		// Pulse duration length.
+    string durationUnits		= 6;		// Pulse duration time units.
+    double sampleRate			= 7;		// Sample rate.
+    string sampleRateUnits		= 8;		// Sample rate units.
+    string shapeColumn			= 9;		// Pulse shape column name.
+    string loadColumn			= 10;		// Load column name.
+    string loadUnits			= 11;		// Load units.
+    string freqColumn			= 12;		// Frequency column name.
+    string freqUnits			= 13;		// Frequency units.
+    string decayColumn			= 14;		// Decay column name.
+  }
+  CSVProps shockPulsesCsvProps			= 5;		// Properties for a CSV file load.
+}
+
+/**
+  * Response from loading a shock profile using pulses from a .dat or .csv file.
+  */
+message LoadShockProfilePulsesResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string errors	= 2;	// List of validation errors.
+}
+
+/**
+  * Request for a list of amplitude units.
+  */
+message ListAmplUnitsRequest {
+}
+
+/**
+  * Represents a list of amplitude units.
+  */
+message ListAmplUnitsResponse{
+  ReturnCode returnCode 	= 1;           // Status code of response.
+  repeated string amplUnits = 2;           // List of amplitude units.
+}
+
+/**
+  * Represents an event.
+  */
+message Events {
+  string phaseName			= 1;			// The name of the life cycle phase this event is associated.
+  string eventName			= 2;			// Event name.
+}
+
+/**
+  * Request for a list of random vibe events defined for a project.
+  */
+message ListRandomVibeEventsRequest {
+  string project			= 1;			// Sherlock project name.
+}
+
+/**
+  * Represents a list of random vibe events defined for a project.
+  */
+message ListRandomVibeEventsResponse {
+  ReturnCode returnCode		= 1;			// Status code of response.
+  repeated Events event		= 2;			// List of random vibe events.
+}
+
+/**
+  * Request for a list of harmonic events defined for a project.
+  */
+message ListHarmonicEventsRequest {
+  string project			= 1;			// Sherlock project name.
+}
+
+/**
+  * Represents a list of harmonic events defined for a project.
+  */
+message ListHarmonicEventsResponse {
+  ReturnCode returnCode		= 1;			// Status code of response.
+  repeated Events event		= 2;			// List of harmonic events.
+}
+
+/**
+  * Request for a list of shock events defined for a project.
+  */
+message ListShockEventsRequest {
+  string project			= 1;			// Sherlock project name.
+}
+
+/**
+  * Represents a list of shock events defined for a project.
+  */
+message ListShockEventsResponse {
+  ReturnCode returnCode		= 1;			// Status code of response.
+  repeated Events event		= 2;			// List of shock events.
+}
+
+/**
+  * Request to delete a life cycle event in a project.
+  */
+message DeleteEventRequest {
+  string project		= 1;		// Sherlock project name.
+  string phaseName		= 2;		// The name of the life cycle phase from which to delete this event.
+  string eventName		= 3;		// Name of the event to be deleted.
+}/**
+  * Request for deleting a life phase
+  */
+message DeletePhaseRequest {
+  string project		= 1;		// Sherlock project name.
+  string phaseName		= 2;			// Sherlock life phase name.
+}
+
+/**
+  * Response for deleting a life phase
+  */
+message DeleteLifePhaseResponse {
+  ReturnCode returnCode 	= 1;
+}
+service SherlockLifeCycleService {
+  
+  // Define and add a new harmonic vibe life cycle event.
+  rpc addHarmonicEvent(AddHarmonicEventRequest) returns (AddHarmonicEventResponse);
+  
+  // Define and add a new harmonic life cycle event profile.
+  rpc addHarmonicProfile(AddHarmonicProfileRequest) returns (AddHarmonicProfileResponse);
+
+  // Define and add a new random vibe life cycle event profile.
+  rpc addRandomProfile(AddRandomProfileRequest) returns (AddRandomProfileResponse) {
+    option deprecated = true;
+  };
+
+  // Define and add a new random vibe life cycle event profile.
+  rpc addRandomVibeProfile(AddRandomVibeProfileRequest) returns (AddRandomVibeProfileResponse);
+  
+  // Define and add a new random vibe life cycle event.
+  rpc addRandomVibeEvent(AddRandomVibeEventRequest) returns (AddRandomVibeEventResponse);
+
+  // Define and add a new shock life cycle event.
+  rpc addShockEvent(AddShockEventRequest) returns (AddShockEventResponse);
+  
+  // Define and add a new shock life cycle event profile.
+  // Keep in mind, the Pulse Duration and Load values defined in the Shock Profile Editor
+  // are relative values used solely within the editor to define the profile shape. 
+  // A combination of all the primary pulse shapes is then used to define the pulse profile.
+  rpc addShockProfile(AddShockProfileRequest) returns (AddShockProfileResponse);
+  
+  // Define and add a new thermal life cycle event.
+  rpc addThermalEvent(AddThermalEventRequest) returns (AddThermalEventResponse);
+  
+  // Define and add a new thermal life cycle event profile.
+  rpc addThermalProfile(AddThermalProfileRequest) returns (AddThermalProfileResponse);
+  
+  // Define and add a new life phase.
+  rpc createLifePhase(CreateLifePhaseRequest) returns (CreateLifePhaseResponse);
+  
+  // Delete a life cycle event.
+  rpc deleteEvent(DeleteEventRequest) returns (ReturnCode);
+    
+  // Returns a list of amplitude units when adding a random vibe profile.
+  rpc listAmplUnits(ListAmplUnitsRequest) returns (ListAmplUnitsResponse);
+  
+  // Returns a list of duration units when adding a life cycle event.
+  rpc listDurationUnits(ListDurationUnitsRequest) returns (ListDurationUnitsResponse);
+  
+  // Returns a list of frequency units.
+  rpc listFreqUnits(ListFreqUnitsRequest) returns (ListFreqUnitsResponse);
+  
+  // Returns a list of harmonic events defined for a project.
+  rpc listHarmonicEvents(ListHarmonicEventsRequest) returns (ListHarmonicEventsResponse);
+  
+  // Returns a list of Harmonic Load Profile types.
+  rpc listHarmonicProfileTypes(ListHarmonicProfileTypesRequest) returns (ListHarmonicProfileTypesResponse);
+
+  // Returns a list of life cycle phases and their events given a Sherlock project directory.
+  rpc listLifeCycleEvents(ListLCEventsRequest) returns (ListLCEventsResponse);
+    
+  // Returns a list of life cycle states.
+  rpc listLifeCycleStates(ListLCStatesRequest) returns (ListLCStatesResponse);
+  
+  // Returns a list of life cycle types.
+  rpc listLifeCycleTypes(ListLCTypesRequest) returns (ListLCTypesResponse);
+  
+  // Returns a list of random vibe profile types.
+  rpc listRandomProfileTypes(ListRandomProfileTypesRequest) returns (ListRandomProfileTypesResponse) {
+    option deprecated = true;
+  };
+  
+  // Returns a list of random vibe profile types.
+  rpc listRandomVibeProfileTypes(ListRandomVibeProfileTypesRequest) returns (ListRandomVibeProfileTypesResponse);
+  
+  // Returns a list of random vibe events defined for a project.
+  rpc listRandomVibeEvents(ListRandomVibeEventsRequest) returns (ListRandomVibeEventsResponse);
+
+  // Returns a list of shock events defined for a project.
+  rpc listShockEvents(ListShockEventsRequest) returns (ListShockEventsResponse);
+
+  // Returns a list of Shock Load units.
+  rpc listShockLoadUnits(ListShockLoadUnitsRequest) returns (ListShockLoadUnitsResponse);
+  
+  // Returns a list of shock pulses.
+  rpc listShockPulses(ListShockPulsesRequest) returns (ListShockPulsesResponse);
+  
+  // Returns a list of temperature units.
+  rpc listTempUnits(ListTempUnitsRequest) returns (ListTempUnitsResponse);
+    
+  // Loads a harmonic profile from a .dat or .csv file
+  rpc loadHarmonicProfile(LoadHarmonicProfileRequest) returns (LoadHarmonicProfileResponse);
+  
+  // Loads a random vibe profile from a .dat or .csv file
+  rpc loadRandomProfile(LoadRandomProfileRequest) returns (LoadRandomProfileResponse) {
+    option deprecated = true;
+  };
+  
+  // Loads a random vibe profile from a .dat or .csv file
+  rpc loadRandomVibeProfile(LoadRandomVibeProfileRequest) returns (LoadRandomVibeProfileResponse);
+  
+  // Loads a shock profile using dataset from a .dat or .csv file
+  rpc loadShockProfileDataset(LoadShockProfileDatasetRequest) returns (LoadShockProfileDatasetResponse);
+  
+  // Loads a shock profile using pulses from a .dat or .csv file
+  rpc loadShockProfilePulses(LoadShockProfilePulsesRequest) returns (LoadShockProfilePulsesResponse);
+  
+  // Loads a thermal profile from a .dat or .csv file
+  rpc loadThermalProfile(LoadThermalProfileRequest) returns (LoadThermalProfileResponse);
+  
+  // Delete a life phase for a project
+  rpc deletePhase(DeletePhaseRequest) returns (ReturnCode);
+}

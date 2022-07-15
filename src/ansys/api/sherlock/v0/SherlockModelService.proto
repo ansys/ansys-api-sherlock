@@ -1,0 +1,101 @@
+// © 2020 ANSYS, Inc.  Unauthorized use, distribution, or duplication is prohibited.
+syntax = "proto3";
+
+import "ansys/api/sherlock/v0/SherlockCommonService.proto";
+
+option java_package = "sherlock.grpc";
+option java_outer_classname = "SherlockModelServiceProto";
+
+/**
+  * Request to export an FEA model
+  */
+message ExportFEAModelRequest {
+  string project							= 1;	// Sherlock project name.
+  string ccaName							= 2;	// The CCA name.
+  string exportFile		 					= 3;	// Full file path to the export file.
+  enum ExportAnalysis {
+    NaturalFreq 		= 0;
+    HarmonicVibe 		= 1;
+    ICTAnalysis 		= 2;
+    MechanicalShock 	= 3;
+    RandomVibe 			= 4;
+  }
+  ExportAnalysis analysis					= 4;
+  message DrillHoleParam {
+    string drillHoleModeling		= 1;			// Enables or disables drill hole modeling, valid values are ENABLED/enabled or DISABLED/disabled.
+    message MinHoleDiameter {
+      double value = 1;		// Minimum hole diameter value.
+      string unit  = 2;		// Minimum hole diameter unit.
+    }
+    MinHoleDiameter minHoleDiameter	= 2;
+    message MaxEdgeLength {
+      double value = 1;		// Maximum edge length value.
+      string unit  = 2;		// Maximum edge length unit.
+    }
+    MaxEdgeLength maxEdgeLength		= 3;
+  }
+  DrillHoleParam drillHoleParam				= 5;	// Drill Holes modeling parameters - Min Hole Diameter and Max. Edge Length. If any of this parameter is provided, drill hole modeling will be enabled.
+  string detectLeadModeling					= 6;	// If enabled, automatically enable lead modeling if any part has lead geometry defined, valid values are ENABLED/enabled or DISABLED/disabled.
+  message LeadModelParam {
+    string leadModeling					= 1;		// Enables or disables lead modeling, valid values are ENABLED/enabled or DISABLED/disabled.
+    string leadElemOrder				= 2;		// Element order, valid values are "First Order (Linear)", "Second Order (Quadratic)", or "Solid Shell".
+    message MaxMeshSize {
+      double value	= 1;	// Max mesh size value.
+      string unit	= 2;	// Max mesh size unit.			
+    }
+    MaxMeshSize maxMeshSize				= 3;
+    message VerticalMeshSize {
+      double value	= 1;	// Vertical mesh size value.
+      string unit	= 2;	// Vertical mesh size unit.
+    }
+    VerticalMeshSize verticalMeshSize	= 4;
+  }
+  LeadModelParam leadModelParam				= 7;
+  bool displayModel							= 8;	// Display model after export.
+}
+
+message ExportTraceReinforcementModelRequest {
+  string project							= 1;	// Sherlock project name.
+  string ccaName							= 2;	// The CCA name.
+  string exportFile		 					= 3;	// Full file path to the trace reinforcement export file.
+  bool   overwrite							= 4;	// Overwrite existing file if true.
+  bool   displayModel						= 5;	// Display model after export if true.
+  bool   clearFEADatabase					= 6;	// Clear FEA Database before defining model if true.
+  bool   generateModelsForAllLayers			= 7;	// Generate models for all layers.
+  message TraceParam {
+    message DiameterThreshold {
+      double value = 1;		// Diameter threshold value.
+      string unit  = 2;		// Diameter threshold unit.
+    }
+    DiameterThreshold diameterThreshold	= 1;
+    message MinHoleDiameterForShellOrBeam {
+      double value = 1;		// Min. hole diameter value for Shell/Beam.
+      string unit  = 2;		// Min. hole diameter unit for Shell/Beam.
+    }
+    MinHoleDiameterForShellOrBeam minHoleDiameterForShellOrBeam	= 2;
+  }
+  TraceParam traceParam						= 8;	// Trace properties (Diameter Threshold and Minimum Hole Diameter for Shell/Beam).
+  message TraceDrillHoleParam {
+    string drillHoleModeling		= 1;			// Enables or disables drill hole modeling, valid values are ENABLED/enabled or DISABLED/disabled.
+    message MinHoleDiameter {
+      double value = 1;		// Minimum hole diameter value.
+      string unit  = 2;		// Minimum hole diameter unit.
+    }
+    MinHoleDiameter minHoleDiameter	= 2;
+    message MaxEdgeLength {
+      double value = 1;		// Maximum edge length value.
+      string unit  = 2;		// Maximum edge length unit.
+    }
+    MaxEdgeLength maxEdgeLength		= 3;
+  }
+  TraceDrillHoleParam traceDrillHoleParam	= 9;	// Drill Holes modeling parameters - Min Hole Diameter and Max. Edge Length. If any of this parameter is provided, drill hole modeling will be enabled.
+}
+
+service SherlockModelService {
+  // Export an FEA Model.
+  rpc exportFEAModel(ExportFEAModelRequest) returns (ReturnCode);
+  
+  // Export a Trace Reinforcement model.
+  rpc exportTraceReinforcementModel(ExportTraceReinforcementModelRequest) returns (ReturnCode);
+}
+
