@@ -56,16 +56,15 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R
 
-      # uncomment the following section to permit upload to public PyPI
-
-      # - name: Upload to Public PyPi
-      #   run: |
-      #     pip install twine
-      #     twine upload --skip-existing ./**/*.whl
-      #     twine upload --skip-existing ./**/*.tar.gz
-      #   env:
-      #     TWINE_USERNAME: __token__
-      #     TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }} 
+      - name: Upload to Private PyPi
+        run: |
+          pip install twine
+          twine upload --skip-existing ./**/*.whl
+          twine upload --skip-existing ./**/*.tar.gz
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: 65w37vhx6b2r7rweix54hxblqhrkm5u6aleiz76tyua53hqpafvq 
+          TWINE_REPOSITORY_URL: "https://upload.pypi.org/legacy/"
 
       - name: Release
         uses: softprops/action-gh-release@v1
