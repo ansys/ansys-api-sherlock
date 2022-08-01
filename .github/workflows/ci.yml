@@ -63,7 +63,7 @@ jobs:
           twine upload --skip-existing ./**/*.tar.gz
         env:
           TWINE_USERNAME: __token__
-          TWINE_PASSWORD: 65w37vhx6b2r7rweix54hxblqhrkm5u6aleiz76tyua53hqpafvq 
+          TWINE_PASSWORD: pypi-65w37vhx6b2r7rweix54hxblqhrkm5u6aleiz76tyua53hqpafvq 
           TWINE_REPOSITORY_URL: "https://upload.pypi.org/legacy/"
 
       - name: Release
