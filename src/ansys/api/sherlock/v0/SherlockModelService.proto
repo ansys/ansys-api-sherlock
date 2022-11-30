@@ -52,6 +52,9 @@ message ExportFEAModelRequest {
   }
   LeadModelParam leadModelParam				= 7;
   bool displayModel							= 8;	// Display model after export.
+  bool clearFEADatabase						= 9;	// Clear FEA Database before defining model.
+  bool useFEAModelID						= 10;	// Use FEA Model ID.
+  string coordinateUnits					= 11;	// // Units of exported model coordinates, valid values are "in", "mm", "m", "mil", "micron", "nm".
 }
 
 message ExportTraceReinforcementModelRequest {
@@ -89,6 +92,7 @@ message ExportTraceReinforcementModelRequest {
     MaxEdgeLength maxEdgeLength		= 3;
   }
   TraceDrillHoleParam traceDrillHoleParam	= 9;	// Drill Holes modeling parameters - Min Hole Diameter and Max. Edge Length. If any of this parameter is provided, drill hole modeling will be enabled.
+  string coordinateUnits					= 10;	// Units of exported model coordinates, valid values are "in", "mm", "m", "mil", "micron", "nm".
 }
 
 service SherlockModelService {
