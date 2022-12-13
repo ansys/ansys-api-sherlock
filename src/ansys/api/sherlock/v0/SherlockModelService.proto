@@ -95,11 +95,26 @@ message ExportTraceReinforcementModelRequest {
   string coordinateUnits					= 10;	// Units of exported model coordinates, valid values are "in", "mm", "m", "mil", "micron", "nm".
 }
 
+message GenerateTraceModelRequest {
+  string project							= 1;	// Sherlock project name.
+  string ccaName							= 2;	// The CCA name. If left empty, trace models will be generated for all CCAs and all of their copper layers.
+  string copperLayerName					= 3;	// Copper layer from which to generate the trace model. If left empty, trace models will be generated for all copper layers.
+  double maxArcSegment						= 4;	// Max Arc Segment.
+  string maxArcSegmentUnits					= 5;	// Max Arc Segment units.
+  double minTraceArea						= 6;	// Min Trace Area.
+  string minTraceAreaUnits					= 7;	// Min Trace Area units.
+  double minHoleArea						= 8;	// Min Hole Area.
+  string minHoleAreaUnits					= 9;	// Min Hole Area units.
+}
+
 service SherlockModelService {
   // Export an FEA Model.
   rpc exportFEAModel(ExportFEAModelRequest) returns (ReturnCode);
   
   // Export a Trace Reinforcement model.
   rpc exportTraceReinforcementModel(ExportTraceReinforcementModelRequest) returns (ReturnCode);
+  
+  // Generate a trace model.
+  rpc generateTraceModel(GenerateTraceModelRequest) returns (ReturnCode);
 }
 
