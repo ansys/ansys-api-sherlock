@@ -105,6 +105,7 @@ message GenerateTraceModelRequest {
   string minTraceAreaUnits					= 7;	// Min Trace Area units.
   double minHoleArea						= 8;	// Min Hole Area.
   string minHoleAreaUnits					= 9;	// Min Hole Area units.
+  bool   useSnapshotForNonImageLayer		= 10;   // Use an image to generate the trace model for layers that are not image layers. If a snapshot image exists for the layer, that snapshot is used. Otherwise this creates an image that is identical to creating a snapshot.
 }
 
 service SherlockModelService {
