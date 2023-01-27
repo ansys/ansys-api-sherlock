@@ -38,6 +38,9 @@ message HealthCheckResponse {
   int32 port = 2;		// Listening port number on server.
 }
 
+message IsSherlockClientLoadingRequest {
+}
+
 service SherlockCommonService {
 
   // Returns health status of gRPC server.
@@ -45,4 +48,7 @@ service SherlockCommonService {
   
   // Signals for gRPC connection to shutdown.
   rpc exit(ExitRequest) returns (ReturnCode);
+  
+  // Check if all SherlockClient is still loading
+  rpc isSherlockClientLoading(IsSherlockClientLoadingRequest) returns (ReturnCode);
 }
