@@ -1,7 +1,9 @@
 // © 2020 ANSYS, Inc.  Unauthorized use, distribution, or duplication is prohibited.
+//
+// The APIs in this service should only be used for Sherlock integration with Workbench.
 syntax = "proto3";
 
-import "ansys/api/sherlock/v0/SherlockCommonService.proto";
+import "SherlockCommonService.proto";
 
 option java_package = "sherlock.grpc";
 option java_outer_classname = "SherlockServiceProto";
@@ -59,9 +61,6 @@ message ExportTraceReinforcementRequest {
   string destGeometryFile 	= 2;
   string systemName 		= 3;
   string componentName 		= 4;
-}
-
-message IsSherlockClientLoadingRequest {
 }
 
 message SetWorkingDirRequest {
