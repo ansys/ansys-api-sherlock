@@ -49,6 +49,6 @@ service SherlockCommonService {
   // Signals for gRPC connection to shutdown.
   rpc exit(ExitRequest) returns (ReturnCode);
   
-  // Check if all SherlockClient is still loading
+  // Check if SherlockClient is still loading.
   rpc isSherlockClientLoading(IsSherlockClientLoadingRequest) returns (ReturnCode);
 }
