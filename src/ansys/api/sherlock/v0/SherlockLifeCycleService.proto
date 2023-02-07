@@ -471,8 +471,8 @@ message AddHarmonicVibeProfilesRequest {
       double freq		= 1;	// Frequency.
       double load		= 2;	// Load.
     }
-    repeated Entry harmonicProfileEntries	= 6;
-    string triaxialAxis						= 7;		// If the harmonic profile type is "Triaxial", the axis this profile should be assigned to. Valid values are: x, y, z.
+    repeated Entry harmonicVibeProfileEntries	= 6;
+    string triaxialAxis							= 7;		// If the harmonic profile type is "Triaxial", the axis this profile should be assigned to. Valid values are: x, y, z.
   }
   repeated HarmonicVibeProfile harmonicVibeProfiles = 2;
 }
