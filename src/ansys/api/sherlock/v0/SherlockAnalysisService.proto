@@ -45,7 +45,66 @@ message RunAnalysisRequest {
   repeated Analysis analyses				= 3;
 }
 
+message GetRandomVibeInputFieldsRequest {
+}
+
+message GetRandomVibeInputFieldsResponse {
+  repeated string fieldName = 1;
+}
+
+message UpdateRandomVibePropsRequest {
+  string project = 1;									// Project name.
+  string ccaName = 2;									// CCA name.
+  optional string randomVibeDamping = 3;				// Modal Damping Ratio(s).
+  optional double naturalFreqMin = 4;					// Min Frequency. For NX Nastran analysis only.
+  optional string naturalFreqMinUnits = 5;				// Min Frequency units. For NX Nastran analysis only.
+  optional double naturalFreqMax = 6;					// Max Frequency. For NX Nastran analysis only.
+  optional string naturalFreqMaxUnits = 7;				// Max Frequency units. For NX Nastran analysis only.
+  optional double analysisTemp = 8;						// Temperature.
+  optional string analysisTempUnits = 9; 				// Temperature units.
+  optional bool partValidationEnabled = 10;				// Part Validation.
+  optional string forceModelRebuild = 11;				// Model Creation. Valid values are "FORCE" or "AUTO"
+  optional bool reuseModalAnalysis = 12;				// Reuse Natural Frequency. For NX Nastran analysis only.
+  optional bool performNFFreqRangeCheck = 13;			// Frequency Range Check. For NX Nastran analysis only.
+  optional bool requireMaterialAssignmentEnabled = 14;	// Require Material Assignment.
+}
+
+
+message GetNaturalFrequencyInputFieldsRequest {
+}
+
+message GetNaturalFrequencyInputFieldsResponse {
+  repeated string fieldName = 1;
+}
+
+message UpdateNaturalFrequencyPropsRequest {
+  string project = 1;							// Project name.
+  string ccaName = 2;							// CCA name.
+  int32 naturalFreqCount = 3;					// NF Result Count.
+  double naturalFreqMin = 4;					// Min Frequency.
+  string naturalFreqMinUnits = 5;				// Min Frequency units (HZ, KHZ, MHZ, or GHZ).
+  double naturalFreqMax = 6;					// Max Frequency.
+  string naturalFreqMaxUnits = 7;				// Max Frequency units (HZ, KHZ, MHZ, or GHZ).
+  bool partValidationEnabled = 8;				// Part Validation.
+  bool requireMaterialAssignmentEnabled = 9;	// Require Material Assignment.
+  optional double analysisTemp = 10;			// Temperature.
+  optional string analysisTempUnits = 11; 		// Temperature units (C, F, or K).
+}
+
+
 service SherlockAnalysisService {
   // Runs one or more Sherlock analysis.
   rpc runAnalysis(RunAnalysisRequest) returns (ReturnCode);
+  
+  // Returns the list of valid Random Vibe property fields given the user configuration.
+  rpc getRandomVibeInputFields(GetRandomVibeInputFieldsRequest) returns (GetRandomVibeInputFieldsResponse);
+  
+  // Updates the analysis properties for Random Vibe analysis.
+  rpc updateRandomVibeProps(UpdateRandomVibePropsRequest) returns (ReturnCode);
+  
+  // Returns the list of valid Natural Frequency property fields given the user configuration.
+  rpc getNaturalFrequencyInputFields(GetNaturalFrequencyInputFieldsRequest) returns (GetNaturalFrequencyInputFieldsResponse);
+  
+  // Updates the analysis properties for Natural Frequency analysis.
+  rpc updateNaturalFrequencyProps(UpdateNaturalFrequencyPropsRequest) returns (ReturnCode);
 }
