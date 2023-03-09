@@ -41,6 +41,52 @@ message HealthCheckResponse {
 message IsSherlockClientLoadingRequest {
 }
 
+/**
+  * Request for a list of valid units of the provided unit type.
+  */
+message ListUnitsRequest {
+  enum UnitType {
+    UNKNOWN = 0;				// Indicates an unknown unit type.
+    ACCEL_DENSITY = 1;			// Units used for acceleration density.
+    ACCELERATION = 2;			// Units used for acceleration.
+    AREA = 3;					// Units used for area.
+    BANDWIDTH = 4;				// Units used for bandwidth.
+    CAPACITANCE = 5;			// Units used for electrical capacitance.
+    CTE = 6;					// Units used for material CTE.
+    CURRENT = 7;				// Units used for electrical current.
+    DENSITY = 8;				// Units used for density.
+    DISP_DENSITY = 9;			// Units used for displacement density.
+    FORCE = 10;					// Units used for force.
+    FREQUENCY = 11;				// Units used for frequency.
+    INDUCTANCE = 12;			// Units used for inductance.
+    LENGTH = 13;				// Units used for length.
+    POWER = 14;					// Units used for electrical power.
+    RESISTANCE = 15;			// Units used for electrical resistance.
+    SIZE = 16;					// Units used for size.
+    SPECIFIC_HEAT = 17;			// Units used for specific heat.
+    STRAIN = 18;				// Units used for strain.
+    STRESS = 19;				// Units used for stress.
+    TEMPERATURE = 20;			// Units used for temperature.
+    THERMAL_CONDUCTIVITY = 21;	// Units used for thermal conductivity.
+    THERMAL_RESISTANCE = 22;	// Units used for thermal resistance.
+    TIME = 23;					// Units used for time.
+    VELOCITY = 24;				// Units used for velocity.
+    VELOCITY_DENSITY = 25;		// Units used for velocity density.
+    VOLTAGE = 26;				// Units used for electrical voltage.
+    VOLUME = 27;				// Units used for volume.
+    WEIGHT = 28;				// Units used for weight.
+  }
+  UnitType unitType = 1;	// Unit type to request valid units of.
+}
+
+/**
+  * Represents a list of valid units for the provided unit type.
+  */
+message ListUnitsResponse {
+  ReturnCode returnCode 	= 1;	// Status code of response.
+  repeated string units		= 2;	// List of valid units for the requested type.
+}
+
 service SherlockCommonService {
 
   // Returns health status of gRPC server.
@@ -51,4 +97,7 @@ service SherlockCommonService {
   
   // Check if SherlockClient is still loading.
   rpc isSherlockClientLoading(IsSherlockClientLoadingRequest) returns (ReturnCode);
+  
+  // Returns a list of valid units of the provided unit type.
+  rpc listUnits(ListUnitsRequest) returns (ListUnitsResponse);
 }
