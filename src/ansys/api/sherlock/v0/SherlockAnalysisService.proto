@@ -1,10 +1,16 @@
-// © 2020 ANSYS, Inc.  Unauthorized use, distribution, or duplication is prohibited.
+// @Copyright 2023 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
 
 option java_package = "sherlock.grpc";
 option java_outer_classname = "SherlockAnalysisServiceProto";
+
+enum ModelSource {
+  UNKNOWN			= 0;	// Default enum to catch invalid source
+  GENERATED			= 1;	// Generated analysis model source
+  STRAIN_MAP		= 2;	// Strain map analysis model source
+}
 
 /**
   * Request to run one or more Sherlock analysis given the project path, CCA name, analyses, lifecycle phases and events.
@@ -15,13 +21,13 @@ message RunAnalysisRequest {
 
   message Analysis { 
     enum AnalysisType {
+      reserved 6;
       UNKNOWN	 			= 0;	// Default enum to catch invalid analysis.
       NaturalFreq 			= 1;	// Enum for the Natural Frequency analysis.
       HarmonicVibe 			= 2;	// Enum for the Harmonic Vibe analysis.
       ICTAnalysis 			= 3;	// Enum for the ICA analysis.
       MechanicalShock 		= 4;	// Enum for the Mechanical Shock analysis.
       RandomVibe 			= 5;	// Enum for the Random Vibe analysis.
-      HoleToHoleCAF 		= 6;	// Enum for the CAF Failure analysis.
       ComponentFailureMode	= 7;	// Enum for the Component Failure Mechanism analysis.
       DFMEAModule			= 8;	// Enum for the DFMEA analysis.
       PTHFatigue			= 9;	// Enum for the PTH Fatigue analysis.
@@ -45,7 +51,11 @@ message RunAnalysisRequest {
   repeated Analysis analyses				= 3;
 }
 
+/**
+ * Request to list the valid Random Vibe input fields for the provided model source and user configuration.
+ */
 message GetRandomVibeInputFieldsRequest {
+  optional ModelSource modelSource = 1;	// Optional model source. Default: GENERATED
 }
 
 message GetRandomVibeInputFieldsResponse {
@@ -67,6 +77,8 @@ message UpdateRandomVibePropsRequest {
   optional bool reuseModalAnalysis = 12;				// Reuse Natural Frequency. For NX Nastran analysis only.
   optional bool performNFFreqRangeCheck = 13;			// Frequency Range Check. For NX Nastran analysis only.
   optional bool requireMaterialAssignmentEnabled = 14;	// Require Material Assignment.
+  optional ModelSource modelSource = 15;				// Optional model source. Default: GENERATED
+  optional string strainMapNaturalFreqs = 16;			// Comma-separated list of natural frequencies for strain map analysis.
 }
 
 
@@ -91,12 +103,40 @@ message UpdateNaturalFrequencyPropsRequest {
   optional string analysisTempUnits = 11; 		// Temperature units (C, F, or K).
 }
 
+/**
+  * Request to run Sherlock strain map analysis given the project name, CCA name, and strain maps.
+  */
+message RunStrainMapAnalysisRequest {
+  string project			= 1;	// Sherlock project name.
+  string ccaName			= 2;	// The CCA name of the main CCA for the analysis.
+
+  message StrainMapAnalysis { 
+    enum AnalysisType {
+      UNKNOWN	 	= 0;	// Default enum to catch invalid analysis.
+      RandomVibe 	= 1;	// Enum for the Random Vibe analysis.
+    }
+    AnalysisType type 		= 1;
+    message EventStrainMap {	
+	  string phaseName = 1;						// Life cycle phase name.
+	  string eventName = 2;						// Life cycle event name.
+	  string pcbSide = 3;						// PCB side for the strain map. Supported values are: TOP, BOTTOM.
+	  string strainMap = 4;						// Strain map assigned to the event.
+	  optional string subAssemblyName = 5;		// The name of the sub-assembly CCA to be assigned the strain map.
+    }
+    repeated EventStrainMap eventStrainMaps	= 2;
+  }
+
+  repeated StrainMapAnalysis strainMapAnalyses = 3;
+}
 
 service SherlockAnalysisService {
   // Runs one or more Sherlock analysis.
   rpc runAnalysis(RunAnalysisRequest) returns (ReturnCode);
   
-  // Returns the list of valid Random Vibe property fields given the user configuration.
+  // Run Sherlock strain map analysis.
+  rpc runStrainMapAnalysis(RunStrainMapAnalysisRequest) returns (ReturnCode);
+  
+  // Returns the list of valid Random Vibe input fields for the provided model source and user configuration.
   rpc getRandomVibeInputFields(GetRandomVibeInputFieldsRequest) returns (GetRandomVibeInputFieldsResponse);
   
   // Updates the analysis properties for Random Vibe analysis.
