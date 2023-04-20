@@ -1,89 +1,85 @@
 name: GitHub CI
 
-# run only on main branch.  This avoids duplicated actions on PRs
+# run only on main branch. This avoids duplicated actions on PRs
 on:
+  workflow_dispatch:
   pull_request:
   push:
     tags:
       - "*"
     branches:
       - main
-  workflow_dispatch:
+
+env:
+  MAIN_PYTHON_VERSION: '3.10'
 
 jobs:
   build:
     name: Build package
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: ${{ env.MAIN_PYTHON_VERSION }}
+
       - name: Install build requirements
         run: |
           pip install -U pip
           pip install build
+
       - name: Build
         run: python -m build
+
       - name: Install
         run: pip install dist/*.whl
+
       - name: Test import
         run: |
           mkdir tmp
           cd tmp
-          python -c "import ansys.api.sherlock.v0; print('Sucessfully imported ansys.api.sherlock.v0')"
+          python -c "import ansys.api.sherlock.v0; print('Successfully imported ansys.api.sherlock.v0')"
           python -c "from ansys.api.sherlock import __version__; print(__version__)"
+
       - name: Upload packages
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ansys-api-sherlock-packages
           path: dist/
           retention-days: 7
 
   release:
-    name: Release
-    if: |
-      github.event_name == 'push' &&
-      contains(github.ref, 'refs/tags') 
+    name: Release package
+    if: github.event_name == 'push' && contains(github.ref, 'refs/tags')
+    needs: [build]
     runs-on: ubuntu-latest
-  
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip build twine
+      - uses: actions/download-artifact@v3
 
-      - name: Build artifacts
-        run: |
-          python -m build && python -m twine check dist/*
+      - name: Display structure of downloaded files
+        run: ls -R
 
-      - name: Publish to private PyPI
+      - name: Upload to Public PyPi
+        run: |
+          pip install twine
+          twine upload --skip-existing ./**/*.whl
+          twine upload --skip-existing ./**/*.tar.gz
         env:
-          TWINE_USERNAME: PAT
-          TWINE_PASSWORD: ${{ secrets.PYANSYS_PYPI_PRIVATE_PAT }}
-          TWINE_REPOSITORY_URL: https://pkgs.dev.azure.com/pyansys/_packaging/pyansys/pypi/upload
-        run: |
-          python -m twine upload dist/* \
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }} 
 
-      # - name: Publish to PyPI
-      #   env:
-      #     TWINE_USERNAME: __token__
-      #     TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-      #   run: |
-      #     python -m twine upload --skip-existing ./**/*.whl
-      #     python -m twine upload --skip-existing ./**/*.tar.gz
-
-      # - name: Publish to GitHub
-      #   uses: softprops/action-gh-release@v1
-      #   with:
-      #     files: |
-      #       ./**/*.whl
-      #       ./**/*.tar.gz
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+          files: |
+            ./**/*.whl
+            ./**/*.tar.gz
+            ./**/*.pdf
