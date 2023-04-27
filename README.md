@@ -1,4 +1,4 @@
-### ``ansys-api-sherlock`` gRPC Interface Package
+### ansys-api-sherlock gRPC Interface Package
 
 This Python package contains the auto-generated gRPC Python interface files for
 Sherlock.
@@ -55,9 +55,8 @@ source and wheel packages for these gRPC Python interface files. By default,
 these are built on PRs, the main branch, and on tags when pushing. Artifacts
 are uploaded for each PR.
 
-To publicly release wheels to PyPI, ensure your branch is up to date and then
-push tags. For example, you would use these commands to push tags for the
-version ``v0.5.0``.
+To publicly release wheels to PyPI, ensure that your branch is up to date and then
+push tags. For example, to push tags for version ``v0.5.0``, you would use these commands:
 
 ```bash
 git tag v0.5.0
