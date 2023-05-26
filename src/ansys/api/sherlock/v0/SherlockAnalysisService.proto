@@ -25,7 +25,7 @@ message RunAnalysisRequest {
       UNKNOWN	 			= 0;	// Default enum to catch invalid analysis.
       NaturalFreq 			= 1;	// Enum for the Natural Frequency analysis.
       HarmonicVibe 			= 2;	// Enum for the Harmonic Vibe analysis.
-      ICTAnalysis 			= 3;	// Enum for the ICA analysis.
+      ICTAnalysis 			= 3;	// Enum for the ICT analysis.
       MechanicalShock 		= 4;	// Enum for the Mechanical Shock analysis.
       RandomVibe 			= 5;	// Enum for the Random Vibe analysis.
       ComponentFailureMode	= 7;	// Enum for the Component Failure Mechanism analysis.
@@ -49,6 +49,17 @@ message RunAnalysisRequest {
   }
 
   repeated Analysis analyses				= 3;
+}
+
+/**
+ * Request to list the valid Harmonic Vibe input fields for the provided model source and user configuration.
+ */
+message GetHarmonicVibeInputFieldsRequest {
+  optional ModelSource modelSource = 1;	// Optional model source. Default: GENERATED
+}
+
+message GetHarmonicVibeInputFieldsResponse {
+  repeated string fieldName = 1;
 }
 
 /**
@@ -103,6 +114,14 @@ message UpdateNaturalFrequencyPropsRequest {
   optional string analysisTempUnits = 11; 		// Temperature units (C, F, or K).
 }
 
+message UpdateThermalMechPropsRequest {
+  string project = 1;                           // Project name.
+  repeated string ccaName = 2;                  // CCA names.
+  int32 thermalResultCount = 3;                 // Thermal Mech Result Count.
+  bool partValidationEnabled = 4;               // Part Validation.
+  bool requireMaterialAssignmentEnabled = 5;    // Require Material Assignment.
+}
+
 /**
   * Request to run Sherlock strain map analysis given the project name, CCA name, and strain maps.
   */
@@ -129,12 +148,79 @@ message RunStrainMapAnalysisRequest {
   repeated StrainMapAnalysis strainMapAnalyses = 3;
 }
 
+/**
+ * Enumeration defining the types of suppored element orders.
+ */
+enum ElementOrder {
+  UnknownOrder	= 0;	// Default enum to catch invalid element order.
+  Linear		= 1;	// Enum for first order linear elements.
+  Quadratic		= 2;	// Enum for second order quadratic elements.
+  SolidShell	= 3;	// Enum for solid shell elements.
+}
+
+message GetPcbModelingInputFieldsRequest {
+}
+
+message GetPcbModelingInputFieldsResponse {
+  repeated string fieldName = 1;
+}
+
+/**
+ * Request to set FEA analysis PCB Modeling properties.
+ */
+message UpdatePcbModelingPropsRequest {
+  string project			= 1;	// Sherlock project name.
+  repeated string ccaNames	= 2;	// The CCA names for which to assign the PCB modeling parameters.
+
+  message Analysis { 
+    enum AnalysisType {
+      UnknownAnalysisType	= 0;	// Default enum to catch invalid analysis.
+      HarmonicVibe			= 1;	// Enum for the Harmonic Vibe analysis.
+      ICTAnalysis 			= 2;	// Enum for the ICT analysis.
+      MechanicalShock		= 3;	// Enum for the Mechanical Shock analysis.
+      NaturalFreq 			= 4;	// Enum for the Natural Frequency analysis.
+      RandomVibe 			= 5;	// Enum for the Random Vibe analysis.
+      ThermalMech			= 6;	// Enum for the Thermal Mech analysis.
+    }
+
+    enum PcbModelType {
+      UnknownMeshType	= 0; 	// Default enum to catch invalid mesh type.
+      Bonded			= 1;	// Bonded FEA model.
+    }
+
+    enum PcbMaterialModel {
+      UnknownPcbModel	= 0;	// Default enum to catch invalid PCB model
+      Uniform			= 1;	// Enum for uniform PCB model
+      Layered			= 2;	// Enum for layered PCB model
+      UniformElements	= 3;	// Enum for uniform elements PCB model
+      LayeredElements	= 4;	// Enum for layered elements PCB model
+    }
+
+    AnalysisType type					= 1;	// The type of analysis for which PCB modeling properties apply.
+    PcbModelType modelType				= 2;	// The PCB modeling mesh type.
+    bool modelingRegionEnabled			= 3;	// Indicates if modeling regions are enabled.
+    PcbMaterialModel pcbMaterialModel	= 4;	// The PCB modeling PCB model type.
+    optional int32 pcbMaxMaterials		= 5;	// The number of PCB materials for Uniform Elements and Layered Elements PCB model types.
+    ElementOrder pcbElemOrder			= 6;	// The element order for PCB elements.
+    double pcbMaxEdgeLength				= 7;	// The maximum mesh size for PCB elements.
+    string pcbMaxEdgeLengthUnits		= 8;	// The length units for the maximum mesh size.
+    double pcbMaxVertical				= 9;	// The maximum vertical mesh size for PCB elements.
+    string pcbMaxVerticalUnits			= 10;	// The length units for the maximum vertical mesh size.
+    bool quadsPreferred					= 11;	// Indicates that the meshing engine should attempt to generate quad-shaped elements when creating the mesh.
+  }
+  
+  repeated Analysis analyses	= 3;
+}
+
 service SherlockAnalysisService {
   // Runs one or more Sherlock analysis.
   rpc runAnalysis(RunAnalysisRequest) returns (ReturnCode);
   
   // Run Sherlock strain map analysis.
   rpc runStrainMapAnalysis(RunStrainMapAnalysisRequest) returns (ReturnCode);
+  
+  // Returns the list of valid Harmonic Vibe input fields for the provided model source and user configuration.
+  rpc getHarmonicVibeInputFields(GetHarmonicVibeInputFieldsRequest) returns (GetHarmonicVibeInputFieldsResponse);
   
   // Returns the list of valid Random Vibe input fields for the provided model source and user configuration.
   rpc getRandomVibeInputFields(GetRandomVibeInputFieldsRequest) returns (GetRandomVibeInputFieldsResponse);
@@ -147,4 +233,13 @@ service SherlockAnalysisService {
   
   // Updates the analysis properties for Natural Frequency analysis.
   rpc updateNaturalFrequencyProps(UpdateNaturalFrequencyPropsRequest) returns (ReturnCode);
+  
+  // Updates the analysis properties for Thermal Mech analysis
+  rpc updateThermalMechProps(UpdateThermalMechPropsRequest) returns (ReturnCode);
+
+  // Returns the list of valid PCB MOdeling property field.
+  rpc getPcbModelingInputFields(GetPcbModelingInputFieldsRequest) returns (GetPcbModelingInputFieldsResponse);
+  
+  // Updates the PCB modeling properties for the provided analysis types.
+  rpc updatePcbModelingProps(UpdatePcbModelingPropsRequest) returns (ReturnCode);
 }
