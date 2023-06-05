@@ -63,6 +63,34 @@ message GetHarmonicVibeInputFieldsResponse {
 }
 
 /**
+ *Request to set the harmonic vibe analysis properties one or more CCA's
+ * in the project indicated.
+ */
+message UpdateHarmonicVibePropsRequest {
+  string project = 1;									// Project name.
+
+  message HarmonicVibe {
+    string ccaName = 1;									// CCA name for which the harmonic vibe properties are set.
+  	optional ModelSource modelSource = 2;				// Optional model source. Default: GENERATED
+  	optional int32 harmonicVibeCount = 3;				// Number of harmonic result layers to generate.
+  	optional string harmonicVibeDamping = 4;			// Modal Damping Ratio(s).
+  	optional bool partValidationEnabled = 5;			// Flag indicating if part validation should be performed.
+  	optional bool requireMaterialAssignmentEnabled = 6;	// Flag indicating if material assignment is required.
+  	optional double analysisTemp = 7;					// Temperature.
+  	optional string analysisTempUnits = 8; 				// Temperature units.
+  	optional string forceModelRebuild = 9;				// Model Creation. Valid values are "FORCE" or "AUTO"
+  	optional bool filterByEventFrequency = 10;			// Flag indicating if harmonic results outside selected event range are imported.
+  	optional double naturalFreqMin = 11;				// Min Frequency. For NX Nastran analysis only.
+  	optional string naturalFreqMinUnits = 12;			// Min Frequency units. For NX Nastran analysis only.
+  	optional double naturalFreqMax = 13;				// Max Frequency. For NX Nastran analysis only.
+  	optional string naturalFreqMaxUnits = 14;			// Max Frequency units. For NX Nastran analysis only.
+  	optional bool reuseModalAnalysis = 15;				// Reuse Natural Frequency. For NX Nastran analysis only.
+  }
+  
+  repeated HarmonicVibe harmonicVibeProperties = 2;
+}
+
+/**
  * Request to list the valid Random Vibe input fields for the provided model source and user configuration.
  */
 message GetRandomVibeInputFieldsRequest {
@@ -221,6 +249,9 @@ service SherlockAnalysisService {
   
   // Returns the list of valid Harmonic Vibe input fields for the provided model source and user configuration.
   rpc getHarmonicVibeInputFields(GetHarmonicVibeInputFieldsRequest) returns (GetHarmonicVibeInputFieldsResponse);
+  
+  // Updates the analysis properties for Harmonic Vibe analysis.
+  rpc updateHarmonicVibeProps(UpdateHarmonicVibePropsRequest) returns (ReturnCode);
   
   // Returns the list of valid Random Vibe input fields for the provided model source and user configuration.
   rpc getRandomVibeInputFields(GetRandomVibeInputFieldsRequest) returns (GetRandomVibeInputFieldsResponse);
