@@ -218,7 +218,7 @@ message GetPartLocationResponse {
  */
 message UpdatePartsListPropertiesRequest {
   string projectName           =1; // Sherlock project name.
-  boolean updateWholePartList  =2; // Indicates wether or not updates are applied to all parts in a list.         
+  bool updateWholePartList  =2; // Indicates wether or not updates are applied to all parts in a list.         
   message Part{
     string refDes              =2; // The Ref Des Value(s) to be updated (Only applies if updateWholePartList is false).
     message Property {
