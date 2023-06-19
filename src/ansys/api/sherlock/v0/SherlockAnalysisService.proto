@@ -80,9 +80,9 @@ message UpdateHarmonicVibePropsRequest {
   	optional string analysisTempUnits = 8; 				// Temperature units.
   	optional string forceModelRebuild = 9;				// Model Creation. Valid values are "FORCE" or "AUTO"
   	optional bool filterByEventFrequency = 10;			// Flag indicating if harmonic results outside selected event range are imported.
-  	optional double naturalFreqMin = 11;				// Min Frequency. For NX Nastran analysis only.
+  	optional uint32 naturalFreqMin = 11;				// Min Frequency. For NX Nastran analysis only.
   	optional string naturalFreqMinUnits = 12;			// Min Frequency units. For NX Nastran analysis only.
-  	optional double naturalFreqMax = 13;				// Max Frequency. For NX Nastran analysis only.
+  	optional uint32 naturalFreqMax = 13;				// Max Frequency. For NX Nastran analysis only.
   	optional string naturalFreqMaxUnits = 14;			// Max Frequency units. For NX Nastran analysis only.
   	optional bool reuseModalAnalysis = 15;				// Reuse Natural Frequency. For NX Nastran analysis only.
   }
@@ -240,6 +240,40 @@ message UpdatePcbModelingPropsRequest {
   repeated Analysis analyses	= 3;
 }
 
+message UpdateMechanicalShockPropsRequest {
+  string project = 1;										// Project name.
+  
+  message MechanicalShock {
+	string ccaName = 1; 									// CCA name for which the mechanical properties are set.
+	optional ModelSource modelSource = 2;					// Default is GENERATED.
+	optional int32 shockResultCount = 3;					// Mechanical Shock Result Count.
+	optional double criticalShockStrain = 4;				// Critical Shock Strain.
+	optional string criticalShockStrainUnits = 5;			// Critical Shock Strain units.
+	optional bool partValidationEnabled = 6;				// Flag indicating if part validation should be performed.
+	optional bool requireMaterialAssignmentEnabled = 7;		// Flag indicating if material assignment is required.
+	optional string forceModelRebuild = 8;					// Model Creation. Valid values are "FORCE" or "AUTO"
+	optional uint32 naturalFreqMin = 9;						// Min Frequency.
+	optional string naturalFreqMinUnits = 10;				// Min Frequency units.
+	optional uint32 naturalFreqMax = 11;					// Max Frequency.
+	optional string naturalFreqMaxUnits = 12;				// Max Frequency units.
+	optional double analysisTemp = 13;						// Temperature.
+	optional string analysisTempUnits = 14;					// Temperature units.
+  }
+  
+  repeated MechanicalShock mechanicalShockProperties = 2;
+}
+
+/**
+ * Request to list the valid Mechanical shock input fields for the provided model source and user configuration.
+ */
+message GetMechanicalShockInputFieldsRequest {
+  optional ModelSource modelSource = 1;	// Optional model source. Default: GENERATED
+}
+
+message GetMechanicalShockInputFieldsResponse {
+  repeated string fieldName = 1;
+}
+
 service SherlockAnalysisService {
   // Runs one or more Sherlock analysis.
   rpc runAnalysis(RunAnalysisRequest) returns (ReturnCode);
@@ -258,6 +292,12 @@ service SherlockAnalysisService {
   
   // Updates the analysis properties for Random Vibe analysis.
   rpc updateRandomVibeProps(UpdateRandomVibePropsRequest) returns (ReturnCode);
+  
+  // Returns the list of valid Mechanical Shock input fields for the provided model source and user configuration.
+  rpc getMechanicalShockInputFields(GetMechanicalShockInputFieldsRequest) returns (GetMechanicalShockInputFieldsResponse);
+ 
+  // Updates the analysis properties for Mechanical Shock analysis.
+  rpc updateMechanicalShockProps(UpdateMechanicalShockPropsRequest) returns (ReturnCode);
   
   // Returns the list of valid Natural Frequency property fields given the user configuration.
   rpc getNaturalFrequencyInputFields(GetNaturalFrequencyInputFieldsRequest) returns (GetNaturalFrequencyInputFieldsResponse);
