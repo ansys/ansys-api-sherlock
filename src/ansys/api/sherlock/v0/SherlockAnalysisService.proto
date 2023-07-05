@@ -274,6 +274,31 @@ message GetMechanicalShockInputFieldsResponse {
   repeated string fieldName = 1;
 }
 
+/**
+ * Request to list the valid Solder Fatigue input fields given the user configuration.
+ */
+message GetSolderFatigueInputFieldsRequest {
+}
+
+message GetSolderFatigueInputFieldsResponse {
+  repeated string fieldName = 1;
+}
+
+message UpdateSolderFatiguePropsRequest {
+  string project = 1;										// Project name.
+  
+  message SolderFatigue {
+	string ccaName = 1; 									// CCA name for which the mechanical properties are set.
+	optional string solderMaterial = 2;						// Name of the solder material.
+	optional double partTemp = 3;							// Part temperature rise.
+	optional string partTempUnits = 4;						// Part temperature rise units.
+	optional bool partTempRiseMinEnabled = 5;				// Flag indicating if part temperature minimum rise should be enabled.
+	optional bool partValidationEnabled = 6;				// Flag indicating if part validation should be performed.
+  }
+  
+  repeated SolderFatigue solderFatigueProperties = 2;
+}
+
 service SherlockAnalysisService {
   // Runs one or more Sherlock analysis.
   rpc runAnalysis(RunAnalysisRequest) returns (ReturnCode);
@@ -299,6 +324,9 @@ service SherlockAnalysisService {
   // Updates the analysis properties for Mechanical Shock analysis.
   rpc updateMechanicalShockProps(UpdateMechanicalShockPropsRequest) returns (ReturnCode);
   
+  // Updates the analysis properties for Solder Fatigue analysis.
+  rpc updateSolderFatigueProps(UpdateSolderFatiguePropsRequest) returns (ReturnCode);
+  
   // Returns the list of valid Natural Frequency property fields given the user configuration.
   rpc getNaturalFrequencyInputFields(GetNaturalFrequencyInputFieldsRequest) returns (GetNaturalFrequencyInputFieldsResponse);
   
@@ -313,4 +341,7 @@ service SherlockAnalysisService {
   
   // Updates the PCB modeling properties for the provided analysis types.
   rpc updatePcbModelingProps(UpdatePcbModelingPropsRequest) returns (ReturnCode);
+  
+  // Returns the list of valid Solder Fatigue property fields given the user configuration.
+  rpc getSolderFatigueInputFields(GetSolderFatigueInputFieldsRequest) returns (GetSolderFatigueInputFieldsResponse);
 }
