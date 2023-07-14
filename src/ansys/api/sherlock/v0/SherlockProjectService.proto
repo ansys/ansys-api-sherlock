@@ -142,6 +142,22 @@ message ListCCAsResponse {
   repeated CCA ccas				= 2;	// CCA's assigned to the project.
 }
 
+message CCA {
+  string ccaName = 1; 									// Name of the Circuit Card
+  optional string description = 2; 						// Description of the circuit card
+  optional string defaultSolderType = 3; 				// Default solder type
+  optional double defaultStencilThickness = 4; 			// Default stencil thickness
+  optional string defaultStencilThicknessUnits = 5; 	// Default stencil thickness units
+  optional double defaultPartTempRise = 6; 				// Default part temp rise
+  optional string defaultPartTempRiseUnits = 7; 		// Default part temp rise units
+  optional bool guessPartPropertiesEnabled = 8; 		// Whether to enable guess part properties
+}
+
+message AddCcaRequest {
+  string project = 1;		// Name of the project
+  repeated CCA CCAs = 2;	// CCAs to add
+}
+
 service SherlockProjectService {
   // Generates the project report and return it via streaming.
   rpc genReport(GenReportRequest) returns (stream GenReportResponse);
@@ -166,4 +182,7 @@ service SherlockProjectService {
 
    // Returns a list of circuit cards, their properties, and sub-assemblies for a given Sherlock project.
   rpc listCCAs(ListCCAsRequest) returns (ListCCAsResponse);
+  
+  // Creates a new circuit card assembly.
+  rpc addCCA(AddCcaRequest) returns (ReturnCode);
 }
