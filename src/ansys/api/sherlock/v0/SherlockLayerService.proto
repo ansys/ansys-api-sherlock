@@ -249,8 +249,73 @@ message UpdateTestPointsResponse {
   repeated string updateError	= 2;	// Test Points update error messages.
 }
 
+message PolygonalShape {
+    
+  message Point {
+    double x = 1;					// The x coordinate of the point
+    double y = 2;					// The y coordinate of the point
+  }
+    
+  repeated Point points = 1;		// The points used to define the polygonal shape, must be >= 3
+  optional double rotation = 2;		// The rotation of the shape
+}
+  
+message RectangularShape {
+  optional double length = 1;		// The length of the rectangle
+  optional double width = 2;		// The width of the rectangle
+  optional double centerX = 3;		// The x coordinate of the center of the rectangle
+  optional double centerY = 4;		// The y coordinate of the center of the rectangle
+  optional double rotation = 5;		// The rotation of the rectangle
+}
+  
+message SlotShape {
+  optional double length = 1;		// The length of the slot shape
+  optional double width = 2;		// The width of the slot shape
+  optional uint32 nodeCount = 3;	// The number of nodes
+  optional double centerX = 4;		// The x coordinate of the center of the slot shape
+  optional double centerY = 5;		// The x coordinate of the center of the slot shape
+  optional double rotation = 6;		// The rotation of the shape
+}
+  
+message CircularShape {
+  optional double diameter = 1;		// The diameter of the circle
+  optional uint32 nodeCount = 2;	// The number of nodes
+  optional double centerX = 3;		// The x coordinate of the center of the circle
+  optional double centerY = 4;		// The x coordinate of the center of the circle
+  optional double rotation = 5;		// The rotation of the shape
+}
+  
+message PCBShape {
+}
+
+message AddPottingRegionRequest {
+  
+  message PottingRegion {
+    string ccaName = 1;							// The name of the CCA
+    optional string pottingID = 2;				// The potting ID, must be unique
+    optional string pottingSide = 3;			// The potting side, options are "TOP", "BOT", or "BOTTOM"
+    optional string pottingMaterial = 4;		// The potting material
+    optional string pottingUnits = 5;			// The units to use for the potting region
+    optional double pottingThickness = 6;		// The potting thickness
+    optional double pottingStandoff = 7;		// The potting standoff
+  
+    oneof Shape {
+      PolygonalShape polygonalShape = 8;		// Used to add a region with a polygonal shape
+  	  RectangularShape rectangularShape = 9;	// Used to add a region with a rectangular shape
+  	  SlotShape slotShape = 10;					// Used to add a region with a slot shape
+  	  CircularShape circularShape = 11;			// Used to add a region with a circular shape
+  	  PCBShape pCBShape = 12;					// Used to add a region with a PCB shape
+    }
+  }
+  
+  string project = 1;							// The name of the Sherlock project to add the potting regions to
+  repeated PottingRegion pottingRegions = 2;	// The potting regions to add
+}
 
 service SherlockLayerService {
+  // Add a potting region with the specified shape and properties
+  rpc addPottingRegion(AddPottingRegionRequest) returns (ReturnCode);
+
   // Delete all ICT fixtures in specific cca of specific project.
   rpc deleteAllICTFixtures(DeleteAllICTFixturesRequest) returns (ReturnCode);
 
