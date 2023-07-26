@@ -142,6 +142,15 @@ message ListCCAsResponse {
   repeated CCA ccas				= 2;	// CCA's assigned to the project.
 }
 
+/**
+ * Request to add a project to Sherlock
+ */
+ message AddProjectRequest {
+  string project          = 1;
+  string category         = 2;
+  string description      = 3;
+}
+
 message CCA {
   string ccaName = 1; 									// Name of the Circuit Card
   optional string description = 2; 						// Description of the circuit card
@@ -183,6 +192,9 @@ service SherlockProjectService {
    // Returns a list of circuit cards, their properties, and sub-assemblies for a given Sherlock project.
   rpc listCCAs(ListCCAsRequest) returns (ListCCAsResponse);
   
+  // Add a project to Sherlock
+  rpc addProject(AddProjectRequest) returns (ReturnCode);
+
   // Creates a new circuit card assembly.
   rpc addCCA(AddCcaRequest) returns (ReturnCode);
 }
