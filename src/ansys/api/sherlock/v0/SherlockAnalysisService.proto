@@ -177,7 +177,7 @@ message RunStrainMapAnalysisRequest {
 }
 
 /**
- * Enumeration defining the types of suppored element orders.
+ * Enumeration defining the types of supported element orders.
  */
 enum ElementOrder {
   UnknownOrder	= 0;	// Default enum to catch invalid element order.
@@ -299,6 +299,23 @@ message UpdateSolderFatiguePropsRequest {
   repeated SolderFatigue solderFatigueProperties = 2;
 }
 
+/**
+ * Request to update FEA Part Modeling Properties
+ */
+message UpdatePartModelingRequest {
+  string project	 						= 1;	// Sherlock project name.
+  string ccaName 							= 2;	// The CCA name.
+  bool partEnabled			 				= 3;	// Whether to enable part modeling. Ignores all other fields if part modeling is disabled.
+  optional double partMinSize 				= 4;	// The minimum part size
+  optional string partMinSizeUnits 			= 5;	// Units for minimum part size
+  optional string partElemOrder 			= 6;	// Element order
+  optional double partMaxEdgeLength 		= 7;	// Maximum mesh size
+  optional string partMaxEdgeLengthUnits 	= 8;	// Units for maximum mesh size
+  optional double partMaxVertical 			= 9;	// Vertical mesh size
+  optional string partMaxVerticalUnits 		= 10;	// Units for vertical mesh size
+  optional bool partResultsFiltered 		= 11;	// Whether to enable filtered part results
+}
+
 service SherlockAnalysisService {
   // Runs one or more Sherlock analysis.
   rpc runAnalysis(RunAnalysisRequest) returns (ReturnCode);
@@ -344,4 +361,7 @@ service SherlockAnalysisService {
   
   // Returns the list of valid Solder Fatigue property fields given the user configuration.
   rpc getSolderFatigueInputFields(GetSolderFatigueInputFieldsRequest) returns (GetSolderFatigueInputFieldsResponse);
+  
+  // Updates the part modeling properties for a given project's CCA.
+  rpc updatePartModelingProperties(UpdatePartModelingRequest) returns (ReturnCode);
 }
