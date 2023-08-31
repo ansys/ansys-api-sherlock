@@ -316,6 +316,33 @@ message UpdatePartModelingRequest {
   optional bool partResultsFiltered 		= 11;	// Whether to enable filtered part results
 }
 
+/**
+ * Request to list the valid ICT analysis input fields given the user configuration.
+ */
+message GetICTAnalysisInputFieldsRequest {
+}
+
+message GetICTAnalysisInputFieldsResponse {
+  repeated string fieldName = 1;
+}
+
+message UpdateICTAnalysisPropsRequest {
+  string project = 1;									// Project name.
+  
+  message ICTAnalysis {
+    string ccaName = 1;									// CCA name.
+    optional double applicationTime = 2;				// Application Time
+    optional string applicationTimeUnits = 3;			// Application Time Units
+    optional uint32 numberOfEvents = 4;					// Number of Events.
+    optional bool partValidationEnabled = 5;			// Part Validation.
+    optional bool requireMaterialAssignmentEnabled = 6;	// Flag indicating if material assignment is required.
+    optional string forceModelRebuild = 7;				// Model Creation. Valid values are "FORCE" or "AUTO"
+    optional int32 ictResultCount = 8;					// Number of ICT layers to generate when using thermal analysis.
+  }
+  
+  repeated ICTAnalysis ictAnalysisProperties = 2;
+}
+
 service SherlockAnalysisService {
   // Runs one or more Sherlock analysis.
   rpc runAnalysis(RunAnalysisRequest) returns (ReturnCode);
@@ -364,4 +391,11 @@ service SherlockAnalysisService {
   
   // Updates the part modeling properties for a given project's CCA.
   rpc updatePartModelingProperties(UpdatePartModelingRequest) returns (ReturnCode);
+
+  // Returns the list of valid ICT analysis property fields given the user configuration.
+  rpc getICTAnalysisInputFields(GetICTAnalysisInputFieldsRequest) returns (GetICTAnalysisInputFieldsResponse);
+  
+  // Updates the analysis properties for ICT analysis.
+  rpc updateICTAnalysisProps(UpdateICTAnalysisPropsRequest) returns (ReturnCode);
+  
 }
