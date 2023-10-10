@@ -1,4 +1,4 @@
-// © 2020 ANSYS, Inc.  Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -7,14 +7,14 @@ option java_package = "sherlock.grpc";
 option java_outer_classname = "SherlockPartsServiceProto";
 
 /**
- * Empty request to list the available parts libraries.
+ * Request to list the available parts libraries.
  */
 message ListPartsLibrariesRequest {
 }
 
 /**
  * Determines how parts in the parts list are matched against parts 
- * in the AVL or Part Library
+ * in the AVL or Part Library.
  */
 enum MatchingMode {
   Both	= 0;		// Matches both part number and manufacturer.
@@ -23,7 +23,7 @@ enum MatchingMode {
 
 /**
  * Determines what happens when there are duplicate matches for parts in the part list
- * against parts in the AVL or Part Library
+ * against parts in the AVL or Part Library.
  */
 enum DuplicationMode {
   First	= 0;					// Uses first matched when there is duplication.
@@ -32,22 +32,21 @@ enum DuplicationMode {
 }
 
 /**
- * Determines what fields in the part list will get updated by the AVL
- * The internal part number, vendor and part number or none
+ * Determines what fields in the part list will get updated by the AVL.
  */
 enum AVLPartNum{
-  AssignInternalPartNum = 0;      // Assign Internal Part Number
-  AssignVendorAndPartNum = 1;     // Assign Vendor & Part Number
-  DoNotChangeVendorOrPartNum = 2; // Do Not Change Vendor / Part Number
+  AssignInternalPartNum = 0;      // Assign internal part number.
+  AssignVendorAndPartNum = 1;     // Assign vendor & part number.
+  DoNotChangeVendorOrPartNum = 2; // Do not change vendor / part number.
 }
 
 /**
  * Determines if the part description in the parts list 
- * will be updated by the AVL
+ * will be updated by the AVL.
  */
 enum AVLDescription{
-  AssignApprovedDescription = 0;  // Assign Approved Description
-  DoNotChangeDescription = 1;     // Do Not Change Description
+  AssignApprovedDescription = 0;  // Assign approved description.
+  DoNotChangeDescription = 1;     // Do not change description.
 }
 
 /**
@@ -59,7 +58,7 @@ message ListPartsLibrariesResponse {
 }
 
 /**
- * Request to update a parts list based on matching and duplication preference provided.
+ * Request to update a parts list based on matching and duplication preferences provided.
  */
 message UpdatePartsListRequest {
   string project				= 1;	// Sherlock project name.
@@ -72,13 +71,16 @@ message UpdatePartsListRequest {
 }
 
 /**
- * Contains the status of the update as well as all the update error messages.
+ * Contains the status of the update as well as all of the update error messages.
  */
 message UpdatePartsListResponse {
   ReturnCode returnCode 		= 1;	// Status code of response.
   repeated string updateError	= 2;	// Parts update error messages.
 }
 
+/**
+ * Request to update the Parts List from AVL.
+ */
 message UpdatePartsListFromAVLRequest {
   string project      = 1;
   string ccaName      = 2;
@@ -118,7 +120,7 @@ message ListPartsNotUpdatedResponse {
 }
 
 /**
- * Request to enable lead modeling for all non LEADLESS parts leads.
+ * Request to enable Lead Modeling for all non LEADLESS parts leads.
  */
 message UpdateLeadModelingRequest {
   string project				= 1;	// Sherlock project name.
@@ -154,7 +156,7 @@ message UpdatePartsLocationsRequest {
     string refDes			= 1;	// Ref Des of the part.
     string x				= 2;	// Location of the part along the X axis.
     string y				= 3;	// Location of the part along the Y axis.
-    string rotation			= 4;	// Orientation of the part on the board in degrees.
+    string rotation			= 4;	// Rotation of the part on the board in degrees.
     string locationUnits	= 5;	// Unit of length for the part location. Supported values are IN, MM, M, MIL, MICRON, and NM.
     string boardSide		= 6;	// Side of board on which the component exists. Supported values are TOP and BOTTOM.
     string mirrored			= 7;	// Indicates if the component is mirrored across the Y-axis. Supported values are Y, and N.
@@ -189,7 +191,7 @@ message UpdatePartsLocationsByFileResponse {
 }
 
 /**
- * Empty request to list valid location units.
+ * Request to list valid location units.
  */
 message GetPartLocationUnitsRequest {
 }
@@ -203,7 +205,7 @@ message GetPartLocationUnitsResponse {
 }
 
 /**
- * Empty request to list valid board sides.
+ * Request to list valid board sides.
  */
 message GetBoardSidesRequest {
 }
@@ -234,7 +236,7 @@ message GetPartLocationResponse {
   message LocationData {
     double x				= 1;	// Location of the part along the X axis.
     double y				= 2;	// Location of the part along the Y axis.
-    double rotation			= 3;	// Orientation of the part on the board in degrees.
+    double rotation			= 3;	// Rotation of the part on the board in degrees.
     string locationUnits	= 4;	// Unit of length for the part location.
     string boardSide		= 5;	// Side of board on which the component exists.
     bool	mirrored		= 6;	// Indicates if the component is mirrored across the Y-axis.
@@ -251,7 +253,7 @@ service SherlockPartsService {
   // Update the parts list for a project's CCA.
   rpc updatePartsList(UpdatePartsListRequest) returns (UpdatePartsListResponse);
 
-  // Update the parts list from the AVL
+  // Update the parts list from the AVL.
   rpc updatePartsListFromAVL(UpdatePartsListFromAVLRequest) returns (UpdatePartsListFromAVLResponse);
 
   // List the parts that have not been updated from the Sherlock Part Library.
@@ -281,4 +283,3 @@ service SherlockPartsService {
   // Get the location properties for a part.
   rpc getPartLocation(GetPartLocationRequest) returns (GetPartLocationResponse);
 }
-

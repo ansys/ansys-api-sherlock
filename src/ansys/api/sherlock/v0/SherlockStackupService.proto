@@ -1,4 +1,4 @@
-// © 2020 ANSYS, Inc.  Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -14,7 +14,7 @@ message ListLaminatesRequest {
 }
 
 /**
- * Represents the properties for all CCAs and their corresponding laminates
+ * Represents the properties for all CCAs and their corresponding laminates.
  */
 message ListLaminatesResponse {
   ReturnCode returnCode = 1;	// Status code of response.
@@ -31,10 +31,12 @@ message ListLaminatesResponse {
       string thicknessUnit			= 6;	// Laminate thickness unit.
       string constructionStyle		= 7;	// Construction style.
  
-/** Represents the layers with a glass construction. */
-      message GlassConstruction {
+/**
+ * Represents the layers with a glass construction. 
+ */
+message GlassConstruction {
         string style 			= 1;	// Glass construction style.
-        double resinPercentage  = 2;	// Glass construction Resin percentage.
+        double resinPercentage  = 2;	// Glass construction resin percentage.
         double thickness 		= 3;	// Glass construction thickness.
         string thicknessUnit 	= 4;	// Glass construction thickness unit.
       }
@@ -56,7 +58,7 @@ message ListLaminatesResponse {
 /**
  * Represents the laminate properties requested to be updated.
  * To update the material, valid values must be provided for manufacturer, grade, and material.
- * To update a thickness, a thickness unit must be provided also.
+ * To update a thickness, a thickness unit must be provided.
  * Glass construction should only be set when the construction style is not the "DEFAULT" value.
  * Any property left out or set to "" or 0.0 will not be updated.
  */
@@ -84,7 +86,7 @@ message UpdateLaminateRequest {
 }
 
 /**
- * Empty request to list valid laminate thickness units.
+ * Request to list valid laminate thickness units.
  */
 message ListLaminateThicknessUnitsRequest {
 }
@@ -98,7 +100,7 @@ message ListLaminateThicknessUnitsResponse {
 }
 
 /**
- * Empty request to list valid conductor materials.
+ * Request to list valid conductor materials.
  */
 message ListConductorMaterialsRequest {
 }
@@ -112,7 +114,7 @@ message ListConductorMaterialsResponse {
 }
 
 /**
- * Empty request to list valid fiber materials.
+ * Request to list valid fiber materials.
  */
 message ListFiberMaterialsRequest {
 }
@@ -126,13 +128,13 @@ message ListFiberMaterialsResponse {
 }
 
 /**
- * Empty request to list valid materials manufacturers names.
+ * Request to list valid names of materials manufacturers.
  */
 message ListLaminateMaterialsManufacturersRequest {
 }
 
 /**
- * Represents a list of valid materials manufacturers names.
+ * Represents a list of valid names of materials manufacturers.
  */
 message ListLaminateMaterialsManufacturersResponse {
   ReturnCode returnCode 		= 1;	// Status code of response.
@@ -148,7 +150,7 @@ message ListLaminateMaterialsRequest {
 }
 
 /**
- * Represents a list of manufacturers materials.
+ * Represents a list of materials from a given manufacturer.
  */
 message ListLaminateMaterialsResponse {
   ReturnCode returnCode = 1;					// Status code of response.
@@ -165,7 +167,7 @@ message ListLaminateMaterialsResponse {
 }
 
 /**
- * Empty request to list valid construction styles.
+ * Request to list valid construction styles.
  */
 message ListConstructionStylesRequest {
 }
@@ -215,7 +217,7 @@ message ListConductorLayersResponse {
 
 /**
  * Represents the conductor layer properties requested to be updated.
- * To update a thickness, a thickness unit must be provided also.
+ * To update a thickness, a thickness unit must be provided.
  * Any property left out or set to "" or 0.0 will not be updated.
  */
 message UpdateConductorLayerRequest {
@@ -231,7 +233,7 @@ message UpdateConductorLayerRequest {
 }
 
 /**
- * Requests the number of layers in the stackup.
+ * Request the number of layers in the stackup.
  */
 message GetLayerCountRequest {
   string project				= 1;	// Sherlock project name.
@@ -247,7 +249,7 @@ message GetLayerCountResponse {
 }
 
 /**
- * Requests the total thickness on all conductor layers in a stackup.
+ * Request the total thickness on all conductor layers in a stackup.
  */
 message GetTotalConductorThicknessRequest {
   string project				= 1;	// Sherlock project name.
@@ -264,7 +266,7 @@ message GetTotalConductorThicknessResponse {
 }
 
 /**
- * Requests a summary of the stackup properties.
+ * Request a summary of the stackup properties.
  */
 message GetStackupPropsRequest {
   string project				= 1;	// Sherlock project name.
@@ -287,7 +289,7 @@ message GetStackupPropsResponse {
 }
 
 /**
- * Represents the properties of a new stackup to be generated.
+ * Request to generate stackup layers for a CCA.
  */
 message GenStackupRequest {
   string project					= 1;	// Sherlock project name.
@@ -324,7 +326,7 @@ service SherlockStackupService {
   // List all fiber materials.
   rpc listFiberMaterials(ListFiberMaterialsRequest) returns (ListFiberMaterialsResponse);
   
-  // List all laminate materials manufacturers
+  // List all laminate materials manufacturers.
   rpc listLaminateMaterialsManufacturers(ListLaminateMaterialsManufacturersRequest) returns (ListLaminateMaterialsManufacturersResponse);
   
   // List all laminate materials (both based on manufacturer specified or without).
@@ -347,7 +349,7 @@ service SherlockStackupService {
   // Returns the total thickness for all conductor layers.
   rpc getTotalConductorThickness(GetTotalConductorThicknessRequest) returns (GetTotalConductorThicknessResponse);
   
-  // Returns a summary of the stackup properties
+  // Returns a summary of the stackup properties.
   rpc getStackupProps(GetStackupPropsRequest) returns (GetStackupPropsResponse);
   
   // Generate stackup layers.
