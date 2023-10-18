@@ -1,4 +1,4 @@
-// © 2020 ANSYS, Inc.  Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 option java_package = "sherlock.grpc";
@@ -13,14 +13,14 @@ message ReturnCode {
 }
 
 /**
- * Empty request to exit the gRPC connection.
+ * Request to exit the gRPC connection.
  */
 message ExitRequest {
    bool closeSherlockClient = 1;	// If set to true, exits the Sherlock client if it is opened. Otherwise, just closes the gRPC connection.
 }
 
 /**
- * Empty request to check if the gRPC connection is open.
+ * Request to check if the gRPC connection is open.
  */
 message HealthCheckRequest {
 }
@@ -38,6 +38,9 @@ message HealthCheckResponse {
   int32 port = 2;		// Listening port number on server.
 }
 
+/**
+ * Check if the Sherlock client is still loading.
+ */
 message IsSherlockClientLoadingRequest {
 }
 
@@ -88,18 +91,17 @@ message ListUnitsResponse {
 }
 
 /**
-  * Represents a request for a list of valid solder materials
+  * Request for a list of valid solder materials.
   */
 message GetSoldersRequest {
 }
 
 /**
-  * Represents a list of valid solder materials
+  * Represents a list of valid solder materials.
   */
 message GetSoldersResponse {
-	repeated string solderName = 1; // List of valid solder materials
+	repeated string solderName = 1; // List of valid solder materials.
 }
-
 
 service SherlockCommonService {
 
@@ -109,7 +111,7 @@ service SherlockCommonService {
   // Signals for gRPC connection to shutdown.
   rpc exit(ExitRequest) returns (ReturnCode);
   
-  // Check if SherlockClient is still loading.
+  // Check if the Sherlock client is still loading.
   rpc isSherlockClientLoading(IsSherlockClientLoadingRequest) returns (ReturnCode);
   
   // Returns a list of valid units of the provided unit type.
