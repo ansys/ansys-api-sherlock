@@ -1,4 +1,4 @@
-// © 2020 ANSYS, Inc.  Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -7,8 +7,8 @@ option java_package = "sherlock.grpc";
 option java_outer_classname = "SherlockModelServiceProto";
 
 /**
-  * Request to export an FEA model
-  */
+ * Request to export an FEA model.
+ */
 message ExportFEAModelRequest {
   string project							= 1;	// Sherlock project name.
   string ccaName							= 2;	// The CCA name.
@@ -54,9 +54,12 @@ message ExportFEAModelRequest {
   bool displayModel							= 8;	// Display model after export.
   bool clearFEADatabase						= 9;	// Clear FEA Database before defining model.
   bool useFEAModelID						= 10;	// Use FEA Model ID.
-  string coordinateUnits					= 11;	// // Units of exported model coordinates, valid values are "in", "mm", "m", "mil", "micron", "nm".
+  string coordinateUnits					= 11;	// Units of exported model coordinates, valid values are "in", "mm", "m", "mil", "micron", "nm".
 }
 
+/**
+ * Request to export a trace reinforcement model.
+ */
 message ExportTraceReinforcementModelRequest {
   string project							= 1;	// Sherlock project name.
   string ccaName							= 2;	// The CCA name.
@@ -95,16 +98,19 @@ message ExportTraceReinforcementModelRequest {
   string coordinateUnits					= 10;	// Units of exported model coordinates, valid values are "in", "mm", "m", "mil", "micron", "nm".
 }
 
+/**
+ * Request to generate a trace model.
+ */
 message GenerateTraceModelRequest {
   string project							= 1;	// Sherlock project name.
   string ccaName							= 2;	// The CCA name. If left empty, trace models will be generated for all CCAs and all of their copper layers.
   string copperLayerName					= 3;	// Copper layer from which to generate the trace model. If left empty, trace models will be generated for all copper layers.
-  double maxArcSegment						= 4;	// Max Arc Segment.
-  string maxArcSegmentUnits					= 5;	// Max Arc Segment units.
-  double minTraceArea						= 6;	// Min Trace Area.
-  string minTraceAreaUnits					= 7;	// Min Trace Area units.
-  double minHoleArea						= 8;	// Min Hole Area.
-  string minHoleAreaUnits					= 9;	// Min Hole Area units.
+  double maxArcSegment						= 4;	// Max arc segment.
+  string maxArcSegmentUnits					= 5;	// Max arc segment units.
+  double minTraceArea						= 6;	// Min trace area.
+  string minTraceAreaUnits					= 7;	// Min trace area units.
+  double minHoleArea						= 8;	// Min hole area.
+  string minHoleAreaUnits					= 9;	// Min hole area units.
   bool   useSnapshotForNonImageLayer		= 10;   // Use an image to generate the trace model for layers that are not image layers. If a snapshot image exists for the layer, that snapshot is used. Otherwise this creates an image that is identical to creating a snapshot.
 }
 
@@ -112,7 +118,7 @@ service SherlockModelService {
   // Export an FEA Model.
   rpc exportFEAModel(ExportFEAModelRequest) returns (ReturnCode);
   
-  // Export a Trace Reinforcement model.
+  // Export a trace reinforcement model.
   rpc exportTraceReinforcementModel(ExportTraceReinforcementModelRequest) returns (ReturnCode);
   
   // Generate a trace model.
