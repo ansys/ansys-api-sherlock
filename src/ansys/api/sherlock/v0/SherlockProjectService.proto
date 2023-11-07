@@ -167,6 +167,32 @@ message AddCcaRequest {
   repeated CCA CCAs = 2;	// CCAs to add.
 }
 
+/**
+ * Request to list Thermal map files and their types for a project.
+ */
+ message ListThermalMapsRequest {
+  string project      = 1;  // Sherlock project name.
+  repeated string cca = 2;  // Projects CCA names. 
+}
+
+/**
+ * Represents the thermal map files and their types for a Sherlock project.
+ */
+message ListThermalMapsResponse {
+  ReturnCode returnCode			                = 1;  // Status code of response.
+  repeated string errors		                = 2;  // List of errors encountered.
+  message CcaThermalMap {
+    string ccaName                          = 1;  // Project CCA name.
+    repeated ThermalMap thermalMaps         = 2;
+  }
+  repeated CcaThermalMap ccaThermalMaps     = 3;  // Thermal map files assigned to the project.
+}
+
+message ThermalMap {
+  string fileName                 = 1;  // Name of the Thermal Map file.
+  string fileType                 = 2;  // Thermal map file type.
+}
+
 service SherlockProjectService {
   // Generates the project report and return it via streaming.
   rpc genReport(GenReportRequest) returns (stream GenReportResponse);
@@ -197,4 +223,7 @@ service SherlockProjectService {
   
   // Creates a new circuit card assembly.
   rpc addCCA(AddCcaRequest) returns (ReturnCode);
+
+  // Returns a list of thermal map files and their types for a given Sherlock project.
+  rpc listThermalMaps(ListThermalMapsRequest) returns (ListThermalMapsResponse);
 }
