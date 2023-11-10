@@ -178,19 +178,18 @@ message AddCcaRequest {
 /**
  * Represents the thermal map files and their types for a Sherlock project.
  */
-message ListThermalMapsResponse {
+ message ListThermalMapsResponse {
   ReturnCode returnCode			                = 1;  // Status code of response.
   repeated string errors		                = 2;  // List of errors encountered.
   message CcaThermalMap {
     string ccaName                          = 1;  // Project CCA name.
-    repeated ThermalMap thermalMaps         = 2;
+    message ThermalMap {
+      string fileName                       = 1;  // Name of the Thermal Map file.
+      string fileType                       = 2;  // Thermal map file type.
+    }
+    repeated ThermalMap thermalMaps         = 2;  // Thermal map files assigned to the project.
   }
-  repeated CcaThermalMap ccaThermalMaps     = 3;  // Thermal map files assigned to the project.
-}
-
-message ThermalMap {
-  string fileName                 = 1;  // Name of the Thermal Map file.
-  string fileType                 = 2;  // Thermal map file type.
+  repeated CcaThermalMap ccaThermalMaps     = 3;  // Thermal map files assigned to the CCA.
 }
 
 service SherlockProjectService {
