@@ -187,9 +187,9 @@ message AddCcaRequest {
       string fileName                       = 1;  // Name of the Thermal Map file.
       string fileType                       = 2;  // Thermal map file type.
     }
-    repeated ThermalMap thermalMaps         = 2;  // Thermal map files assigned to the project.
+    repeated ThermalMap thermalMaps         = 2;  // Thermal map files assigned to the CCA.
   }
-  repeated CcaThermalMap ccaThermalMaps     = 3;  // Thermal map files assigned to the CCA.
+  repeated CcaThermalMap ccaThermalMaps     = 3;  // CCA thermal map files assigned to the project.
 }
 
 service SherlockProjectService {
