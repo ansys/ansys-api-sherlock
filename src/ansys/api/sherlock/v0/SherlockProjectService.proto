@@ -185,7 +185,7 @@ message AddCcaRequest {
     string ccaName                          = 1;  // Project CCA name.
     message ThermalMap {
       string fileName                       = 1;  // Name of the Thermal Map file.
-      string fileType                       = 2;  // Thermal map file type. Possible values are: "Thermal Map (Excel)", "Icepak Thermal Map (TMAP)", "Thermal Map (Image)", "Thermal Map (CSV)".
+      string fileType                       = 2;  // Thermal map file type. Possible values are: "Icepak Thermal Map (TMAP)", "Thermal Map (CSV)", "Thermal Map (Excel)", "Thermal Map (Image)".
     }
     repeated ThermalMap thermalMaps         = 2;  // Thermal map files assigned to the CCA.
   }
