@@ -1,4 +1,4 @@
-// Copyright 2023 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -51,11 +51,14 @@ message ImportODBRequest {
   string archiveFile			= 1;		// Full path to the ODB++ archive file to be imported.
   string project				= 2;		// Sherlock project name. If empty, the filename will be used for the project name.
   string ccaName				= 3;		// Project CCA name. If empty, the filename will be used for the CCA name.	
-  bool processLayerThickness 	= 4;		// Option to assign stackup thickness.		
+  bool processLayerThickness 	= 4;		// Option to assign stackup thickness.
   bool includeOtherLayers 		= 5;		// Option to include other layers.
   bool processCutoutFile 		= 6;		// Option to process cutouts.
   bool guessPartProperties		= 7;		// Option to guess part properties.
   bool imsStackup				= 8;		// Option to generate IMS stackup.
+  bool polylineSimplification	= 9;		// Option to enable polyline simplification.
+  double polylineTolerance		= 10;		// Polyline simplification tolerance.
+  string polylineToleranceUnits	= 11;		// Polyline simplification tolerance units.
 }
 
 /**
@@ -67,6 +70,9 @@ message ImportIPC2581Request {
   string ccaName				= 3;		// Project CCA name. If empty, the filename will be used for the CCA name.	
   bool includeOtherLayers 		= 4;		// Option to include other layers.
   bool guessPartProperties		= 5;		// Option to guess part properties.
+  bool polylineSimplification	= 6;		// Option to enable polyline simplification.
+  double polylineTolerance		= 7;		// Polyline simplification tolerance.
+  string polylineToleranceUnits	= 8;		// Polyline simplification tolerance units.
 }
 
 /**
@@ -170,7 +176,7 @@ message AddCcaRequest {
 /**
  * Request to list Thermal map files and their types for a project.
  */
- message ListThermalMapsRequest {
+message ListThermalMapsRequest {
   string project      = 1;  // Sherlock project name.
   repeated string cca = 2;  // Optional project CCA names to list thermal maps for.
 }
@@ -178,7 +184,7 @@ message AddCcaRequest {
 /**
  * Represents the thermal map files and their types for a Sherlock project.
  */
- message ListThermalMapsResponse {
+message ListThermalMapsResponse {
   ReturnCode returnCode			                = 1;  // Status code of response.
   repeated string errors		                = 2;  // List of errors encountered.
   message CcaThermalMap {
