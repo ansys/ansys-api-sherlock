@@ -1,4 +1,4 @@
-// © 2020 ANSYS, Inc.  Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -7,7 +7,7 @@ option java_package = "sherlock.grpc";
 option java_outer_classname = "SherlockLayerServiceProto";
 
 /**
- * Empty request to list the valid mount point types.
+ * Request to list the valid mount point types.
  */
 message GetMountPointTypesRequest {
 }
@@ -21,7 +21,7 @@ message GetMountPointTypesResponse {
 }
 
 /**
- * Empty request to list the valid mount point shape types.
+ * Request to list the valid mount point shape types.
  */
 message GetMountPointShapeTypesRequest {
   string mountPointType		= 1;	// Mount Point Type. Supported values are: Mount Hole, Mount Pad, Standoff, and Support Pin.
@@ -36,7 +36,7 @@ message GetMountPointShapeTypesResponse {
 }
 
 /**
- * Empty request to list the valid mount point sides.
+ * Request to list the valid mount point sides.
  */
 message GetMountPointSidesRequest {
 }
@@ -50,7 +50,7 @@ message GetMountPointSidesResponse {
 }
 
 /**
- * Empty request to list the valid mount point units.
+ * Request to list the valid mount point units.
  */
 message GetMountPointUnitsRequest {
 }
@@ -64,7 +64,7 @@ message GetMountPointUnitsResponse {
 }
 
 /**
- * Empty request to list the valid mount point boundaries.
+ * Request to list the valid mount point boundaries.
  */
 message GetMountPointBoundariesRequest {
 }
@@ -78,7 +78,7 @@ message GetMountPointBoundariesResponse {
 }
 
 /**
- * Empty request to list the valid mount point chassis materials.
+ * Request to list the valid mount point chassis materials.
  */
 message GetMountPointChassisMaterialsRequest {
 }
@@ -95,32 +95,32 @@ message GetMountPointChassisMaterialsResponse {
  * Request to delete all mount points in specific CCA of specific project.
  */
 message DeleteAllMountPointsRequest {
-  string project = 1;	// Sherlock project name
-  string ccaName = 2;	// The cca Name
+  string project = 1;	// Sherlock project name.
+  string ccaName = 2;	// The CCA name.
 }
 
 /**
- * Request to export all mount points and their properties into a CSV formatted file
+ * Request to export all mount points and their properties into a CSV formatted file.
  */
 message ExportAllMountPointsRequest {
-  string project 	= 1;	// Sherlock project name
-  string ccaName 	= 2;	// The cca Name
-  string units 		= 3;	// Units used in exporting
-  string filePath 	= 4;	// The filepath of the CSV file to be exported
+  string project 	= 1;	// Sherlock project name.
+  string ccaName 	= 2;	// The CCA name.
+  string units 		= 3;	// Units used in exporting.
+  string filePath 	= 4;	// The filepath of the CSV file to be exported.
 }
 
 /**
- * Request to export all ICT fixtures and their properties into a CSV formatted file
+ * Request to export all ICT fixtures and their properties into a CSV formatted file.
  */
 message ExportAllICTFixturesRequest {
-  string project 	= 1;	// Sherlock project name
-  string ccaName 	= 2;	// The cca Name
-  string units 		= 3;	// Units used in exporting
-  string filePath 	= 4;	// The filepath of the CSV file to be exported
+  string project 	= 1;	// Sherlock project name.
+  string ccaName 	= 2;	// The CCA name.
+  string units 		= 3;	// Units used in exporting.
+  string filePath 	= 4;	// The filepath of the CSV file to be exported.
 }
 
 /**
- * Empty request to list the valid mount point chassis materials.
+ * Request to list the valid mount point chassis materials.
  */
 message GetMountPointsPropertiesRequest {
   string project				= 1;	// Sherlock project name.
@@ -133,50 +133,50 @@ message GetMountPointsPropertiesRequest {
  */
 message GetMountPointsPropertiesResponse {
   ReturnCode returnCode 		= 1;	// Status code of response.
-  repeated MountPointProperties mountPointsProperties 	= 2;	// Mount Point properties
+  repeated MountPointProperties mountPointsProperties 	= 2;	// Mount point properties.
 }
 
 /**
- * Properties of mount point, the properties may varies from the mount point type and mount point shape
+ * Properties of mount point, the properties may varies from the mount point type and mount point shape.
  */	
 message MountPointProperties{
-  string ID					= 1;	// Mount Point ID
-  string type				= 2;	// Mount Point Type
-  string shape				= 3;	// Shape Type
-  string units 				= 4;	// Mount Point Units
-  string x 					= 5;	// Center X
-  string y 					= 6;	// Center Y
-  string length 			= 7;	// Length
-  string width				= 8;	// Width
-  string diameter			= 9;	// Diameter
-  string nodes				= 10;	// # of Nodes
-  string rotation			= 11;	// Rotation(degrees)
-  string side 				= 12;	// Mount Point Side
-  string height 			= 13;	// Mount Point Height
-  string material 			= 14;	// Mount Point Material
-  string boundary			= 15;	// Boundary Pt(s)
-  string constraints		= 16; 	// FEA Constraints
-  string polygon			= 17;	// Coordinates of points
-  string state				= 18;	// Mount Point State
-  string chassisMaterial 	= 19;	// Chassis Material
+  string ID					= 1;	// Mount point ID.
+  string type				= 2;	// Mount point type.
+  string shape				= 3;	// Shape type.
+  string units 				= 4;	// Mount point units.
+  string x 					= 5;	// Center X.
+  string y 					= 6;	// Center Y.
+  string length 			= 7;	// Length.
+  string width				= 8;	// Width.
+  string diameter			= 9;	// Diameter.
+  string nodes				= 10;	// # of nodes.
+  string rotation			= 11;	// Rotation in degrees.
+  string side 				= 12;	// Mount point side.
+  string height 			= 13;	// Mount point height.
+  string material 			= 14;	// Mount point material.
+  string boundary			= 15;	// Boundary Pt(s).
+  string constraints		= 16; 	// FEA constraints.
+  string polygon			= 17;	// Coordinates of points.
+  string state				= 18;	// Mount point state.
+  string chassisMaterial 	= 19;	// Chassis material.
 }
 
 /**
- * Request to update mount points properties of a CCA from a CSV formatted file
+ * Request to update mount points properties of a CCA from a CSV formatted file.
  */
 message UpdateMountPointsByFileRequest {
-  string project 										= 1;	// Sherlock project name
-  string ccaName 										= 2;	// The cca Name
-  string filePath 										= 3;	// The filepath of the CSV file containing the mount points properties
+  string project 										= 1;	// Sherlock project name.
+  string ccaName 										= 2;	// The CCA name.
+  string filePath 										= 3;	// The filepath of the CSV file containing the mount points properties.
 }
 
 /**
- * Request to update mount points properties of a CCA from a CSV formatted file
+ * Request to update mount points properties of a CCA from a CSV formatted file.
  */
 message UpdateMountPointsRequest {
-  string project 										= 1;	// Sherlock project name
-  string ccaName 										= 2;	// The cca Name
-  repeated MountPointProperties mountPointsProperties 	= 3;	// Mount Point properties
+  string project 										= 1;	// Sherlock project name.
+  string ccaName 										= 2;	// The CCA name.
+  repeated MountPointProperties mountPointsProperties 	= 3;	// Mount point properties.
 }
 
 /**
@@ -188,28 +188,28 @@ message UpdateMountPointsResponse {
 }
 
 /**
- * Request to delete all ICT Fixtures in specific CCA of specific project.
+ * Request to delete all ICT fixtures in specific CCA of specific project.
  */
 message DeleteAllICTFixturesRequest {
   string project = 1;	// Sherlock project name.
-  string ccaName = 2;	// The cca Name.
+  string ccaName = 2;	// The CCA name.
 }
 
 /**
- * Request to delete all ICT Fixtures in specific CCA of specific project.
+ * Request to delete all ICT fixtures in specific CCA of specific project.
  */
 message DeleteAllTestPointsRequest {
   string project = 1;	// Sherlock project name.
-  string ccaName = 2;	// The cca Name.
+  string ccaName = 2;	// The CCA name.
 }
 
 /**
- * Request to update ICT fixtures properties of a CCA from a CSV formatted file
+ * Request to update ICT fixtures properties of a CCA from a CSV formatted file.
  */
 message UpdateICTFixturesByFileRequest {
-  string project 										= 1;	// Sherlock project name
-  string ccaName 										= 2;	// The cca Name
-  string filePath 										= 3;	// The filepath of the CSV file containing the ICT fixtures properties
+  string project 										= 1;	// Sherlock project name.
+  string ccaName 										= 2;	// The CCA name.
+  string filePath 										= 3;	// The filepath of the CSV file containing the ICT fixtures properties.
 }
 
 /**
@@ -221,24 +221,24 @@ message UpdateICTFixturesResponse {
 }
 
 /**
- * Request to export all test points and their properties into a CSV formatted file
+ * Request to export all test points and their properties into a CSV formatted file.
  */
 message ExportAllTestPointsRequest {
-  string project 		= 1;	// Sherlock project name
-  string ccaName 		= 2;	// The cca Name
-  string lengthUnits 	= 3;	// Length Units used in exporting
-  string displacementUnits = 4;	// Displacement Units used in exporting
-  string forceUnits 	= 5;	// Force Units used in exporting
-  string filePath 		= 6;	// The filepath of the CSV file to be exported
+  string project 		= 1;	// Sherlock project name.
+  string ccaName 		= 2;	// The CCA name.
+  string lengthUnits 	= 3;	// Length Units used in exporting.
+  string displacementUnits = 4;	// Displacement Units used in exporting.
+  string forceUnits 	= 5;	// Force Units used in exporting.
+  string filePath 		= 6;	// The filepath of the CSV file to be exported.
 }
 
 /**
- * Request to update test points properties of a CCA from a CSV formatted file
+ * Request to update test points properties of a CCA from a CSV formatted file.
  */
 message UpdateTestPointsByFileRequest {
-  string project 										= 1;	// Sherlock project name
-  string ccaName 										= 2;	// The cca Name
-  string filePath 										= 3;	// The filepath of the CSV file containing the test points properties
+  string project 										= 1;	// Sherlock project name.
+  string ccaName 										= 2;	// The CCA name.
+  string filePath 										= 3;	// The filepath of the CSV file containing the test points properties.
 }
 
 /**
@@ -252,77 +252,79 @@ message UpdateTestPointsResponse {
 message PolygonalShape {
     
   message Point {
-    double x = 1;					// The x coordinate of the point
-    double y = 2;					// The y coordinate of the point
+    double x = 1;					// The x coordinate of the point.
+    double y = 2;					// The y coordinate of the point.
   }
     
-  repeated Point points = 1;		// The points used to define the polygonal shape, must be >= 3
-  optional double rotation = 2;		// The rotation of the shape
+  repeated Point points = 1;		// The points used to define the polygonal shape, must be >= 3.
+  optional double rotation = 2;		// The rotation of the shape in degrees.
 }
   
 message RectangularShape {
-  optional double length = 1;		// The length of the rectangle
-  optional double width = 2;		// The width of the rectangle
-  optional double centerX = 3;		// The x coordinate of the center of the rectangle
-  optional double centerY = 4;		// The y coordinate of the center of the rectangle
-  optional double rotation = 5;		// The rotation of the rectangle
+  optional double length = 1;		// The length of the rectangle.
+  optional double width = 2;		// The width of the rectangle.
+  optional double centerX = 3;		// The x coordinate of the center of the rectangle.
+  optional double centerY = 4;		// The y coordinate of the center of the rectangle.
+  optional double rotation = 5;		// The rotation of the rectangle in degrees.
 }
   
 message SlotShape {
-  optional double length = 1;		// The length of the slot shape
-  optional double width = 2;		// The width of the slot shape
-  optional uint32 nodeCount = 3;	// The number of nodes
-  optional double centerX = 4;		// The x coordinate of the center of the slot shape
-  optional double centerY = 5;		// The x coordinate of the center of the slot shape
-  optional double rotation = 6;		// The rotation of the shape
+  optional double length = 1;		// The length of the slot shape.
+  optional double width = 2;		// The width of the slot shape.
+  optional uint32 nodeCount = 3;	// The number of nodes.
+  optional double centerX = 4;		// The x coordinate of the center of the slot shape.
+  optional double centerY = 5;		// The x coordinate of the center of the slot shape.
+  optional double rotation = 6;		// The rotation of the shape in degrees.
 }
   
 message CircularShape {
-  optional double diameter = 1;		// The diameter of the circle
-  optional uint32 nodeCount = 2;	// The number of nodes
-  optional double centerX = 3;		// The x coordinate of the center of the circle
-  optional double centerY = 4;		// The x coordinate of the center of the circle
-  optional double rotation = 5;		// The rotation of the shape
+  optional double diameter = 1;		// The diameter of the circle.
+  optional uint32 nodeCount = 2;	// The number of nodes.
+  optional double centerX = 3;		// The x coordinate of the center of the circle.
+  optional double centerY = 4;		// The x coordinate of the center of the circle.
+  optional double rotation = 5;		// The rotation of the shape in degrees.
 }
   
 message PCBShape {
 }
 
-message AddPottingRegionRequest {
-  
+/**
+ * Request to add a potting region.
+ */
+message AddPottingRegionRequest {  
   message PottingRegion {
-    string ccaName = 1;							// The name of the CCA
-    optional string pottingID = 2;				// The potting ID, must be unique
-    optional string pottingSide = 3;			// The potting side, options are "TOP", "BOT", or "BOTTOM"
-    optional string pottingMaterial = 4;		// The potting material
-    optional string pottingUnits = 5;			// The units to use for the potting region
-    optional double pottingThickness = 6;		// The potting thickness
-    optional double pottingStandoff = 7;		// The potting standoff
+    string ccaName = 1;							// The name of the CCA.
+    optional string pottingID = 2;				// The potting ID, must be unique.
+    optional string pottingSide = 3;			// The potting side, options are "TOP", "BOT", or "BOTTOM".
+    optional string pottingMaterial = 4;		// The potting material.
+    optional string pottingUnits = 5;			// The units to use for the potting region.
+    optional double pottingThickness = 6;		// The potting thickness.
+    optional double pottingStandoff = 7;		// The potting standoff.
   
     oneof Shape {
-      PolygonalShape polygonalShape = 8;		// Used to add a region with a polygonal shape
-  	  RectangularShape rectangularShape = 9;	// Used to add a region with a rectangular shape
-  	  SlotShape slotShape = 10;					// Used to add a region with a slot shape
-  	  CircularShape circularShape = 11;			// Used to add a region with a circular shape
-  	  PCBShape pCBShape = 12;					// Used to add a region with a PCB shape
+      PolygonalShape polygonalShape = 8;		// Used to add a region with a polygonal shape.
+  	  RectangularShape rectangularShape = 9;	// Used to add a region with a rectangular shape.
+  	  SlotShape slotShape = 10;					// Used to add a region with a slot shape.
+  	  CircularShape circularShape = 11;			// Used to add a region with a circular shape.
+  	  PCBShape pCBShape = 12;					// Used to add a region with a PCB shape.
     }
   }
   
-  string project = 1;							// The name of the Sherlock project to add the potting regions to
-  repeated PottingRegion pottingRegions = 2;	// The potting regions to add
+  string project = 1;							// The name of the Sherlock project to add the potting regions to.
+  repeated PottingRegion pottingRegions = 2;	// The potting regions to add.
 }
 
 service SherlockLayerService {
-  // Add a potting region with the specified shape and properties
+  // Add a potting region with the specified shape and properties.
   rpc addPottingRegion(AddPottingRegionRequest) returns (ReturnCode);
 
-  // Delete all ICT fixtures in specific cca of specific project.
+  // Delete all ICT fixtures in specific CCA of specific project.
   rpc deleteAllICTFixtures(DeleteAllICTFixturesRequest) returns (ReturnCode);
 
-  // Delete all mount points in specific cca of specific project.
+  // Delete all mount points in specific CCA of specific project.
   rpc deleteAllMountPoints(DeleteAllMountPointsRequest) returns (ReturnCode);
   
-  // Delete all test points in specific cca of specific project.
+  // Delete all test points in specific CCA of specific project.
   rpc deleteAllTestPoints(DeleteAllTestPointsRequest) returns (ReturnCode);
   
   // Export all mount points and their properties into a CSV formatted file.
@@ -334,25 +336,25 @@ service SherlockLayerService {
   // Export all test points and their properties into a CSV formatted file.
   rpc exportAllTestPoints(ExportAllTestPointsRequest) returns (ReturnCode);
 
-  // Get a list of valid Mount Point Boundaries.
+  // Get a list of valid mount point boundaries.
   rpc getMountPointBoundaries(GetMountPointBoundariesRequest) returns (GetMountPointBoundariesResponse);
 
-  // Get a list of valid Mount Point chassis materials.
+  // Get a list of valid mount point chassis materials.
   rpc getMountPointChassisMaterials(GetMountPointChassisMaterialsRequest) returns (GetMountPointChassisMaterialsResponse);
   
-  // Get a list of valid Mount Point Properties
+  // Get a list of valid mount point properties.
   rpc getMountPointsProperties(GetMountPointsPropertiesRequest) returns (GetMountPointsPropertiesResponse);
 
-  // Get a list of valid Mount Point Shape Type values.
+  // Get a list of valid mount point shape type values.
   rpc getMountPointShapeTypes(GetMountPointShapeTypesRequest) returns (GetMountPointShapeTypesResponse);
   
-  // Get a list of valid Mount Point Sides.
+  // Get a list of valid mount point sides.
   rpc getMountPointSides(GetMountPointSidesRequest) returns (GetMountPointSidesResponse);
 
-  // Get a list of valid Mount Point Type values.
+  // Get a list of valid mount point type values.
   rpc getMountPointTypes(GetMountPointTypesRequest) returns (GetMountPointTypesResponse);
 
-  // Get a list of valid Mount Point Units.
+  // Get a list of valid mount point units.
   rpc getMountPointUnits(GetMountPointUnitsRequest) returns (GetMountPointUnitsResponse);
   
   // Update the ICT fixtures properties of a CCA from a CSV formatted file. This API could be used to add new ICT fixtures or update existing ones depending on the file contents.
@@ -361,7 +363,7 @@ service SherlockLayerService {
   // The file format should be the same as the one produced from CCA -> Export ICT Fixtures.
   rpc updateICTFixturesByFile(UpdateICTFixturesByFileRequest) returns (UpdateICTFixturesResponse);
 
-  // Update mount points with specified properties
+  // Update mount points with specified properties.
   rpc updateMountPoints(UpdateMountPointsRequest) returns (UpdateMountPointsResponse);
 
   // Update the mount points properties of a CCA from a CSV formatted file. This API could be used to add new mount points or update existing ones depending on the file contents.

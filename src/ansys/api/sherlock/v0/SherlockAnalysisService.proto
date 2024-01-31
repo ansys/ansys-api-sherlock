@@ -7,14 +7,14 @@ option java_package = "sherlock.grpc";
 option java_outer_classname = "SherlockAnalysisServiceProto";
 
 enum ModelSource {
-  UNKNOWN			= 0;	// Default enum to catch invalid source
-  GENERATED			= 1;	// Generated analysis model source
-  STRAIN_MAP		= 2;	// Strain map analysis model source
+  UNKNOWN			= 0;	// Default enum to catch invalid source.
+  GENERATED			= 1;	// Generated analysis model source.
+  STRAIN_MAP		= 2;	// Strain map analysis model source.
 }
 
 /**
-  * Request to run one or more Sherlock analysis given the project path, CCA name, analyses, lifecycle phases and events.
-  */
+ * Request to run one or more Sherlock analysis given the project path, CCA name, analyses, lifecycle phases and events.
+ */
 message RunAnalysisRequest {
   string project							= 1;	// Sherlock project name.
   string ccaName							= 2;	// The CCA name.
@@ -55,7 +55,7 @@ message RunAnalysisRequest {
  * Request to list the valid Harmonic Vibe input fields for the provided model source and user configuration.
  */
 message GetHarmonicVibeInputFieldsRequest {
-  optional ModelSource modelSource = 1;	// Optional model source. Default: GENERATED
+  optional ModelSource modelSource = 1;	// Optional model source. Default: GENERATED.
 }
 
 message GetHarmonicVibeInputFieldsResponse {
@@ -63,7 +63,7 @@ message GetHarmonicVibeInputFieldsResponse {
 }
 
 /**
- *Request to set the harmonic vibe analysis properties one or more CCA's
+ * Request to update the harmonic vibe analysis properties for one or more CCA's
  * in the project indicated.
  */
 message UpdateHarmonicVibePropsRequest {
@@ -71,14 +71,14 @@ message UpdateHarmonicVibePropsRequest {
 
   message HarmonicVibe {
     string ccaName = 1;									// CCA name for which the harmonic vibe properties are set.
-  	optional ModelSource modelSource = 2;				// Optional model source. Default: GENERATED
+  	optional ModelSource modelSource = 2;				// Optional model source. Default: GENERATED.
   	optional int32 harmonicVibeCount = 3;				// Number of harmonic result layers to generate.
   	optional string harmonicVibeDamping = 4;			// Modal Damping Ratio(s).
   	optional bool partValidationEnabled = 5;			// Flag indicating if part validation should be performed.
   	optional bool requireMaterialAssignmentEnabled = 6;	// Flag indicating if material assignment is required.
   	optional double analysisTemp = 7;					// Temperature.
   	optional string analysisTempUnits = 8; 				// Temperature units.
-  	optional string forceModelRebuild = 9;				// Model Creation. Valid values are "FORCE" or "AUTO"
+  	optional string forceModelRebuild = 9;				// Model Creation. Valid values are "FORCE" or "AUTO".
   	optional bool filterByEventFrequency = 10;			// Flag indicating if harmonic results outside selected event range are imported.
   	optional uint32 naturalFreqMin = 11;				// Min Frequency. For NX Nastran analysis only.
   	optional string naturalFreqMinUnits = 12;			// Min Frequency units. For NX Nastran analysis only.
@@ -91,16 +91,19 @@ message UpdateHarmonicVibePropsRequest {
 }
 
 /**
- * Request to list the valid Random Vibe input fields for the provided model source and user configuration.
+ * Request to list the valid random vibe input fields for the provided model source and user configuration.
  */
 message GetRandomVibeInputFieldsRequest {
-  optional ModelSource modelSource = 1;	// Optional model source. Default: GENERATED
+  optional ModelSource modelSource = 1;	// Optional model source. Default: GENERATED.
 }
 
 message GetRandomVibeInputFieldsResponse {
   repeated string fieldName = 1;
 }
 
+/**
+ * Request to update random vibe analysis properties.
+ */
 message UpdateRandomVibePropsRequest {
   string project = 1;									// Project name.
   string ccaName = 2;									// CCA name.
@@ -112,15 +115,17 @@ message UpdateRandomVibePropsRequest {
   optional double analysisTemp = 8;						// Temperature.
   optional string analysisTempUnits = 9; 				// Temperature units.
   optional bool partValidationEnabled = 10;				// Part Validation.
-  optional string forceModelRebuild = 11;				// Model Creation. Valid values are "FORCE" or "AUTO"
+  optional string forceModelRebuild = 11;				// Model Creation. Valid values are "FORCE" or "AUTO".
   optional bool reuseModalAnalysis = 12;				// Reuse Natural Frequency. For NX Nastran analysis only.
   optional bool performNFFreqRangeCheck = 13;			// Frequency Range Check. For NX Nastran analysis only.
   optional bool requireMaterialAssignmentEnabled = 14;	// Require Material Assignment.
-  optional ModelSource modelSource = 15;				// Optional model source. Default: GENERATED
+  optional ModelSource modelSource = 15;				// Optional model source. Default: GENERATED.
   optional string strainMapNaturalFreqs = 16;			// Comma-separated list of natural frequencies for strain map analysis.
 }
 
-
+/**
+ * Request to list the valid natural frequency input fields given the user configuration.
+ */
 message GetNaturalFrequencyInputFieldsRequest {
 }
 
@@ -128,6 +133,9 @@ message GetNaturalFrequencyInputFieldsResponse {
   repeated string fieldName = 1;
 }
 
+/**
+ * Request to update natural frequency analysis properties.
+ */
 message UpdateNaturalFrequencyPropsRequest {
   string project = 1;							// Project name.
   string ccaName = 2;							// CCA name.
@@ -142,6 +150,9 @@ message UpdateNaturalFrequencyPropsRequest {
   optional string analysisTempUnits = 11; 		// Temperature units (C, F, or K).
 }
 
+/**
+ * Request to update thermal mech analysis properties.
+ */
 message UpdateThermalMechPropsRequest {
   string project = 1;                           // Project name.
   repeated string ccaName = 2;                  // CCA names.
@@ -186,6 +197,9 @@ enum ElementOrder {
   SolidShell	= 3;	// Enum for solid shell elements.
 }
 
+/**
+ * Request to list the valid PCB Modeling input fields given the user configuration.
+ */
 message GetPcbModelingInputFieldsRequest {
 }
 
@@ -194,7 +208,7 @@ message GetPcbModelingInputFieldsResponse {
 }
 
 /**
- * Request to set FEA analysis PCB Modeling properties.
+ * Request to update FEA analysis PCB Modeling properties.
  */
 message UpdatePcbModelingPropsRequest {
   string project			= 1;	// Sherlock project name.
@@ -217,11 +231,11 @@ message UpdatePcbModelingPropsRequest {
     }
 
     enum PcbMaterialModel {
-      UnknownPcbModel	= 0;	// Default enum to catch invalid PCB model
-      Uniform			= 1;	// Enum for uniform PCB model
-      Layered			= 2;	// Enum for layered PCB model
-      UniformElements	= 3;	// Enum for uniform elements PCB model
-      LayeredElements	= 4;	// Enum for layered elements PCB model
+      UnknownPcbModel	= 0;	// Default enum to catch invalid PCB model.
+      Uniform			= 1;	// Enum for uniform PCB model.
+      Layered			= 2;	// Enum for layered PCB model.
+      UniformElements	= 3;	// Enum for uniform elements PCB model.
+      LayeredElements	= 4;	// Enum for layered elements PCB model.
     }
 
     AnalysisType type					= 1;	// The type of analysis for which PCB modeling properties apply.
@@ -240,6 +254,9 @@ message UpdatePcbModelingPropsRequest {
   repeated Analysis analyses	= 3;
 }
 
+/**
+ * Request to update the mechanical shock analysis properties.
+ */
 message UpdateMechanicalShockPropsRequest {
   string project = 1;										// Project name.
   
@@ -251,7 +268,7 @@ message UpdateMechanicalShockPropsRequest {
 	optional string criticalShockStrainUnits = 5;			// Critical Shock Strain units.
 	optional bool partValidationEnabled = 6;				// Flag indicating if part validation should be performed.
 	optional bool requireMaterialAssignmentEnabled = 7;		// Flag indicating if material assignment is required.
-	optional string forceModelRebuild = 8;					// Model Creation. Valid values are "FORCE" or "AUTO"
+	optional string forceModelRebuild = 8;					// Model Creation. Valid values are "FORCE" or "AUTO".
 	optional uint32 naturalFreqMin = 9;						// Min Frequency.
 	optional string naturalFreqMinUnits = 10;				// Min Frequency units.
 	optional uint32 naturalFreqMax = 11;					// Max Frequency.
@@ -264,10 +281,10 @@ message UpdateMechanicalShockPropsRequest {
 }
 
 /**
- * Request to list the valid Mechanical shock input fields for the provided model source and user configuration.
+ * Request to list the valid mechanical shock input fields for the provided model source and user configuration.
  */
 message GetMechanicalShockInputFieldsRequest {
-  optional ModelSource modelSource = 1;	// Optional model source. Default: GENERATED
+  optional ModelSource modelSource = 1;	// Optional model source. Default: GENERATED.
 }
 
 message GetMechanicalShockInputFieldsResponse {
@@ -275,7 +292,7 @@ message GetMechanicalShockInputFieldsResponse {
 }
 
 /**
- * Request to list the valid Solder Fatigue input fields given the user configuration.
+ * Request to list the valid solder fatigue input fields given the user configuration.
  */
 message GetSolderFatigueInputFieldsRequest {
 }
@@ -284,6 +301,9 @@ message GetSolderFatigueInputFieldsResponse {
   repeated string fieldName = 1;
 }
 
+/**
+ * Request to update solder fatigue properties.
+ */
 message UpdateSolderFatiguePropsRequest {
   string project = 1;										// Project name.
   
@@ -300,20 +320,20 @@ message UpdateSolderFatiguePropsRequest {
 }
 
 /**
- * Request to update FEA Part Modeling Properties
+ * Request to update FEA part modeling properties.
  */
 message UpdatePartModelingRequest {
   string project	 						= 1;	// Sherlock project name.
   string ccaName 							= 2;	// The CCA name.
   bool partEnabled			 				= 3;	// Whether to enable part modeling. Ignores all other fields if part modeling is disabled.
-  optional double partMinSize 				= 4;	// The minimum part size
-  optional string partMinSizeUnits 			= 5;	// Units for minimum part size
-  optional string partElemOrder 			= 6;	// Element order
-  optional double partMaxEdgeLength 		= 7;	// Maximum mesh size
-  optional string partMaxEdgeLengthUnits 	= 8;	// Units for maximum mesh size
-  optional double partMaxVertical 			= 9;	// Vertical mesh size
-  optional string partMaxVerticalUnits 		= 10;	// Units for vertical mesh size
-  optional bool partResultsFiltered 		= 11;	// Whether to enable filtered part results
+  optional double partMinSize 				= 4;	// The minimum part size.
+  optional string partMinSizeUnits 			= 5;	// Units for minimum part size.
+  optional string partElemOrder 			= 6;	// Element order.
+  optional double partMaxEdgeLength 		= 7;	// Maximum mesh size.
+  optional string partMaxEdgeLengthUnits 	= 8;	// Units for maximum mesh size.
+  optional double partMaxVertical 			= 9;	// Vertical mesh size.
+  optional string partMaxVerticalUnits 		= 10;	// Units for vertical mesh size.
+  optional bool partResultsFiltered 		= 11;	// Whether to enable filtered part results.
 }
 
 /**
@@ -326,17 +346,20 @@ message GetICTAnalysisInputFieldsResponse {
   repeated string fieldName = 1;
 }
 
+/**
+ * Request to update ICT Analysis properties.
+ */
 message UpdateICTAnalysisPropsRequest {
   string project = 1;									// Project name.
   
   message ICTAnalysis {
     string ccaName = 1;									// CCA name.
-    optional double applicationTime = 2;				// Application Time
-    optional string applicationTimeUnits = 3;			// Application Time Units
+    optional double applicationTime = 2;				// Application Time.
+    optional string applicationTimeUnits = 3;			// Application Time Units.
     optional uint32 numberOfEvents = 4;					// Number of Events.
     optional bool partValidationEnabled = 5;			// Part Validation.
     optional bool requireMaterialAssignmentEnabled = 6;	// Flag indicating if material assignment is required.
-    optional string forceModelRebuild = 7;				// Model Creation. Valid values are "FORCE" or "AUTO"
+    optional string forceModelRebuild = 7;				// Model Creation. Valid values are "FORCE" or "AUTO".
     optional int32 ictResultCount = 8;					// Number of ICT layers to generate when using thermal analysis.
   }
   
@@ -350,43 +373,43 @@ service SherlockAnalysisService {
   // Run Sherlock strain map analysis.
   rpc runStrainMapAnalysis(RunStrainMapAnalysisRequest) returns (ReturnCode);
   
-  // Returns the list of valid Harmonic Vibe input fields for the provided model source and user configuration.
+  // Returns the list of valid harmonic vibe input fields for the provided model source and user configuration.
   rpc getHarmonicVibeInputFields(GetHarmonicVibeInputFieldsRequest) returns (GetHarmonicVibeInputFieldsResponse);
   
-  // Updates the analysis properties for Harmonic Vibe analysis.
+  // Updates the analysis properties for harmonic vibe analysis.
   rpc updateHarmonicVibeProps(UpdateHarmonicVibePropsRequest) returns (ReturnCode);
   
   // Returns the list of valid Random Vibe input fields for the provided model source and user configuration.
   rpc getRandomVibeInputFields(GetRandomVibeInputFieldsRequest) returns (GetRandomVibeInputFieldsResponse);
   
-  // Updates the analysis properties for Random Vibe analysis.
+  // Updates the analysis properties for random vibe analysis.
   rpc updateRandomVibeProps(UpdateRandomVibePropsRequest) returns (ReturnCode);
   
-  // Returns the list of valid Mechanical Shock input fields for the provided model source and user configuration.
+  // Returns the list of valid mechanical shock input fields for the provided model source and user configuration.
   rpc getMechanicalShockInputFields(GetMechanicalShockInputFieldsRequest) returns (GetMechanicalShockInputFieldsResponse);
  
-  // Updates the analysis properties for Mechanical Shock analysis.
+  // Updates the analysis properties for mechanical shock analysis.
   rpc updateMechanicalShockProps(UpdateMechanicalShockPropsRequest) returns (ReturnCode);
   
-  // Updates the analysis properties for Solder Fatigue analysis.
+  // Updates the analysis properties for solder fatigue analysis.
   rpc updateSolderFatigueProps(UpdateSolderFatiguePropsRequest) returns (ReturnCode);
   
-  // Returns the list of valid Natural Frequency property fields given the user configuration.
+  // Returns the list of valid natural frequency property fields given the user configuration.
   rpc getNaturalFrequencyInputFields(GetNaturalFrequencyInputFieldsRequest) returns (GetNaturalFrequencyInputFieldsResponse);
   
-  // Updates the analysis properties for Natural Frequency analysis.
+  // Updates the analysis properties for natural frequency analysis.
   rpc updateNaturalFrequencyProps(UpdateNaturalFrequencyPropsRequest) returns (ReturnCode);
   
-  // Updates the analysis properties for Thermal Mech analysis
+  // Updates the analysis properties for thermal mech analysis.
   rpc updateThermalMechProps(UpdateThermalMechPropsRequest) returns (ReturnCode);
 
-  // Returns the list of valid PCB MOdeling property field.
+  // Returns the list of valid PCB modeling property field.
   rpc getPcbModelingInputFields(GetPcbModelingInputFieldsRequest) returns (GetPcbModelingInputFieldsResponse);
   
   // Updates the PCB modeling properties for the provided analysis types.
   rpc updatePcbModelingProps(UpdatePcbModelingPropsRequest) returns (ReturnCode);
   
-  // Returns the list of valid Solder Fatigue property fields given the user configuration.
+  // Returns the list of valid solder fatigue property fields given the user configuration.
   rpc getSolderFatigueInputFields(GetSolderFatigueInputFieldsRequest) returns (GetSolderFatigueInputFieldsResponse);
   
   // Updates the part modeling properties for a given project's CCA.

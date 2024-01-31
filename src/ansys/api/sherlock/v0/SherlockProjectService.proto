@@ -1,4 +1,4 @@
-// © 2020 ANSYS, Inc.  Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -8,8 +8,8 @@ option java_outer_classname = "SherlockProjectServiceProto";
 
 
 /**
-  * Request for project report.
-  */
+ * Request for project report.
+ */
 message GenReportRequest {
   string project		= 1;	// Sherlock project name.
   string author			= 2;	// Name of the author who generates the report.
@@ -17,8 +17,8 @@ message GenReportRequest {
 }
 
 /**
-  * Streams the project report in chunks.
-  */
+ * Streams the project report in chunks.
+ */
 message GenReportResponse {
   bytes content			= 1;	// A chunk of the project report being returned in increments.
   int32 size			= 2;	// Size of the chunk returned.
@@ -26,8 +26,8 @@ message GenReportResponse {
 }
 
 /**
-  * Request for project CCA report.
-  */
+ * Request for project CCA report.
+ */
 message GenCCAReportRequest {
   string project		= 1;	// Sherlock project name.
   string cca			= 2;	// Project CCA name.
@@ -36,8 +36,8 @@ message GenCCAReportRequest {
 }
 
 /**
-  * Streams the project CCA report in chunks.
-  */
+ * Streams the project CCA report in chunks.
+ */
 message GenCCAReportResponse {
   bytes content			= 1;	// A chunk of the project CCA report being returned in increments.
   int32 size			= 2;	// Size of the chunk returned.
@@ -45,40 +45,46 @@ message GenCCAReportResponse {
 }
 
 /**
-  * Request for importing an ODB++ archive.
-  */
+ * Request for importing an ODB++ archive.
+ */
 message ImportODBRequest {
   string archiveFile			= 1;		// Full path to the ODB++ archive file to be imported.
   string project				= 2;		// Sherlock project name. If empty, the filename will be used for the project name.
   string ccaName				= 3;		// Project CCA name. If empty, the filename will be used for the CCA name.	
-  bool processLayerThickness 	= 4;		// Option to assign stackup  thickness.		
+  bool processLayerThickness 	= 4;		// Option to assign stackup thickness.
   bool includeOtherLayers 		= 5;		// Option to include other layers.
   bool processCutoutFile 		= 6;		// Option to process cutouts.
-  bool guessPartProperties		= 7;		// Option to guess part properties
+  bool guessPartProperties		= 7;		// Option to guess part properties.
   bool imsStackup				= 8;		// Option to generate IMS stackup.
+  bool polylineSimplification	= 9;		// Option to enable polyline simplification.
+  double polylineTolerance		= 10;		// Polyline simplification tolerance.
+  string polylineToleranceUnits	= 11;		// Polyline simplification tolerance units.
 }
 
 /**
-  * Request for importing an IPC-2581 archive.
-  */
+ * Request for importing an IPC-2581 archive.
+ */
 message ImportIPC2581Request {
   string archiveFile			= 1;		// Full path to the IPC-2581 archive file to be imported.
   string project				= 2;		// Sherlock project name. If empty, the filename will be used for the project name.
   string ccaName				= 3;		// Project CCA name. If empty, the filename will be used for the CCA name.	
   bool includeOtherLayers 		= 4;		// Option to include other layers.
-  bool guessPartProperties		= 5;		// Option to guess part properties
+  bool guessPartProperties		= 5;		// Option to guess part properties.
+  bool polylineSimplification	= 6;		// Option to enable polyline simplification.
+  double polylineTolerance		= 7;		// Polyline simplification tolerance.
+  string polylineToleranceUnits	= 8;		// Polyline simplification tolerance units.
 }
 
 /**
-  * Request for deleting project
-  */
+ * Request for deleting project.
+ */
 message DeleteProjectRequest{
-  string project = 1;	// Project name of project to be deleted
+  string project = 1;	// Project name of project to be deleted.
 }
 
 /**
-  * Request to add a strain map CSV file
-  */
+ * Request to add a strain map CSV file.
+ */
 message AddStrainMapRequest {
   string project					= 1;	// Sherlock project name.
   message StrainMapFile {
@@ -87,22 +93,22 @@ message AddStrainMapRequest {
     int32  headerRowCount			= 3;	// Number of rows before the column header in the file.
 	string referenceIDColumn		= 4;	// Reference ID column name.
 	string strainColumn				= 5;	// Strain column name.
-	string strainUnits				= 6;	// Strain units used in the strain map file. Valid units: µε, ε
+	string strainUnits				= 6;	// Strain units used in the strain map file. Valid units: µε, ε.
     repeated string cca				= 7;	// Project CCA names to to add the file to.
   }
   repeated StrainMapFile strainMapFiles	= 2;	// Strain map files and associated properties to be added.
 }
 
 /**
-  * Response from adding strain map CSV files
-  */
+ * Response from adding strain map CSV files.
+ */
 message AddStrainMapResponse {
   ReturnCode returnCode		= 1;	// Status code of response.
   repeated string errors	= 2;	// List of validation errors.
 }
 
 /**
- * Request to list CCA strain maps for a project
+ * Request to list CCA strain maps for a project.
  */
 message ListStrainMapsRequest {
   string project		= 1;	// Sherlock project name.
@@ -110,8 +116,8 @@ message ListStrainMapsRequest {
 }
 
 /**
-  * Lists the strain maps assigned to the project CCA's.
-  */
+ * Lists the strain maps assigned to the project CCA's.
+ */
 message ListStrainMapsResponse {
   ReturnCode returnCode			= 1;	// Status code of response.
   repeated string errors		= 2;	// List of errors encountered.
@@ -123,7 +129,7 @@ message ListStrainMapsResponse {
 }
 
 /**
- * Request to list CCA's and sub-assembly CCA's for a project
+ * Request to list CCA's and sub-assembly CCA's for a project.
  */
 message ListCCAsRequest {
   string project		= 1;	// Sherlock project name.
@@ -131,8 +137,8 @@ message ListCCAsRequest {
 }
 
 /**
-  * Represents the circuit cards, their properties, and sub-assemblies for a Sherlock project.
-  */
+ * Represents the circuit cards, their properties, and sub-assemblies for a Sherlock project.
+ */
 message ListCCAsResponse {
   ReturnCode returnCode			= 1;	// Status code of response.
   message CCA {
@@ -143,28 +149,141 @@ message ListCCAsResponse {
 }
 
 /**
- * Request to add a project to Sherlock
+ * Request to add a project to Sherlock.
  */
- message AddProjectRequest {
+message AddProjectRequest {
   string project          = 1;
   string category         = 2;
   string description      = 3;
 }
 
 message CCA {
-  string ccaName = 1; 									// Name of the Circuit Card
-  optional string description = 2; 						// Description of the circuit card
-  optional string defaultSolderType = 3; 				// Default solder type
-  optional double defaultStencilThickness = 4; 			// Default stencil thickness
-  optional string defaultStencilThicknessUnits = 5; 	// Default stencil thickness units
-  optional double defaultPartTempRise = 6; 				// Default part temp rise
-  optional string defaultPartTempRiseUnits = 7; 		// Default part temp rise units
-  optional bool guessPartPropertiesEnabled = 8; 		// Whether to enable guess part properties
+  string ccaName = 1; 									// Name of the circuit card.
+  optional string description = 2; 						// Description of the circuit card.
+  optional string defaultSolderType = 3; 				// Default solder type.
+  optional double defaultStencilThickness = 4; 			// Default stencil thickness.
+  optional string defaultStencilThicknessUnits = 5; 	// Default stencil thickness units.
+  optional double defaultPartTempRise = 6; 				// Default part temp rise.
+  optional string defaultPartTempRiseUnits = 7; 		// Default part temp rise units.
+  optional bool guessPartPropertiesEnabled = 8; 		// Whether to enable guess part properties.
 }
 
 message AddCcaRequest {
-  string project = 1;		// Name of the project
-  repeated CCA CCAs = 2;	// CCAs to add
+  string project = 1;		// Name of the project.
+  repeated CCA CCAs = 2;	// CCAs to add.
+}
+
+/**
+ * Request to list Thermal map files and their types for a project.
+ */
+message ListThermalMapsRequest {
+  string project      = 1;  // Sherlock project name.
+  repeated string cca = 2;  // Optional project CCA names to list thermal maps for.
+}
+
+/**
+ * Represents the thermal map files and their types for a Sherlock project.
+ */
+message ListThermalMapsResponse {
+  ReturnCode returnCode			                = 1;  // Status code of response.
+  repeated string errors		                = 2;  // List of errors encountered.
+  message CcaThermalMap {
+    string ccaName                          = 1;  // Project CCA name.
+    message ThermalMap {
+      string fileName                       = 1;  // Name of the Thermal Map file.
+      string fileType                       = 2;  // Thermal map file type. Possible values are: "Icepak Thermal Map (TMAP)", "Thermal Map (CSV)", "Thermal Map (Excel)", "Thermal Map (Image)".
+    }
+    repeated ThermalMap thermalMaps         = 2;  // Thermal map files assigned to the CCA.
+  }
+  repeated CcaThermalMap ccaThermalMaps     = 3;  // CCA thermal map files assigned to the project.
+}
+
+/**
+ * Request to update thermal map files to a Sherlock project.
+ */
+ message UpdateThermalMapRequest {
+  string project                          = 1;  // Sherlock project name.
+  repeated ThermalMapFile thermalMapFiles = 2;  // Thermal Map files.
+}
+
+message ThermalMapFile {
+  enum FileType {
+    CSV     = 0;        // Csv file.
+    Excel   = 1;        // Excel file.
+    Image   = 2;        // Image file.
+    TMAP    = 3;        // Icepack file.
+  }
+
+  enum ThermalBoardSide {
+    Bottom    = 0;    // Bottom side of the board.
+    Both      = 1;    // Both sides of the board.
+    Top       = 2;    // Top side of the board.
+  }
+
+  message ImageFile {
+    enum LegendOrientation {
+      Horizontal  = 0;      // Horizontal legend orientation.
+      Vertical    = 1;      // Vertical legend orientation.
+      
+    }
+
+    message NodeCoordinate {
+      double vertexX = 1;    // X-coordinate of the node.
+      double vertexY = 2;    // Y-coordinate of the node.
+    }
+
+    message ImageCoordinate {
+      double imageX = 1; // X-coordinate of the upper left corner.
+      double imageY = 2; // Y-coordinate of the upper left corner.
+      double imageH = 3; // Height of the image.
+      double imageW = 4; // Width of the image.
+    }
+  
+    message LegendCoordinate {
+      double legendX = 1; // X-coordinate of the upper left corner.
+      double legendY = 2; // Y-coordinate of the upper left corner.
+      double legendH = 3; // Height of the legend.
+      double legendW = 4; // Width of the legend.
+    }
+
+    string coordinateUnits                        = 1;      // Coordinate units used for board, lengend and image boundaries.
+    repeated NodeCoordinate boardBounds           = 2;      // Coordinates of the nodes which make up the board outline.
+    ImageCoordinate  imageBounds                  = 3;      // Coordinates of the board bounds within the image.
+    LegendCoordinate legendBounds                 = 4;      // Coordinates of the bounds of legend within the image.
+    LegendOrientation legendOrientation           = 5;      // Specify the legend orientation.
+    double minTemperature                         = 6;      // Minimum temperature value.
+    string minTemperatureUnits                    = 7;      // Units for minimum temperature value.
+    double maxTemperature                         = 8;      // Maximum temperature value.
+    string maxTemperatureUnits                    = 9;      // Units for maximum temperature value.
+  }
+
+  message CsvExcelFile {
+    int32 headerRowCount            = 1;      // Number of rows before the column header in the file.
+    string referenceIDColumn        = 2;      // Reference ID column.
+    string temperatureColumn        = 3;      // Temperature column.
+    string temperatureUnits         = 4;      // Units for temperature values.
+    string numericFormat            = 5;      // Numeric format for values.
+  }
+
+  string fileName                   = 1;      // The name of the thermal file to update.
+  FileType fileType                 = 2;      // Thermal file type.
+  string fileComment                = 3;      // Include a comment or description for the file.
+  ThermalBoardSide thermalBoardSide = 4;      // Thermal board side.
+
+  oneof fileData {
+    CsvExcelFile csvExcelFile       = 5;      // Used to CSV and Excel files.
+    ImageFile imageFile             = 6;      // Used to add properties to Image files.
+  }
+  repeated string thermalProfiles   = 7;      // List of thermal profiles.
+  repeated string cca               = 8;      // Project CCA Name.
+}
+
+/**
+ * Response from updating thermal map files.
+ */
+ message UpdateThermalMapsResponse {
+  ReturnCode returnCode		            = 1;	    // Status code of response.
+  repeated string errors	            = 2;	    // List of validation errors.
 }
 
 service SherlockProjectService {
@@ -177,24 +296,30 @@ service SherlockProjectService {
   // Imports an ODB++ archive.
   rpc importODBArchive(ImportODBRequest) returns (ReturnCode);
   
-  // Imports an ODB++ archive.
+  // Imports an IPC-2581 archive.
   rpc importIPC2581Archive(ImportIPC2581Request) returns (ReturnCode);
   
-  // Delete a project from Sherlock
+  // Delete a project from Sherlock.
   rpc deleteProject(DeleteProjectRequest) returns (ReturnCode);
   
-  // Add a strain map to a Sherlock project
+  // Add a strain map to a Sherlock project.
   rpc addStrainMap(AddStrainMapRequest) returns (AddStrainMapResponse);
   
-   // Returns a list of circuit cards and their assigned strain maps for a given Sherlock project.
+  // Returns a list of circuit cards and their assigned strain maps for a given Sherlock project.
   rpc listStrainMaps(ListStrainMapsRequest) returns (ListStrainMapsResponse);
 
-   // Returns a list of circuit cards, their properties, and sub-assemblies for a given Sherlock project.
+  // Returns a list of circuit cards, their properties, and sub-assemblies for a given Sherlock project.
   rpc listCCAs(ListCCAsRequest) returns (ListCCAsResponse);
-  
-  // Add a project to Sherlock
-  rpc addProject(AddProjectRequest) returns (ReturnCode);
 
+  // Add a project to Sherlock.
+  rpc addProject(AddProjectRequest) returns (ReturnCode);
+  
   // Creates a new circuit card assembly.
   rpc addCCA(AddCcaRequest) returns (ReturnCode);
+
+  // Returns a list of thermal map files and their types for a given Sherlock project.
+  rpc listThermalMaps(ListThermalMapsRequest) returns (ListThermalMapsResponse);
+
+  // Update thermal map files to a Sherlock project.
+  rpc updateThermalMaps(UpdateThermalMapRequest) returns (UpdateThermalMapsResponse);
 }
