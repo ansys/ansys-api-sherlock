@@ -286,6 +286,26 @@ message ThermalMapFile {
   repeated string errors	            = 2;	    // List of validation errors.
 }
 
+/**
+ * Request to add thermal map files to a Sherlock project.
+ */
+ message AddThermalMapRequest {
+  string project                                = 1;  // Sherlock project name.
+  message AddThermalMap {
+    string thermalMapFile                       = 1;  // Full path to the thermal map file to be added.
+    ThermalMapFile thermalMapFileProperties     = 2;  // Thermal map file properties.
+  }
+  repeated AddThermalMap thermalMapFiles        = 2;  // Thermal map files and associated properties to be added.
+}
+
+/**
+ * Response from adding thermal map files.
+ */
+ message AddThermalMapResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  repeated string errors	= 2;	// List of validation errors.
+}
+
 service SherlockProjectService {
   // Generates the project report and return it via streaming.
   rpc genReport(GenReportRequest) returns (stream GenReportResponse);
@@ -322,4 +342,7 @@ service SherlockProjectService {
 
   // Update thermal map files to a Sherlock project.
   rpc updateThermalMaps(UpdateThermalMapRequest) returns (UpdateThermalMapsResponse);
+
+  // Add a thermal map to a Sherlock project.
+  rpc addThermalMaps(AddThermalMapRequest) returns (AddThermalMapResponse);
 }
