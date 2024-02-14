@@ -306,6 +306,23 @@ message ThermalMapFile {
   repeated string errors	= 2;	// List of validation errors.
 }
 
+/**
+ * Request for importing a .zip project archive when Sherlock is in multiple project mode.
+ */
+ message ImportProjectZipRequest {
+  string project				= 1;		// Sherlock project name.
+  string category				= 2;		// Sherlock project category.
+  string archiveFile			= 3;		// Full path to the .zip archive file containing the project data.
+}
+
+/**
+ * Request for importing a .zip project archive when Sherlock is in single project mode.
+ */
+ message ImportProjectZipSingleModeRequest {
+  ImportProjectZipRequest projZipRequest   		= 1;  // Encapsulates project name, category and full path to project .zip archive. 
+  string destFileDir							= 2;  // Directory in which the Sherlock project folder will be created. 
+}
+
 service SherlockProjectService {
   // Generates the project report and return it via streaming.
   rpc genReport(GenReportRequest) returns (stream GenReportResponse);
@@ -345,4 +362,10 @@ service SherlockProjectService {
 
   // Add a thermal map to a Sherlock project.
   rpc addThermalMaps(AddThermalMapRequest) returns (AddThermalMapResponse);
+
+  // Imports a zipped project archive -- multiple project mode.
+  rpc importProjectZipArchive(ImportProjectZipRequest) returns (ReturnCode);
+
+  // Imports a zipped project archive -- single project mode.
+  rpc importProjectZipArchiveSingleMode(ImportProjectZipSingleModeRequest) returns (ReturnCode);
 }
