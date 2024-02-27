@@ -1,4 +1,4 @@
-// Copyright 2023 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -135,26 +135,26 @@ message GenerateTraceModelRequest {
  * Indicates which trace regions to include in the 3D model.
  */
 enum TraceOutputType  {
-  ALL_REGIONS = 0;        // Both Conductor and Dielectric
-  CONDUCTOR_REGIONS = 1;  // The traces themselves
-  DIELECTRIC_REGIONS = 2; // Regions that surround the conductor regions (Ex. areas filled with resin)
+  ALL_REGIONS = 0;        // Both Conductor and Dielectric.
+  CONDUCTOR_REGIONS = 1;  // The traces themselves.
+  DIELECTRIC_REGIONS = 2; // Regions that surround the conductor regions (Ex. areas filled with resin).
 }
 
 /**
- * Drill hole properties used for exporting trace models
+ * Drill hole properties used for exporting trace models.
  */
 message DrillHoleModeling {
   bool drillHoleModelingEnabled  = 1; // Determines if drill holes will be included in the exported model
   Measurement minHoleDiameter = 2; // All drill holes with a diameter less than this will not be included in the exported model.
-                                   // Set this to 0 to include all drill holes
+                                   // Set this to 0 to include all drill holes.
   Measurement maxEdgeLength = 3; // Specifies the size of the segments used to represent round drill holes by a polygon.
 }
 
 /**
- * Request to export one or many trace models
+ * Request to export one or many trace models.
  */
 message ExportTraceModelRequest {
-  repeated TraceModelExportParams traceModelExportParams = 1; // Parameters for a single trace model export
+  repeated TraceModelExportParams traceModelExportParams = 1; // Parameters for a single trace model export.
 }
 
 /**
@@ -164,33 +164,33 @@ message TraceModelExportParams {
   string project = 1;  // Sherlock project name.
   string ccaName = 2;  // Sherlock CCA name.
   string filePath = 3; // Full file path to the trace export file.
-  string copperLayerName = 4; // Name of the layer in the CCA to export
-  bool overwriteExistingFile = 5; // Option that determines if any existing files get overwritten
-  bool displayModelAfterExport = 6; // Option to display the model after the export is done
+  string copperLayerName = 4; // Name of the layer in the CCA to export.
+  bool overwriteExistingFile = 5; // Option that determines if any existing files get overwritten.
+  bool displayModelAfterExport = 6; // Option to display the model after the export is done.
   optional bool clearFEADatabase = 7; // Clears FEA Database. Applicable for .apdl, and .cdb. This will be set to false if it is omitted for applicable file types.
   bool useFEAModelID = 8;  // Use FEA Model ID.
   optional string coordUnits = 9;  // Units of the coordinate system. Applicable to .py .wbjn, and .stp/.step. This will be set to mm if omitted for applicable file types.
   
   /*
-   * Mesh properties used for exporting trace models
+   * Mesh properties used for exporting trace models.
    */
   message PcbMeshPropParam {
     MeshType meshType = 1; // Options of different trace meshing strategies. The options available depend on export file type.
-    bool isModelingRegionEnabled = 2; // Determines if pre-defined modeling regions will be applied to the exported trace model
+    bool isModelingRegionEnabled = 2; // Determines if pre-defined modeling regions will be applied to the exported trace model.
   }
   PcbMeshPropParam pcbMeshPropParam = 10; // Properties used for exporting PCB mesh.
 
   /**
-   * Trace properties used for exporting trace models
+   * Trace properties used for exporting trace models.
    */
   message TracePropParam {
-    TraceOutputType traceOutputs = 1; // Options to select which trace regions to include in the 3D model
+    TraceOutputType traceOutputs = 1; // Options to select which trace regions to include in the 3D model.
     ElementOrder elementOrder = 2; // Type of FEA element to be used when modeling each component. (First/linear, Second/quadratic, Solid Shell)
     Measurement maxMeshSize = 3; // Value passed to FEA meshing tool to indicate the desired element sizes.
     int32 maxHolesPerTrace = 4; // Maximum number of holes allowed in a trace before partitioning it into multiple traces.
   }
-  TracePropParam tracePropParam = 11;  // Properties used for exporting the traces
-  DrillHoleModeling drillHoleModeling = 12; // Properties used for exporting drill holes
+  TracePropParam tracePropParam = 11;  // Properties used for exporting the traces.
+  DrillHoleModeling drillHoleModeling = 12; // Properties used for exporting drill holes.
 }
 
 service SherlockModelService {
@@ -203,7 +203,7 @@ service SherlockModelService {
   // Generate a trace model.
   rpc generateTraceModel(GenerateTraceModelRequest) returns (ReturnCode);
 
-  // Export a trace model
+  // Export a trace model.
   rpc exportTraceModel(ExportTraceModelRequest) returns (ReturnCode);
 }
 

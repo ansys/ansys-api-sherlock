@@ -1,4 +1,4 @@
-// Copyright 2023 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 option java_package = "sherlock.grpc";
@@ -104,7 +104,7 @@ message GetSoldersResponse {
 }
 
 /**
- * Represents a common measurement with a value and a unit
+ * Represents a common measurement with a value and a unit.
  */
  message Measurement {
   double value = 1;
