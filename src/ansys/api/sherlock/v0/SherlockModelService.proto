@@ -99,7 +99,7 @@ message ExportFEAModelRequest {
   }
   oneof drillHoleParams{
     TraceDrillHoleParam traceDrillHoleParam	= 9 [deprecated = true];	// Drill Holes modeling parameters - Min Hole Diameter and Max. Edge Length. If any of this parameter is provided, drill hole modeling will be enabled.
-    DrillHoleModeling drillHoleModeling = 11; // Properties used for exporting drill holes
+    DrillHoleModeling drillHoleModeling = 11; // Properties used for exporting drill holes.
   }
  
   string coordinateUnits					= 10;	// Units of exported model coordinates, valid values are "in", "mm", "m", "mil", "micron", "nm".
