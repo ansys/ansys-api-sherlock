@@ -144,7 +144,7 @@ enum TraceOutputType  {
  * Drill hole properties used for exporting trace models.
  */
 message DrillHoleModeling {
-  bool drillHoleModelingEnabled  = 1; // Determines if drill holes will be included in the exported model
+  bool drillHoleModelingEnabled  = 1; // Determines if drill holes will be included in the exported model.
   Measurement minHoleDiameter = 2; // All drill holes with a diameter less than this will not be included in the exported model.
                                    // Set this to 0 to include all drill holes.
   Measurement maxEdgeLength = 3; // Specifies the size of the segments used to represent round drill holes by a polygon.
@@ -158,7 +158,7 @@ message ExportTraceModelRequest {
 }
 
 /**
- * All parameters required to export a trace model
+ * All parameters required to export a trace model.
  */
 message TraceModelExportParams {
   string project = 1;  // Sherlock project name.
