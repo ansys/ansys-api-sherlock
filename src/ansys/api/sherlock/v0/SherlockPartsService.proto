@@ -1,4 +1,4 @@
-// Copyright 2023 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -245,6 +245,35 @@ message GetPartLocationResponse {
   repeated LocationData locationData = 2;
 }
 
+/**
+ * Request to update one or more properties of one or more parts in a parts list.
+ */
+message UpdatePartsListPropertiesRequest {
+  string project                         = 1; // Sherlock project name.
+  string ccaName                         = 2; // The CCA name for which part properties will be updated.         
+  message PartProperties {
+    repeated string refDes       = 1; // The reference designator for each part to be updated. If not included, update properties for all parts in the CCA.
+    message Property {
+      string name  = 1; // Name of property to be updated.
+      string value = 2; // Value to be applied to the chosen part property.
+    }
+    repeated Property properties = 2; // Part properties to be updated.  
+  }
+  repeated PartProperties partProperties = 3; // List of parts with properties to be updated.
+}
+
+/**
+ * Contains the status of the parts properties update as well as all the update error messages.
+ */
+message UpdatePartsListPropertiesResponse {
+  ReturnCode returnCode                   = 1; // Status code of response.
+  message PartPropertyError {
+    optional string refDes = 1; // The reference designator of the part. Not set for invalid property name errors.
+    string message         = 2; // Error message when updating the part.
+  }
+  repeated PartPropertyError updateErrors = 2; // Part property update errors.
+}
+
 service SherlockPartsService {
 
   // List the available parts libraries.
@@ -255,6 +284,9 @@ service SherlockPartsService {
 
   // Update the parts list from the AVL.
   rpc updatePartsListFromAVL(UpdatePartsListFromAVLRequest) returns (UpdatePartsListFromAVLResponse);
+
+  // Update the values of given parts.
+  rpc updatePartsListProperties(UpdatePartsListPropertiesRequest) returns (UpdatePartsListPropertiesResponse);
 
   // List the parts that have not been updated from the Sherlock Part Library.
   rpc listPartsNotUpdated(ListPartsNotUpdatedRequest) returns (ListPartsNotUpdatedResponse);
