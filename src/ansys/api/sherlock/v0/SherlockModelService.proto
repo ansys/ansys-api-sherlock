@@ -193,6 +193,17 @@ message TraceModelExportParams {
   DrillHoleModeling drillHoleModeling = 12; // Properties used for exporting drill holes.
 }
 
+/**
+ * Request to export an Electronics Desktop model
+ */
+message ExportAEDBRequest {
+  string project			= 1;	// Sherlock project name.
+  string ccaName			= 2;	// The CCA name.
+  string exportFile		 	= 3;	// Full file path to the Electronics Desktop export file.
+  bool   overwrite			= 4;	// Overwrite existing file if true.
+  bool   displayModel		= 5;	// Display model after export if true.
+}
+ 
 service SherlockModelService {
   // Export an FEA Model.
   rpc exportFEAModel(ExportFEAModelRequest) returns (ReturnCode);
@@ -205,5 +216,8 @@ service SherlockModelService {
 
   // Export a trace model.
   rpc exportTraceModel(ExportTraceModelRequest) returns (ReturnCode);
+  
+  // Export an Electronics Desktop model
+  rpc exportAEDB(ExportAEDBRequest) returns (ReturnCode);
 }
 
