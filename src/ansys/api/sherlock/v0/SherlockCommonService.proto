@@ -1,4 +1,4 @@
-// Copyright 2023-2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 option java_package = "sherlock.grpc";
@@ -110,6 +110,16 @@ message GetSoldersResponse {
   double value = 1;
   string units = 2;
 }
+
+/**
+ * Types of delimiters that can be used for exporting tables
+ */
+ enum TableDelimiter {
+  COMMA = 0;
+  SPACE = 1;
+  TAB = 2;
+  SEMICOLON = 3;
+ }
 
 service SherlockCommonService {
 
