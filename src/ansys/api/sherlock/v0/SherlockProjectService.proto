@@ -83,24 +83,67 @@ message DeleteProjectRequest{
 }
 
 /**
- * Request to add a strain map CSV file.
+ * Request to add strain map files to CCAs in a Sherlock project.
  */
-message AddStrainMapRequest {
-  string project					= 1;	// Sherlock project name.
+ message AddStrainMapRequest {
   message StrainMapFile {
-    string strainMapFile			= 1;	// Full path to the strain map file to be added.
-    string fileComment				= 2;	// File comment text.
-    int32  headerRowCount			= 3;	// Number of rows before the column header in the file.
-	string referenceIDColumn		= 4;	// Reference ID column name.
-	string strainColumn				= 5;	// Strain column name.
-	string strainUnits				= 6;	// Strain units used in the strain map file. Valid units: µε, ε.
-    repeated string cca				= 7;	// Project CCA names to to add the file to.
+    enum FileType {
+      CSV     = 0; // Csv file.
+      Excel   = 1; // Excel file.
+      Image   = 2; // Image file.
+    }
+
+    message StrainMapImageFile {
+      enum LegendOrientation {
+        Horizontal  = 0;      // Horizontal legend orientation.
+        Vertical    = 1;      // Vertical legend orientation.
+      }
+
+      message NodeCoordinate {
+        double vertexX = 1;    // X-coordinate of the node.
+        double vertexY = 2;    // Y-coordinate of the node.
+      }
+  
+      message ImageCoordinate {
+        double imageX = 1; // X-coordinate of the upper left corner.
+        double imageY = 2; // Y-coordinate of the upper left corner.
+        double imageH = 3; // Height of the image.
+        double imageW = 4; // Width of the image.
+      }
+    
+      message LegendCoordinate {
+        double legendX = 1; // X-coordinate of the upper left corner.
+        double legendY = 2; // Y-coordinate of the upper left corner.
+        double legendH = 3; // Height of the legend.
+        double legendW = 4; // Width of the legend.
+      }
+  
+      string coordinateUnits                = 1;      // Coordinate units used for board, lengend and image boundaries.
+      repeated NodeCoordinate boardBounds   = 2;      // Coordinates of the nodes which make up the board outline.
+      ImageCoordinate  imageBounds          = 3;      // Coordinates of the board bounds within the image.
+      LegendCoordinate legendBounds         = 4;      // Coordinates of the bounds of legend within the image.
+      LegendOrientation legendOrientation   = 5;      // Specify the legend orientation.
+      double minStrain                      = 6;      // Minimum strain value.
+      double maxStrain                      = 7;      // Maximum strain value.
+      string strainUnits                    = 8;      // Units for minimum and maximum strain values.
+    }
+    string strainMapFile			          = 1;	// Full path to the strain map file to be added.
+    string fileComment				          = 2;	// File comment text.
+    int32  headerRowCount			          = 3;	// Number of rows before the column header in the file.
+	  string referenceIDColumn	          = 4;	// Reference ID column name.
+	  string strainColumn				          = 5;	// Strain column name.
+	  string strainUnits				          = 6;	// Strain units used in the strain map file. Valid units: µε, ε.
+    repeated string cca				          = 7;	// Project CCA names to to add the file to.
+    string numericFormat		            = 8;	// Numeric format for values.
+    FileType fileType			              = 9;	// Type of the strain map file.
+    StrainMapImageFile imageFile			  = 10;	// Image strain map file properties.
   }
-  repeated StrainMapFile strainMapFiles	= 2;	// Strain map files and associated properties to be added.
+  string project					                    = 1;	// Sherlock project name.
+  repeated StrainMapFile strainMapFiles       = 2;  // Strain map files and associated properties to be added.
 }
 
 /**
- * Response from adding strain map CSV files.
+ * Response from adding strain map files.
  */
 message AddStrainMapResponse {
   ReturnCode returnCode		= 1;	// Status code of response.
@@ -339,7 +382,7 @@ service SherlockProjectService {
   // Delete a project from Sherlock.
   rpc deleteProject(DeleteProjectRequest) returns (ReturnCode);
   
-  // Add a strain map to a Sherlock project.
+  // Add a strain map files to a Sherlock project.
   rpc addStrainMap(AddStrainMapRequest) returns (AddStrainMapResponse);
   
   // Returns a list of circuit cards and their assigned strain maps for a given Sherlock project.
