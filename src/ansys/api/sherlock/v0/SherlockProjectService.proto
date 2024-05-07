@@ -195,9 +195,9 @@ message ListCCAsResponse {
  * Request to add a project to Sherlock.
  */
 message AddProjectRequest {
-  string project          = 1;
-  string category         = 2;
-  string description      = 3;
+  string project          = 1; // Sherlock project name.
+  string category         = 2; // Project category.
+  string description      = 3; // Project description.
 }
 
 message CCA {
