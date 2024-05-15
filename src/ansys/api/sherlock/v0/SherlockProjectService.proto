@@ -195,9 +195,9 @@ message ListCCAsResponse {
  * Request to add a project to Sherlock.
  */
 message AddProjectRequest {
-  string project          = 1;
-  string category         = 2;
-  string description      = 3;
+  string project          = 1; // Sherlock project name.
+  string category         = 2; // Project category.
+  string description      = 3; // Project description.
 }
 
 message CCA {
@@ -366,6 +366,22 @@ message ThermalMapFile {
   string destFileDir							= 2;  // Directory in which the Sherlock project folder will be created. 
 }
 
+/**
+ * Request for exporting the designated Sherlock project as a .zip file.
+ */
+ message ExportProjectRequest {
+  string project				= 1; 	// Sherlock project name.
+  bool exportDesignFiles		= 2; 	// If true, export all design files assigned to the project.
+  bool exportResultFiles		= 3; 	// If true, export all analysis module results.
+  bool exportArchivedResults    = 4; 	// If true, export all archived result files.
+  bool exportUserFiles			= 5; 	// If true, export all user properties and custom data files.
+  bool exportLogFiles			= 6; 	// If true, export all Sherlock console and application logs.
+  bool exportSystemData 		= 7; 	// If true, export all system technical data.
+  string exportFileDirectory	= 8;	// Full path of the directory where the .zip file is to be exported.
+  string exportFileName			= 9; 	// Name of the zip file containing the project's exported data.
+  bool overwriteExistingFile 	= 10;   // If true, an existing file will be overwritten.
+}
+
 service SherlockProjectService {
   // Generates the project report and return it via streaming.
   rpc genReport(GenReportRequest) returns (stream GenReportResponse);
@@ -411,4 +427,8 @@ service SherlockProjectService {
 
   // Imports a zipped project archive -- single project mode.
   rpc importProjectZipArchiveSingleMode(ImportProjectZipSingleModeRequest) returns (ReturnCode);
+
+  // Exports project to a zipped archive file.
+  rpc exportProject(ExportProjectRequest) returns (ReturnCode);
+
 }
