@@ -1,4 +1,4 @@
-// Copyright 2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -13,7 +13,7 @@ message ListPartsLibrariesRequest {
 }
 
 /**
- * Determines how parts in the parts list are matched against parts 
+ * Determines how parts in the parts list are matched against parts
  * in the AVL or Part Library.
  */
 enum MatchingMode {
@@ -41,7 +41,7 @@ enum AVLPartNum{
 }
 
 /**
- * Determines if the part description in the parts list 
+ * Determines if the part description in the parts list
  * will be updated by the AVL.
  */
 enum AVLDescription{
@@ -64,9 +64,9 @@ message UpdatePartsListRequest {
   string project				= 1;	// Sherlock project name.
   string ccaName				= 2;	// The CCA name.
   string partLibrary			= 3;	// Parts library name.
-  
+
   MatchingMode matching			= 4;	// Designates the matching mode for updates.
-  
+
   DuplicationMode duplication 	= 5;	// Designates how to handle duplications during update.
 }
 
@@ -82,18 +82,18 @@ message UpdatePartsListResponse {
  * Request to update the parts list from AVL.
  */
 message UpdatePartsListFromAVLRequest {
-  string project      = 1;
-  string ccaName      = 2;
-  MatchingMode matching       = 3;
-  DuplicationMode duplication = 4;
-  AVLPartNum avlPartNum       = 5;
-  AVLDescription avlDesc      = 6;
+  string project      = 1;          // Sherlock project name.
+  string ccaName      = 2;          // The CCA name.
+  MatchingMode matching       = 3;  // How sherlock matches parts in the AVL
+  DuplicationMode duplication = 4;  // How sherlock handles duplicate parts found.
+  AVLPartNum avlPartNum       = 5;  // Update part number and vendor/manufacturer or part number only.
+  AVLDescription avlDesc      = 6;  // Update description or not.
 }
 
 message UpdatePartsListFromAVLResponse {
-  ReturnCode returnCode = 1;
-  int32 numPartsUpdated = 2;
-  repeated string updateErrors = 3;
+  ReturnCode returnCode = 1;        // Status code of response.
+  int32 numPartsUpdated = 2;        // Number of parts updated in the parts list.
+  repeated string updateErrors = 3; // Specific errors that occured during update.
 }
 
 /**
@@ -107,16 +107,16 @@ message ListPartsNotUpdatedRequest {
  * Represents a list of parts not updated from the Sherlock Part Library.
  */
 message ListPartsNotUpdatedResponse {
-  ReturnCode returnCode 	= 1;	// Status code of response.
+  ReturnCode returnCode = 1;	// Status code of response.
   message CCA {
-    string ccaName		= 1;		// Name of the CCA.
+    string ccaName      = 1;	// The CCA name.
     message Part {
-      string refDes		= 1;	// Reference Designator for the part.
-      string partNumber	= 2;	// Part number.
+      string refDes     = 1;	// Reference designator for the part.
+      string partNumber = 2;	// Part number.
     }
-    repeated Part parts	= 2;
+    repeated Part parts = 2;    // List of Parts not updated for a CCA.
   }
-  repeated CCA ccas			= 2;
+  repeated CCA ccas     = 2;    // List of CCAs containing Parts not updated.
 }
 
 /**
@@ -153,7 +153,7 @@ message UpdatePartsLocationsRequest {
   string project				= 1;	// Sherlock project name.
   string ccaName				= 2;	// The CCA name.
   message PartLocation {
-    string refDes			= 1;	// Ref Des of the part.
+    string refDes			= 1;	// Reference designator of the part.
     string x				= 2;	// Location of the part along the X axis.
     string y				= 3;	// Location of the part along the Y axis.
     string rotation			= 4;	// Rotation of the part on the board in degrees.
@@ -161,7 +161,7 @@ message UpdatePartsLocationsRequest {
     string boardSide		= 6;	// Side of board on which the component exists. Supported values are TOP and BOTTOM.
     string mirrored			= 7;	// Indicates if the component is mirrored across the Y-axis. Supported values are Y, and N.
   }
-  repeated PartLocation partLoc	= 3;
+  repeated PartLocation partLoc	= 3;  // List of part locations to be updated for a specified project and CCA.
 }
 
 /**
@@ -222,10 +222,10 @@ message GetBoardSidesResponse {
  * Request to get a part's location.
  */
 message GetPartLocationRequest {
-  string project				= 1;	// Sherlock project name.
-  string ccaName				= 2;	// The CCA name.
-  string refDes					= 3;	// A comma separated list of ref des for a list of parts, or a ref des for one part.
-  string locationUnits			= 4;	// Unit of length for the part location. Supported values are IN, MM, M, MIL, MICRON, and NM.
+  string project       = 1; // Sherlock project name.
+  string ccaName       = 2; // The CCA name.
+  string refDes        = 3; // A comma separated list of reference designators for a list of parts, or a Ref Des for one part.
+  string locationUnits = 4; // Unit of length for the part location. Supported values are IN, MM, M, MIL, MICRON, and NM.
 }
 
 /**
@@ -240,9 +240,9 @@ message GetPartLocationResponse {
     string locationUnits	= 4;	// Unit of length for the part location.
     string boardSide		= 5;	// Side of board on which the component exists.
     bool	mirrored		= 6;	// Indicates if the component is mirrored across the Y-axis.
-    string refDes			= 7;	// RefDes for the corresponding part.
+    string refDes			= 7;	// Ref Des for the corresponding part.
   }
-  repeated LocationData locationData = 2;
+  repeated LocationData locationData = 2;  // List of location data for a part or list of parts in a specified project and CCA.
 }
 
 /**
@@ -250,14 +250,14 @@ message GetPartLocationResponse {
  */
 message UpdatePartsListPropertiesRequest {
   string project                         = 1; // Sherlock project name.
-  string ccaName                         = 2; // The CCA name for which part properties will be updated.         
+  string ccaName                         = 2; // The CCA name for which part properties will be updated.
   message PartProperties {
     repeated string refDes       = 1; // The reference designator for each part to be updated. If not included, update properties for all parts in the CCA.
     message Property {
       string name  = 1; // Name of property to be updated.
       string value = 2; // Value to be applied to the chosen part property.
     }
-    repeated Property properties = 2; // Part properties to be updated.  
+    repeated Property properties = 2; // Part properties to be updated.
   }
   repeated PartProperties partProperties = 3; // List of parts with properties to be updated.
 }
@@ -275,15 +275,15 @@ message UpdatePartsListPropertiesResponse {
 }
 
 /**
- * Contains the options needed to export a net list to a delimited output file (csv but can have delimiters other than a comma).
+ * Contains the options needed to export a net list to a delimited output file (csv but can have delimiters other than a comma)
  */
- message ExportNetListRequest {
-  string project                = 1; // Sherlock project name.
-  string ccaName                = 2; // The CCA name. 
-  string outputFilePath         = 3; // Full path of the file where the table will be written
-  bool overwriteExisting        = 4; // Flag to determine if existing files should be overwritten if they match the outputFilePath. False by default.
-  TableDelimiter colDelimiter   = 5; // Enum that specifies supported delimiter character to be used. Set to COMMA by default. Not applicable to Excel files like xls, xlsx.
-  bool utf8Enabled              = 6; // Flag that specifies if UTF-8 will be used. False by default. Not applicable to Excel files like xls, xlsx.
+message ExportNetListRequest {
+  string project = 1; // Sherlock project name.
+  string ccaName = 2; // The CCA name.
+  string outputFilePath = 3; // Full path of the file where the table will be written.
+  bool overwriteExisting = 4; // Flag to determine if existing files should be overwritten if they match the outputFilePath. False by default.
+  TableDelimiter colDelimiter = 5; // Enum that specifies supported delimiter character to be used. Set to COMMA by default. Not applicable to Excel files like xls, xlsx.
+  bool utf8Enabled = 6; // Flag that specifies if UTF-8 will be used. False by default. Not applicable to Excel files like xls, xlsx.
 }
 
 service SherlockPartsService {
@@ -302,13 +302,13 @@ service SherlockPartsService {
 
   // List the parts that have not been updated from the Sherlock Part Library.
   rpc listPartsNotUpdated(ListPartsNotUpdatedRequest) returns (ListPartsNotUpdatedResponse);
-  
+
   // Enable lead modeling for all non LEADLESS parts leads in a project's CCA.
   rpc updateLeadModeling(UpdateLeadModelingRequest) returns (ReturnCode);
-  
+
   // Export parts list for all parts given a project's CCA.
   rpc exportPartsList(ExportPartsListRequest) returns (ReturnCode);
-  
+
   // Import a parts list for a given a project's CCA.
   rpc importPartsList(ImportPartsListRequest) returns (ReturnCode);
 
@@ -317,16 +317,16 @@ service SherlockPartsService {
 
   // Update one or more parts' locations using a CSV file.
   rpc updatePartsLocationsByFile(UpdatePartsLocationsByFileRequest) returns (UpdatePartsLocationsByFileResponse);
-    
+
   // Get a list of valid part location units.
   rpc getPartLocationUnits(GetPartLocationUnitsRequest) returns (GetPartLocationUnitsResponse);
-  
+
   // Get a list of valid board side values.
   rpc getBoardSides(GetBoardSidesRequest) returns (GetBoardSidesResponse);
-  
+
   // Get the location properties for a part.
   rpc getPartLocation(GetPartLocationRequest) returns (GetPartLocationResponse);
 
-  // Export the net list to a file.
+  // Export the net list to a file
   rpc exportNetList(ExportNetListRequest) returns (ReturnCode);
 }
