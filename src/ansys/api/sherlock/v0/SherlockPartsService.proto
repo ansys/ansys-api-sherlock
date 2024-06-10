@@ -13,15 +13,6 @@ message ListPartsLibrariesRequest {
 }
 
 /**
- * Determines how parts in the parts list are matched against parts
- * in the AVL or Part Library.
- */
-enum MatchingMode {
-  Both	= 0;		// Matches both part number and manufacturer.
-  Part	= 1;		// Matches part number only.
-}
-
-/**
  * Determines what happens when there are duplicate matches for parts in the part list
  * against parts in the AVL or Part Library.
  */
@@ -41,7 +32,7 @@ enum AVLPartNum{
 }
 
 /**
- * Determines if the part description in the parts list
+ * Determines if the part description in the parts list 
  * will be updated by the AVL.
  */
 enum AVLDescription{
@@ -64,9 +55,9 @@ message UpdatePartsListRequest {
   string project				= 1;	// Sherlock project name.
   string ccaName				= 2;	// The CCA name.
   string partLibrary			= 3;	// Parts library name.
-
+  
   MatchingMode matching			= 4;	// Designates the matching mode for updates.
-
+  
   DuplicationMode duplication 	= 5;	// Designates how to handle duplications during update.
 }
 
@@ -250,14 +241,14 @@ message GetPartLocationResponse {
  */
 message UpdatePartsListPropertiesRequest {
   string project                         = 1; // Sherlock project name.
-  string ccaName                         = 2; // The CCA name for which part properties will be updated.
+  string ccaName                         = 2; // The CCA name for which part properties will be updated.         
   message PartProperties {
     repeated string refDes       = 1; // The reference designator for each part to be updated. If not included, update properties for all parts in the CCA.
     message Property {
       string name  = 1; // Name of property to be updated.
       string value = 2; // Value to be applied to the chosen part property.
     }
-    repeated Property properties = 2; // Part properties to be updated.
+    repeated Property properties = 2; // Part properties to be updated.  
   }
   repeated PartProperties partProperties = 3; // List of parts with properties to be updated.
 }
@@ -279,7 +270,7 @@ message UpdatePartsListPropertiesResponse {
  */
 message ExportNetListRequest {
   string project = 1; // Sherlock project name.
-  string ccaName = 2; // The CCA name.
+  string ccaName = 2; // The CCA name. 
   string outputFilePath = 3; // Full path of the file where the table will be written.
   bool overwriteExisting = 4; // Flag to determine if existing files should be overwritten if they match the outputFilePath. False by default.
   TableDelimiter colDelimiter = 5; // Enum that specifies supported delimiter character to be used. Set to COMMA by default. Not applicable to Excel files like xls, xlsx.
@@ -296,19 +287,19 @@ service SherlockPartsService {
 
   // Update the parts list from the AVL.
   rpc updatePartsListFromAVL(UpdatePartsListFromAVLRequest) returns (UpdatePartsListFromAVLResponse);
-
+  
   // Update the values of given parts.
   rpc updatePartsListProperties(UpdatePartsListPropertiesRequest) returns (UpdatePartsListPropertiesResponse);
-
+  
   // List the parts that have not been updated from the Sherlock Part Library.
   rpc listPartsNotUpdated(ListPartsNotUpdatedRequest) returns (ListPartsNotUpdatedResponse);
-
+  
   // Enable lead modeling for all non LEADLESS parts leads in a project's CCA.
   rpc updateLeadModeling(UpdateLeadModelingRequest) returns (ReturnCode);
-
+  
   // Export parts list for all parts given a project's CCA.
   rpc exportPartsList(ExportPartsListRequest) returns (ReturnCode);
-
+  
   // Import a parts list for a given a project's CCA.
   rpc importPartsList(ImportPartsListRequest) returns (ReturnCode);
 
@@ -317,13 +308,13 @@ service SherlockPartsService {
 
   // Update one or more parts' locations using a CSV file.
   rpc updatePartsLocationsByFile(UpdatePartsLocationsByFileRequest) returns (UpdatePartsLocationsByFileResponse);
-
+    
   // Get a list of valid part location units.
   rpc getPartLocationUnits(GetPartLocationUnitsRequest) returns (GetPartLocationUnitsResponse);
-
+  
   // Get a list of valid board side values.
   rpc getBoardSides(GetBoardSidesRequest) returns (GetBoardSidesResponse);
-
+  
   // Get the location properties for a part.
   rpc getPartLocation(GetPartLocationRequest) returns (GetPartLocationResponse);
 
