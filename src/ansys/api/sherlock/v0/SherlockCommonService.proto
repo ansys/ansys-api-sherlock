@@ -1,4 +1,4 @@
-// Copyright 2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 option java_package = "sherlock.grpc";
@@ -8,7 +8,7 @@ option java_outer_classname = "SherlockCommonServiceProto";
  * Status response of a message. A value of 0 indicates a successful request. 
  */
 message ReturnCode {
-  int32 value = 1;		// Status code of response. A value of 0 indicates success.
+  int32 value = 1;		// Status code of response. A value of 0 indicates success, -1 indicates error.
   string message = 2;	// Message indicating the status of response including any error.
 }
 
@@ -34,8 +34,8 @@ message HealthCheckResponse {
     SERVING = 1;		// Indicates the connection is up and server is listening.
     NOT_SERVING = 2;	// Indicates connection with server is closed.
   }
-  ServingStatus status = 1;
-  int32 port = 2;		// Listening port number on server.
+  ServingStatus status = 1; // Enum representing connection status.
+  int32 port = 2;		    // Listening port number on server.
 }
 
 /**
@@ -104,22 +104,31 @@ message GetSoldersResponse {
 }
 
 /**
- * Represents a common measurement with a value and a unit.
+ * Represents a common measurement with a value and a unit
  */
- message Measurement {
-  double value = 1;
-  string units = 2;
+message Measurement {
+  double value = 1;  // Numerical value of a measurement.
+  string units = 2;  // Units of the numerical value.
 }
 
 /**
  * Types of delimiters that can be used for exporting tables
  */
  enum TableDelimiter {
-  COMMA = 0;
-  SPACE = 1;
-  TAB = 2;
-  SEMICOLON = 3;
- }
+  COMMA = 0;  		// Represents ',' delimiter.
+  SPACE = 1;  		// Represents ' ' delimiter.
+  TAB = 2;	  		// Represents tab key delimiter.
+  SEMICOLON = 3;	// Represents ';' delimiter.
+}
+
+/**
+ * Determines how parts in the parts list are matched against parts 
+ * in the AVL or Part Library.
+ */
+enum MatchingMode {
+  Both	= 0;		// Matches both part number and manufacturer.
+  Part	= 1;		// Matches part number only.
+}
 
 service SherlockCommonService {
 
