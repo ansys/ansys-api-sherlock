@@ -382,6 +382,29 @@ message ThermalMapFile {
   bool overwriteExistingFile 	= 10;   // If true, an existing file will be overwritten.
 }
 
+/**
+ * Request for creating CCA from a specified modeling region.
+ */
+message CreateCcaFromModelingRegionRequest {
+	string project										   = 1; 	// Sherlock project name.
+	/**
+ 	 * Request for each individual property of cca
+ 	 */
+	message CCAFromModelingRegion {
+  		string ccaName									= 1;  	// Project CCA name.
+  		string modelingRegionID							= 2;	// ID of CCA's modeling region used to create new CCA.
+  		string description								= 3; 	// CCA's description.
+  		optional string defaultSolderType				= 4; 	// Default solder type.
+  		optional double defaultStencilThickness 		= 5; 	// Default stencil thickness.
+  		optional string defaultStencilThicknessUnits	= 6; 	// Default stencil thickness units.
+  		optional double defaultPartTempRise 			= 7; 	// Default part temp rise.
+  		optional string defaultPartTempRiseUnits 		= 8; 	// Default part temp rise units.
+  		optional bool guessPartProperties 				= 9; 	// Whether to enable guess part properties.
+  		optional bool generateImageLayers				= 10;	// Whether to generate image layers
+	}
+	repeated CCAFromModelingRegion cCAsFromModelingRegions = 2;		// CCAs from modeling regions to add.
+}
+
 service SherlockProjectService {
   // Generates the project report and return it via streaming.
   rpc genReport(GenReportRequest) returns (stream GenReportResponse);
@@ -431,4 +454,6 @@ service SherlockProjectService {
   // Exports project to a zipped archive file.
   rpc exportProject(ExportProjectRequest) returns (ReturnCode);
 
+  // Creates a CCA from a given modeling region
+  rpc createCCAFromModelingRegion(CreateCcaFromModelingRegionRequest) returns (ReturnCode);
 }
