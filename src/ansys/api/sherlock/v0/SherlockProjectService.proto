@@ -388,7 +388,7 @@ message ThermalMapFile {
 message CreateCcaFromModelingRegionRequest {
 	string project										   = 1; 	// Sherlock project name.
 	/**
- 	 * Request for each individual property of cca
+ 	 * Request for each individual property of cca.
  	 */
 	message CCAFromModelingRegion {
   		string ccaName									= 1;  	// Project CCA name.
@@ -454,6 +454,6 @@ service SherlockProjectService {
   // Exports project to a zipped archive file.
   rpc exportProject(ExportProjectRequest) returns (ReturnCode);
 
-  // Creates a CCA from a given modeling region
+  // Creates a CCA from a given modeling region.
   rpc createCCAFromModelingRegion(CreateCcaFromModelingRegionRequest) returns (ReturnCode);
 }
