@@ -374,6 +374,9 @@ message ModelingRegion {
 }
 
 service SherlockLayerService {
+  // Add one or more modeling regions with the specified shapes and properties.
+  rpc addModelingRegion(AddModelingRegionRequest) returns (ReturnCode);
+
   // Add a potting region with the specified shape and properties.
   rpc addPottingRegion(AddPottingRegionRequest) returns (ReturnCode);
 
@@ -437,6 +440,4 @@ service SherlockLayerService {
   // The file format should be the same as the one produced from CCA -> Export Test Points.
   rpc updateTestPointsByFile(UpdateTestPointsByFileRequest) returns (UpdateTestPointsResponse);
 
-  // Add one or more modeling regions with the specified shapes and properties.
-  rpc addModelingRegion(AddModelingRegionRequest) returns (ReturnCode);
 }
