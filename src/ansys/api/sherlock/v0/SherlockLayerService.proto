@@ -373,6 +373,42 @@ message ModelingRegion {
 	repeated ModelingRegion modelingRegions = 2;	// List of modeling regions to add to the project.
 }
 
+/** 
+ * Request to update one or more modeling regions for a specific project.
+ */
+ message UpdateModelingRegionRequest {
+	string project = 1;								// The name of the Sherlock project.
+	repeated ModelingRegion modelingRegions = 2;	// List of modeling regions to update in the project.  The regionId for 
+													// each modeling region must already exist in the project.
+}
+
+/** 
+ * Request to delete one or more modeling regions for a specific project.
+ */
+ message DeleteModelingRegionRequest {
+	message DeleteModelingRegionInfo {
+		string ccaName = 1;	 	// Name of the CCA.
+		string regionId = 2;	// Unique region ID of the modeling region to delete.
+	}
+	string project = 1;									    // The name of the Sherlock project.
+	repeated DeleteModelingRegionInfo deleteRegions = 2;	// List of modeling regions to delete in the project.  
+}
+
+/**
+ * Request to copy one or more modeling regions in a specific project.
+ */
+ message CopyModelingRegionRequest {
+	message CopyModelingRegionInfo {
+		string ccaName = 1;	 		// Name of the CCA.
+		string regionId = 2;		// Region ID of the existing modeling region to copy.
+		string regionIdCopy = 3;    // Region ID of the modeling region copy. Must be unique.
+		double centerX = 4;			// The center x coordinate of the modeling region copy -- used for location placement in the Layer Viewer. 
+		double centerY = 5;			// The center y coordinate of the modeling region copy -- used for location placement in the Layer Viewer.
+	}
+	string project = 1;									    // The name of the Sherlock project.
+	repeated CopyModelingRegionInfo copyRegions = 2;		// List of modeling regions to copy along with their corresponding "copy to" parameters.	
+}
+
 service SherlockLayerService {
   // Add one or more modeling regions with the specified shapes and properties.
   rpc addModelingRegion(AddModelingRegionRequest) returns (ReturnCode);
@@ -388,6 +424,12 @@ service SherlockLayerService {
   
   // Delete all test points in specific CCA of specific project.
   rpc deleteAllTestPoints(DeleteAllTestPointsRequest) returns (ReturnCode);
+
+  // Delete one or more existing modeling regions.
+  rpc deleteModelingRegion(DeleteModelingRegionRequest) returns (ReturnCode);
+
+  // Copy one or more existing modeling regions.
+  rpc copyModelingRegion(CopyModelingRegionRequest) returns (ReturnCode);
   
   // Export all mount points and their properties into a CSV formatted file.
   rpc exportAllMountPoints(ExportAllMountPointsRequest) returns (ReturnCode);
@@ -427,6 +469,9 @@ service SherlockLayerService {
 
   // Update mount points with specified properties.
   rpc updateMountPoints(UpdateMountPointsRequest) returns (UpdateMountPointsResponse);
+
+  // Update one or more modeling regions with the specified shapes and properties.
+  rpc updateModelingRegion(UpdateModelingRegionRequest) returns (ReturnCode);
 
   // Update the mount points properties of a CCA from a CSV formatted file. This API could be used to add new mount points or update existing ones depending on the file contents.
   // If the ID specified already exists, then the properties for that mount point will be updated.
