@@ -377,7 +377,7 @@ message UpdatePartsListValidationPropsRequest {
     string ccaName = 1;												// The CCA name.
     optional string partLibrary = 2;								// Part library name.
     optional bool processUseAVL = 3;								// Process option to use AVL.
-    optional bool processUseWizard = 4;								// Process option to use Wizard.
+    optional bool processUseWizard = 4;								// Process option to use wizard.
     optional bool processCheckConfirmedProperties = 5;				// Process option to check confirmed properties.
     optional bool processCheckPartNumbers = 6;						// Process option to check part numbers.
     optional MatchingMode matching = 7;								// Matching type.
@@ -387,6 +387,30 @@ message UpdatePartsListValidationPropsRequest {
   }
   
   repeated PartsListValidation partsListValidationProperties = 2;	// Properties for each CCA in the project.
+}
+
+/**
+ * Request to retrieve the Parts List Validation properties.
+ */
+message GetPartsListValidationPropsRequest {
+  string project = 1;				// Sherlock Project name.
+  string ccaName = 2;				// The CCA name.
+}
+
+/**
+ * Response that includes Parts List Validation properties.
+ */
+message PartsListValidationPropsResponse {
+  ReturnCode returnCode = 1;										// Status code of response.
+  string partLibrary = 2;											// Part library name.
+  bool processUseAVL = 3;											// Process option to use AVL.
+  bool processUseWizard = 4;										// Process option to use wizard.
+  bool processCheckConfirmedProperties = 5;							// Process option to check confirmed properties.
+  bool processCheckPartNumbers = 6;									// Process option to check part numbers.
+  MatchingMode matching = 7;										// Matching type.
+  bool avlRequireInternalPartNumber = 8;							// AVL option to require internal part number.
+  bool avlRequireApprovedDescription = 9;							// AVL option to require approved description.
+  bool avlRequireApprovedManufacturer = 10;							// AVL option to require approved manufacturer.
 }
 
 service SherlockAnalysisService {
@@ -444,7 +468,10 @@ service SherlockAnalysisService {
   // Updates the analysis properties for ICT analysis.
   rpc updateICTAnalysisProps(UpdateICTAnalysisPropsRequest) returns (ReturnCode);
   
-  // Updates the analysis properties for part list validation analysis.
+  // Updates the analysis properties for parts list validation analysis.
   rpc updatePartsListValidationProps(UpdatePartsListValidationPropsRequest) returns (ReturnCode);
+  
+  // Returns the parts list validation properties.
+  rpc getPartsListValidationProps(GetPartsListValidationPropsRequest) returns (PartsListValidationPropsResponse);
   
 }
