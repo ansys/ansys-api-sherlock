@@ -289,12 +289,34 @@ message PCBShape {
 }
 
 /**
+ * Data that fully describes a potting region.
+ */
+ message PottingRegion {
+  string ccaName = 1;							// The name of the CCA.
+  optional string pottingID = 2;				// The potting ID.
+  optional string pottingSide = 3;			// The potting side, options are "TOP", "BOT", or "BOTTOM".
+  optional string pottingMaterial = 4;		// The potting material.
+  optional string pottingUnits = 5;			// The units to use for the potting region.
+  optional double pottingThickness = 6;		// The potting thickness.
+  optional double pottingStandoff = 7;		// The potting standoff.
+
+  oneof Shape {
+    PolygonalShape polygonalShape = 8;		// Used to add a region with a polygonal shape.
+    RectangularShape rectangularShape = 9;	// Used to add a region with a rectangular shape.
+    SlotShape slotShape = 10;					// Used to add a region with a slot shape.
+    CircularShape circularShape = 11;			// Used to add a region with a circular shape.
+    PCBShape pCBShape = 12;					// Used to add a region with a PCB shape.
+  }
+}
+
+/**
  * Request to add a potting region.
  */
 message AddPottingRegionRequest {  
   message PottingRegion {
+    option deprecated = true;
     string ccaName = 1;							// The name of the CCA.
-    optional string pottingID = 2;				// The potting ID, must be unique.
+    optional string pottingID = 2;				// The potting ID.
     optional string pottingSide = 3;			// The potting side, options are "TOP", "BOT", or "BOTTOM".
     optional string pottingMaterial = 4;		// The potting material.
     optional string pottingUnits = 5;			// The units to use for the potting region.
@@ -313,6 +335,57 @@ message AddPottingRegionRequest {
   string project = 1;							// The name of the Sherlock project to add the potting regions to.
   repeated PottingRegion pottingRegions = 2;	// The potting regions to add.
 }
+
+/**
+ * Request to update 1 or more potting regions in a single CCA.
+ */
+ message UpdatePottingRegionRequest {
+  /**
+   * Potting region data used to describe a single potting region and identify which one should be updated.
+   */
+  message PottingRegionUpdateData {
+    string pottingRegionIDToUpdate = 1;  // Data that uniquely identifies the potting region being updated.
+    PottingRegion pottingRegion = 2; // Data that describes a potting region.
+  }
+
+  string project = 1; // The name of the Sherlock project that contains the potting region(s) to update.
+  repeated PottingRegionUpdateData updatePottingRegions = 2;  // List of data needed to update each potting region.
+}
+
+/**
+ * Request to delete 1 or more potting regions.
+ */
+ message DeletePottingRegionRequest {
+  /**
+   * Potting region data used to identify a single pre-existing potting region which should be deleted.
+   */
+  message PottingRegionDeleteData {
+    string ccaName = 1; // The name of the CCA.
+    string pottingID = 2; // The potting ID.
+  }
+
+  string project = 1; // The name of the Sherlock project that contains the potting region(s) to delete.
+  repeated PottingRegionDeleteData pottingRegionDeleteData = 2; // List of information needed to delete a specific Potting Region.
+}
+
+/**
+ * Request to copy 1 or more potting regions.
+ */
+ message CopyPottingRegionRequest {
+  /**
+   * Potting region data used to identify a single pre-existing potting region which should be copied.
+   */
+  message PottingRegionCopyData {
+    string ccaName = 1; // The name of the CCA.
+    string pottingID = 2; // The potting ID to copy from.
+    string copyPottingID = 3; // The potting ID to be used for the new copy.
+    optional double centerX = 4; // The x coordinate for the center of the copied potting region.
+    optional double centerY = 5; // The y coordinate for the center of the copied potting region.
+  }
+
+  string project = 1; // The name of the Sherlock project that contains the potting region(s) to copy.
+  repeated PottingRegionCopyData pottingRegionCopyData = 2; // List of information needed to copy a specific Potting Region.
+ }
 
 message ModelingRegion {
 	enum ModelingMode {
@@ -368,7 +441,7 @@ message ModelingRegion {
 /** 
  * Request to add one or more modeling regions to a specific project.
  */
- message AddModelingRegionRequest {
+message AddModelingRegionRequest {
 	string project = 1;								// The name of the Sherlock project to add the modeling regions to.
 	repeated ModelingRegion modelingRegions = 2;	// List of modeling regions to add to the project.
 }
@@ -376,7 +449,7 @@ message ModelingRegion {
 /** 
  * Request to update one or more modeling regions for a specific project.
  */
- message UpdateModelingRegionRequest {
+message UpdateModelingRegionRequest {
 	string project = 1;								// The name of the Sherlock project.
 	repeated ModelingRegion modelingRegions = 2;	// List of modeling regions to update in the project.  The regionId for 
 													// each modeling region must already exist in the project.
@@ -385,7 +458,7 @@ message ModelingRegion {
 /** 
  * Request to delete one or more modeling regions for a specific project.
  */
- message DeleteModelingRegionRequest {
+message DeleteModelingRegionRequest {
 	message DeleteModelingRegionInfo {
 		string ccaName = 1;	 	// Name of the CCA.
 		string regionId = 2;	// Unique region ID of the modeling region to delete.
@@ -397,7 +470,7 @@ message ModelingRegion {
 /**
  * Request to copy one or more modeling regions in a specific project.
  */
- message CopyModelingRegionRequest {
+message CopyModelingRegionRequest {
 	message CopyModelingRegionInfo {
 		string ccaName = 1;	 		// Name of the CCA.
 		string regionId = 2;		// Region ID of the existing modeling region to copy.
@@ -410,11 +483,17 @@ message ModelingRegion {
 }
 
 service SherlockLayerService {
-  // Add one or more modeling regions with the specified shapes and properties.
-  rpc addModelingRegion(AddModelingRegionRequest) returns (ReturnCode);
-
   // Add a potting region with the specified shape and properties.
   rpc addPottingRegion(AddPottingRegionRequest) returns (ReturnCode);
+
+  // Updates a potting region with the specified shape and properties.
+  rpc updatePottingRegion(UpdatePottingRegionRequest) returns (stream ReturnCode);
+
+  // Deletes a potting region based on given identification properties.
+  rpc deletePottingRegion(DeletePottingRegionRequest) returns (stream ReturnCode);
+
+  // Copies a potting region based on given identification properties.
+  rpc copyPottingRegion(CopyPottingRegionRequest) returns (stream ReturnCode);
 
   // Delete all ICT fixtures in specific CCA of specific project.
   rpc deleteAllICTFixtures(DeleteAllICTFixturesRequest) returns (ReturnCode);
@@ -424,12 +503,6 @@ service SherlockLayerService {
   
   // Delete all test points in specific CCA of specific project.
   rpc deleteAllTestPoints(DeleteAllTestPointsRequest) returns (ReturnCode);
-
-  // Delete one or more existing modeling regions.
-  rpc deleteModelingRegion(DeleteModelingRegionRequest) returns (ReturnCode);
-
-  // Copy one or more existing modeling regions.
-  rpc copyModelingRegion(CopyModelingRegionRequest) returns (ReturnCode);
   
   // Export all mount points and their properties into a CSV formatted file.
   rpc exportAllMountPoints(ExportAllMountPointsRequest) returns (ReturnCode);
@@ -470,9 +543,6 @@ service SherlockLayerService {
   // Update mount points with specified properties.
   rpc updateMountPoints(UpdateMountPointsRequest) returns (UpdateMountPointsResponse);
 
-  // Update one or more modeling regions with the specified shapes and properties.
-  rpc updateModelingRegion(UpdateModelingRegionRequest) returns (ReturnCode);
-
   // Update the mount points properties of a CCA from a CSV formatted file. This API could be used to add new mount points or update existing ones depending on the file contents.
   // If the ID specified already exists, then the properties for that mount point will be updated.
   // If the ID specified does not already exist, or if the field is empty, then a new mount point will be added with the specified properties.
@@ -484,5 +554,16 @@ service SherlockLayerService {
   // If the ID specified does not already exist, or if the field is empty, then a new test point will be added with the specified properties.
   // The file format should be the same as the one produced from CCA -> Export Test Points.
   rpc updateTestPointsByFile(UpdateTestPointsByFileRequest) returns (UpdateTestPointsResponse);
-
+  
+  // Add one or more modeling regions with the specified shapes and properties.
+  rpc addModelingRegion(AddModelingRegionRequest) returns (ReturnCode);
+  
+  // Update one or more modeling regions with the specified shapes and properties.
+  rpc updateModelingRegion(UpdateModelingRegionRequest) returns (ReturnCode);
+  
+  // Delete one or more existing modeling regions.
+  rpc deleteModelingRegion(DeleteModelingRegionRequest) returns (ReturnCode);
+  
+  // Copy one or more existing modeling regions.
+  rpc copyModelingRegion(CopyModelingRegionRequest) returns (ReturnCode);
 }
