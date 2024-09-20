@@ -140,9 +140,9 @@ message UpdateNaturalFrequencyPropsRequest {
   string project = 1;							// Project name.
   string ccaName = 2;							// CCA name.
   int32 naturalFreqCount = 3;					// NF Result Count.
-  double naturalFreqMin = 4;					// Min Frequency.
+  double naturalFreqMin = 4;					// Min Frequency.  IMPORTANT:  Only Integer values will be accepted for this field.  Decimal values will be rejected in the API.
   string naturalFreqMinUnits = 5;				// Min Frequency units (HZ, KHZ, MHZ, or GHZ).
-  double naturalFreqMax = 6;					// Max Frequency.
+  double naturalFreqMax = 6;					// Max Frequency. IMPORTANT:  Only Integer values will be accepted for this field.  Decimal values will be rejected in the API.
   string naturalFreqMaxUnits = 7;				// Max Frequency units (HZ, KHZ, MHZ, or GHZ).
   bool partValidationEnabled = 8;				// Part Validation.
   bool requireMaterialAssignmentEnabled = 9;	// Require Material Assignment.
