@@ -85,6 +85,7 @@ message UpdateHarmonicVibePropsRequest {
   	optional uint32 naturalFreqMax = 13;				// Max Frequency. For NX Nastran analysis only.
   	optional string naturalFreqMaxUnits = 14;			// Max Frequency units. For NX Nastran analysis only.
   	optional bool reuseModalAnalysis = 15;				// Reuse Natural Frequency. For NX Nastran analysis only.
+    optional uint32 strainMapNaturalFreq = 16;  // Maximum Natural Frequency used for strain map analysis.
   }
   
   repeated HarmonicVibe harmonicVibeProperties = 2;     // List of HarmonicVibe analysis properties to update.
