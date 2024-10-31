@@ -130,6 +130,21 @@ enum MatchingMode {
   Part	= 1;		// Matches part number only.
 }
 
+/**
+ * Request to receive Sherlock version and configuration data.
+ */
+ message SherlockInfoRequest {
+}
+
+/*
+ * Represents Sherlock version and configuration data.
+ */
+message SherlockInfoResponse {
+  string releaseVersion = 1;    // The current version of Sherlock, formatted as: YYYY R# (Ex. "2025 R1")
+  string defaultProjectDir = 2; // The project directory currently used by Sherlock.
+  bool isSingleProjectMode = 3; // When true, indicates that Sherlock is in single-project mode. When false, indicates that Sherlock is in multi-project mode.
+}
+
 service SherlockCommonService {
 
   // Returns health status of gRPC server.
@@ -146,4 +161,7 @@ service SherlockCommonService {
   
   // Returns a list of valid solder materials.
   rpc getSolders(GetSoldersRequest) returns (GetSoldersResponse);
+
+  // Returns meta data about Sherlock.
+  rpc getSherlockInfo(SherlockInfoRequest) returns (SherlockInfoResponse);
 }
