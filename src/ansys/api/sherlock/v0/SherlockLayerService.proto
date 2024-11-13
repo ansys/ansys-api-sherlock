@@ -482,6 +482,48 @@ message CopyModelingRegionRequest {
 	repeated CopyModelingRegionInfo copyRegions = 2;		// List of modeling regions to copy along with their corresponding "copy to" parameters.	
 }
 
+/**
+ * Request to list all layers in a specific project CCA.
+ */
+message ListLayersRequest {
+  string project = 1;	// Sherlock project name.
+  string ccaName = 2;	// The CCA name.
+}
+
+/**
+ * Contains the list of layers.
+ */
+message ListLayersResponse {
+  ReturnCode returnCode = 1;	// Status code of response.
+  repeated string layer = 2;	// Layer name. The list of layers returned is ordered by the folder names, then by the layer names.
+}
+
+/**
+ * Request to export one or more 2D Layer Viewer images from a project CCA.
+ */
+message ExportLayerImageRequest {
+  message ExportLayerImageInfo {
+    bool componentsEnabled = 1;			// Displays the components in the export image. Default: true.
+    bool labelsEnabled = 2;				// Displays the component reference designators in the export image. Default: true.
+    bool leadsEnabled = 3;				// Displays the component leads and solder balls in the export image. Default: true.
+    bool axesEnabled = 4;				// Displays the x and y axes in the export image. Default: false.
+    bool gridEnabled = 5;				// Displays a grid in the export image. Default: false.
+    repeated string layer = 6;			// List of names of the layers to be exported. This cannot be empty.
+    string filePath = 7;				// Full file path of the export image.
+    int32 imageHeight = 8;				// The export image height.
+    int32 imageWidth = 9;				// The export image width.
+    bool overwriteExistingFile = 10;	// If the file path already exists, overwrite the file if this is set to true. Default: false.
+  }
+  string project = 1;								// Sherlock project name.
+  string ccaName = 2;								// The CCA name.
+  repeated ExportLayerImageInfo exportLayers = 3;	// List of layer images to export along with their export parameters.
+}
+
+message ExportLayerImageResponse {
+  ReturnCode returnCode = 1;			// Status code of response.
+  repeated string exportMessages = 2;	// Informational and error messages about the export.
+}
+
 service SherlockLayerService {
   // Add a potting region with the specified shape and properties.
   rpc addPottingRegion(AddPottingRegionRequest) returns (ReturnCode);
@@ -566,4 +608,10 @@ service SherlockLayerService {
   
   // Copy one or more existing modeling regions.
   rpc copyModelingRegion(CopyModelingRegionRequest) returns (ReturnCode);
+
+  // List all the available layers as seen in the layer viewer for a project CCA.
+  rpc listLayers(ListLayersRequest) returns (ListLayersResponse);
+
+  // Export one or more 2D Layer Viewer images from a project CCA.
+  rpc exportLayerImage(ExportLayerImageRequest) returns (ExportLayerImageResponse);
 }
