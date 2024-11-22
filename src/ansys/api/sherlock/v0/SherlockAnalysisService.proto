@@ -71,20 +71,21 @@ message UpdateHarmonicVibePropsRequest {
 
   message HarmonicVibe {
     string ccaName = 1;									// CCA name for which the harmonic vibe properties are set.
-  	optional ModelSource modelSource = 2;				// Optional model source. Default: GENERATED.
-  	optional int32 harmonicVibeCount = 3;				// Number of harmonic result layers to generate.
-  	optional string harmonicVibeDamping = 4;			// Modal Damping Ratio(s).
-  	optional bool partValidationEnabled = 5;			// Flag indicating if part validation should be performed.
-  	optional bool requireMaterialAssignmentEnabled = 6;	// Flag indicating if material assignment is required.
-  	optional double analysisTemp = 7;					// Temperature.
-  	optional string analysisTempUnits = 8; 				// Temperature units.
-  	optional string forceModelRebuild = 9;				// Model Creation. Valid values are "FORCE" or "AUTO".
-  	optional bool filterByEventFrequency = 10;			// Flag indicating if harmonic results outside selected event range are imported.
-  	optional uint32 naturalFreqMin = 11;				// Min Frequency. For NX Nastran analysis only.
-  	optional string naturalFreqMinUnits = 12;			// Min Frequency units. For NX Nastran analysis only.
-  	optional uint32 naturalFreqMax = 13;				// Max Frequency. For NX Nastran analysis only.
-  	optional string naturalFreqMaxUnits = 14;			// Max Frequency units. For NX Nastran analysis only.
-  	optional bool reuseModalAnalysis = 15;				// Reuse Natural Frequency. For NX Nastran analysis only.
+    optional ModelSource modelSource = 2;				// Optional model source. Default: GENERATED.
+    optional int32 harmonicVibeCount = 3;				// Number of harmonic result layers to generate.
+    optional string harmonicVibeDamping = 4;			// Modal Damping Ratio(s).
+    optional bool partValidationEnabled = 5;			// Flag indicating if part validation should be performed.
+    optional bool requireMaterialAssignmentEnabled = 6;	// Flag indicating if material assignment is required.
+    optional double analysisTemp = 7;					// Temperature.
+    optional string analysisTempUnits = 8; 				// Temperature units.
+    optional string forceModelRebuild = 9;				// Model Creation. Valid values are "FORCE" or "AUTO".
+    optional bool filterByEventFrequency = 10;			// Flag indicating if harmonic results outside selected event range are imported.
+    optional uint32 naturalFreqMin = 11;				// Min Frequency. For NX Nastran analysis only.
+    optional string naturalFreqMinUnits = 12;			// Min Frequency units. For NX Nastran analysis only.
+    optional uint32 naturalFreqMax = 13;				// Max Frequency. For NX Nastran analysis only.
+    optional string naturalFreqMaxUnits = 14;			// Max Frequency units. For NX Nastran analysis only.
+    optional bool reuseModalAnalysis = 15;				// Reuse Natural Frequency. For NX Nastran analysis only.
+    optional double strainMapNaturalFreq = 16;			// Maximum Natural Frequency used for strain map analysis.
   }
   
   repeated HarmonicVibe harmonicVibeProperties = 2;     // List of HarmonicVibe analysis properties to update.
@@ -173,6 +174,7 @@ message RunStrainMapAnalysisRequest {
       UNKNOWN	 		= 0;	// Default enum to catch invalid analysis.
       RandomVibe 		= 1;	// Enum for the Random Vibe analysis.
       MechanicalShock	= 2;	// Enum for Mechanical Shock analysis.
+      HarmonicVibe = 3;  // Enum for the Harmonic Vibe analysis.
     }
     AnalysisType type 		= 1;  // Type of Strain Map analysis to run.
     message EventStrainMap {	
