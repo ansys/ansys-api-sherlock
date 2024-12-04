@@ -503,19 +503,19 @@ message ListLayersResponse {
  */
 message ExportLayerImageRequest {
   message ExportLayerImageInfo {
-    bool componentsEnabled = 1;			// Displays the components in the export image. Default: true.
-    bool labelsEnabled = 2;				// Displays the component reference designators in the export image. Default: true.
-    bool leadsEnabled = 3;				// Displays the component leads and solder balls in the export image. Default: true.
-    bool axesEnabled = 4;				// Displays the x and y axes in the export image. Default: false.
-    bool gridEnabled = 5;				// Displays a grid in the export image. Default: false.
+    optional bool componentsEnabled = 1;	// Displays the components in the export image. Default to true when not provided.
+    optional bool labelsEnabled = 2;		// Displays the component reference designators in the export image. Default to true when not provided.
+    optional bool leadsEnabled = 3;		// Displays the component leads and solder balls in the export image. Default to true when not provided.
+    bool axesEnabled = 4;			// Displays the x and y axes in the export image.
+    bool gridEnabled = 5;			// Displays a grid in the export image.
     repeated string layer = 6;			// List of names of the layers to be exported. This cannot be empty.
-    string filePath = 7;				// Full file path of the export image.
-    int32 imageHeight = 8;				// The export image height.
-    int32 imageWidth = 9;				// The export image width.
-    bool overwriteExistingFile = 10;	// If the file path already exists, overwrite the file if this is set to true. Default: false.
+    string filePath = 7;			// Full file path of the export image.
+    int32 imageHeight = 8;			// The export image height.
+    int32 imageWidth = 9;			// The export image width.
+    bool overwriteExistingFile = 10;		// If the file path already exists, overwrite the file if this is set to true.
   }
-  string project = 1;								// Sherlock project name.
-  string ccaName = 2;								// The CCA name.
+  string project = 1;					// Sherlock project name.
+  string ccaName = 2;					// The CCA name.
   repeated ExportLayerImageInfo exportLayers = 3;	// List of layer images to export along with their export parameters.
 }
 
