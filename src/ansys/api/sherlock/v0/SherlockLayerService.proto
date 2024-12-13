@@ -613,5 +613,5 @@ service SherlockLayerService {
   rpc listLayers(ListLayersRequest) returns (ListLayersResponse);
 
   // Export one or more 2D Layer Viewer images from a project CCA.
-  rpc exportLayerImage(ExportLayerImageRequest) returns (ExportLayerImageResponse);
+  rpc exportLayerImage(ExportLayerImageRequest) returns (stream ExportLayerImageResponse);
 }
