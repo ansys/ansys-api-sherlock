@@ -460,7 +460,7 @@ message UpdateComponentFailureMechanismPropsRequest {
     optional bool partValidationEnabled   = 7;	// Flag indicating if part validation should be performed.
   }
   
-  repeated SemiconductorWearoutAnalysis semiconductorWearoutAnalysiProperties = 2;		// List of SemiconductorWearoutAnalysis properties to update for each CCA in a project.
+  repeated SemiconductorWearoutAnalysis semiconductorWearoutAnalysisProperties = 2;		// List of SemiconductorWearoutAnalysis properties to update for each CCA in a project.
 }
 
 service SherlockAnalysisService {
