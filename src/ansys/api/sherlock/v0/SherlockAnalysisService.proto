@@ -444,6 +444,25 @@ message UpdateComponentFailureMechanismPropsRequest {
   repeated ComponentFailureMechanism componentFailureMechanismProperties = 2;	// Properties for each CCA in the project.
 }
 
+/**
+ * Request to update Semiconductor Wearout Analysis properties.
+ */
+ message UpdateSemiconductorWearoutAnalysisPropsRequest {
+  string project = 1;									          // Sherlock Project name.
+  
+  message SemiconductorWearoutAnalysis {
+    string ccaName                        = 1;  // The CCA name.
+    optional double maxFeatureSize        = 2;	// Maximum feature size.
+    optional string maxFeatureSizeUnits   = 3;	// Maximum feature size units.
+    optional double partTempRise          = 4;	// Part temperature rise.
+    optional string partTempRiseUnits     = 5;  // Part temperature rise units.
+    optional bool partTempRiseMinEnabled  = 6;	// Whether part temperature rise value is applied to the minimum temperature defined in the thermal cycle.
+    optional bool partValidationEnabled   = 7;	// Flag indicating if part validation should be performed.
+  }
+  
+  repeated SemiconductorWearoutAnalysis semiconductorWearoutAnalysisProperties = 2;		// List of SemiconductorWearoutAnalysis properties to update for each CCA in a project.
+}
+
 service SherlockAnalysisService {
   // Runs one or more Sherlock analysis.
   rpc runAnalysis(RunAnalysisRequest) returns (ReturnCode);
@@ -507,4 +526,7 @@ service SherlockAnalysisService {
   
   // Updates the analysis properties for component failure mechanism analysis.
   rpc updateComponentFailureMechanismProps(UpdateComponentFailureMechanismPropsRequest) returns (stream ReturnCode);
+
+  // Updates the analysis properties for semiconductor wearout analysis.
+  rpc updateSemiconductorWearoutAnalysisProps(UpdateSemiconductorWearoutAnalysisPropsRequest) returns (stream ReturnCode);
 }
