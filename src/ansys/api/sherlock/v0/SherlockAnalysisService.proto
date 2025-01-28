@@ -471,10 +471,10 @@ message UpdateComponentFailureMechanismPropsRequest {
   
   message PTHFatigueAnalysis {
     enum Qualification {
-      NONE        = 0; // No qualification
-      PER_LOT     = 1; // Qualification per lot
-      PRODUCT     = 2; // Qualification by product
-      SUPPLIER    = 3; // Qualification by supplier
+      NONE        = 0; // No qualification.
+      PER_LOT     = 1; // Qualification per lot.
+      PRODUCT     = 2; // Qualification by product.
+      SUPPLIER    = 3; // Qualification by supplier.
     }
     string ccaName                                                    = 1;  // The CCA name.
     optional Qualification qualification                              = 2; // Qualification choice for IST/HATS.
