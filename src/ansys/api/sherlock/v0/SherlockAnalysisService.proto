@@ -470,14 +470,14 @@ message UpdateComponentFailureMechanismPropsRequest {
   string project  = 1; // Sherlock Project name.
   
   message PTHFatigueAnalysis {
-    enum QualificationChoices {
-      None        = 0; // No qualification
-      Supplier    = 1; // Qualification by supplier
-      Product     = 2; // Qualification by product
-      PerLot      = 3; // Qualification per lot
+    enum Qualification {
+      NONE        = 0; // No qualification
+      PER_LOT     = 1; // Qualification per lot
+      PRODUCT     = 2; // Qualification by product
+      SUPPLIER    = 3; // Qualification by supplier
     }
     string ccaName                                                    = 1;  // The CCA name.
-    optional QualificationChoices qualificationChoices                = 2; // Qualification choice for IST/HATS.
+    optional Qualification qualification                              = 2; // Qualification choice for IST/HATS.
     optional string pthQualityFactor                                  = 3; // Quality factor for PTH.
     optional double pthWallThickness                                  = 4; // Wall thickness of PTH.
     optional string pthWallThicknessUnits                             = 5; // Units for PTH wall thickness.
