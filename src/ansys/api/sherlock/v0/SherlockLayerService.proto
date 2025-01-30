@@ -482,6 +482,43 @@ message CopyModelingRegionRequest {
 	repeated CopyModelingRegionInfo copyRegions = 2;		// List of modeling regions to copy along with their corresponding "copy to" parameters.	
 }
 
+message LayerInfo {
+    enum LayerFolder {
+    	Unknown = 0;
+        Components = 1;
+        Copper_Layers = 2;
+        DFMEA_Bot = 3;
+        DFMEA_Top = 4;
+        Drill_Holes = 5;
+        Harmonic_Vibe_Analysis = 6;
+        Heat_Sinks = 7;
+        Icepak_Thermal_Maps_Analysis = 8;
+        ICT_Analysis = 9;
+        Laminate_Layers = 10;
+        Mechanical_Parts = 11;
+        Mechanical_Shock_Analysis = 12;
+        Mechanical = 13;
+        Natural_Freq_Analysis = 14;
+        Other_Layers = 15;
+        Potting_Regions = 16;
+        PTH_Fatigue = 17;
+        Random_Vibe_Analysis = 18;
+        Semiconductor_Wearout_Top = 19;
+        Silk_Screens = 20;
+        Solder_Fatigue_Bot = 21;
+        Solder_Fatigue_Top = 22;
+        Solder_Masks = 23;
+        Strain_Maps_Analysis = 24;
+        Test_Points = 25;
+        Thermal_Derating_Bot = 26;
+        Thermal_Derating_Top = 27;
+        Thermal_Maps_Analysis = 28;
+        Thermal_Mech_Analysis = 29;
+    }
+	LayerFolder layerFolder = 1;
+    repeated string layers = 2;
+}
+
 /**
  * Request to list all layers in a specific project CCA.
  */
@@ -493,9 +530,9 @@ message ListLayersRequest {
 /**
  * Contains the list of layers.
  */
-message ListLayersResponse {
-  ReturnCode returnCode = 1;	// Status code of response.
-  repeated string layer = 2;	// Layer name. The list of layers returned is ordered by the folder names, then by the layer names.
+ message ListLayersResponse {
+  ReturnCode returnCode = 1;			// Status code of response.
+  repeated LayerInfo layerInfos = 2;	// List of layer information.
 }
 
 /**
@@ -505,20 +542,23 @@ message ExportLayerImageRequest {
   message ExportLayerImageInfo {
     optional bool componentsEnabled = 1;	// Displays the components in the export image. Default to true when not provided.
     optional bool labelsEnabled = 2;		// Displays the component reference designators in the export image. Default to true when not provided.
-    optional bool leadsEnabled = 3;		// Displays the component leads and solder balls in the export image. Default to true when not provided.
-    bool axesEnabled = 4;			// Displays the x and y axes in the export image.
-    bool gridEnabled = 5;			// Displays a grid in the export image.
-    repeated string layer = 6;			// List of names of the layers to be exported. This cannot be empty.
-    string filePath = 7;			// Full file path of the export image.
-    int32 imageHeight = 8;			// The export image height.
-    int32 imageWidth = 9;			// The export image width.
+    optional bool leadsEnabled = 3;			// Displays the component leads and solder balls in the export image. Default to true when not provided.
+    bool axesEnabled = 4;					// Displays the x and y axes in the export image.
+    bool gridEnabled = 5;					// Displays a grid in the export image.
+    repeated LayerInfo layerInfos = 6;		// List of layers to be exported. This cannot be empty.
+    string filePath = 7;					// Full file path of the export image.
+    int32 imageHeight = 8;					// The export image height.
+    int32 imageWidth = 9;					// The export image width.
     bool overwriteExistingFile = 10;		// If the file path already exists, overwrite the file if this is set to true.
   }
-  string project = 1;					// Sherlock project name.
-  string ccaName = 2;					// The CCA name.
+  string project = 1;								// Sherlock project name.
+  string ccaName = 2;								// The CCA name.
   repeated ExportLayerImageInfo exportLayers = 3;	// List of layer images to export along with their export parameters.
 }
 
+/**
+ * Contains the status of the export as well as all the export error and informational messages.
+ */
 message ExportLayerImageResponse {
   ReturnCode returnCode = 1;			// Status code of response.
   repeated string exportMessages = 2;	// Informational and error messages about the export.
