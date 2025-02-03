@@ -463,6 +463,33 @@ message UpdateComponentFailureMechanismPropsRequest {
   repeated SemiconductorWearoutAnalysis semiconductorWearoutAnalysisProperties = 2;		// List of SemiconductorWearoutAnalysis properties to update for each CCA in a project.
 }
 
+/**
+ * Request to update Plated Through Hole Analysis properties.
+ */
+ message UpdatePTHFatiguePropsRequest {
+  string project  = 1; // Sherlock Project name.
+  
+  message PTHFatigueAnalysis {
+    enum Qualification {
+      NONE        = 0; // No qualification.
+      PER_LOT     = 1; // Qualification per lot.
+      PRODUCT     = 2; // Qualification by product.
+      SUPPLIER    = 3; // Qualification by supplier.
+    }
+    string ccaName                                                    = 1;  // The CCA name.
+    optional Qualification qualification                              = 2; // Qualification choice for IST/HATS.
+    optional string pthQualityFactor                                  = 3; // Quality factor for PTH.
+    optional double pthWallThickness                                  = 4; // Wall thickness of PTH.
+    optional string pthWallThicknessUnits                             = 5; // Units for PTH wall thickness.
+    optional double minHoleSize                                       = 6; // Minimum hole size.
+    optional string minHoleSizeUnits                                  = 7; // Units for minimum hole size.
+    optional double maxHoleSize                                       = 8; // Maximum hole size.
+    optional string maxHoleSizeUnits                                  = 9; // Units for maximum hole size.
+  }
+  
+  repeated PTHFatigueAnalysis pthFatigueAnalysisProperties = 2;		// List of PTHFatigueAnalysis properties to update for each CCA in a project.
+}
+
 service SherlockAnalysisService {
   // Runs one or more Sherlock analysis.
   rpc runAnalysis(RunAnalysisRequest) returns (ReturnCode);
@@ -529,4 +556,7 @@ service SherlockAnalysisService {
 
   // Updates the analysis properties for semiconductor wearout analysis.
   rpc updateSemiconductorWearoutAnalysisProps(UpdateSemiconductorWearoutAnalysisPropsRequest) returns (stream ReturnCode);
+
+  // Updates the analysis properties for plated through hole fatigue analysis.
+  rpc updatePTHFatigueProps(UpdatePTHFatiguePropsRequest) returns (stream ReturnCode);
 }
