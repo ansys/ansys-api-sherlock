@@ -52,12 +52,15 @@ message RunAnalysisRequest {
 }
 
 /**
- * Request to list the valid Harmonic Vibe input fields for the provided model source and user configuration.
+ * Request to list the valid harmonic vibe input fields for the provided model source and user configuration.
  */
 message GetHarmonicVibeInputFieldsRequest {
   optional ModelSource modelSource = 1;	// Optional model source. Default: GENERATED.
 }
 
+/**
+ * Response that includes the valid harmonic vibe input fields.
+ */
 message GetHarmonicVibeInputFieldsResponse {
   repeated string fieldName = 1;  // List of Harmonic Vibe input fields.
 }
@@ -98,6 +101,9 @@ message GetRandomVibeInputFieldsRequest {
   optional ModelSource modelSource = 1;	// Optional model source. Default: GENERATED.
 }
 
+/**
+ * Response that includes the valid random vibe input fields.
+ */
 message GetRandomVibeInputFieldsResponse {
   repeated string fieldName = 1;  // List of Random Vibe input fields.
 }
@@ -290,6 +296,9 @@ message GetMechanicalShockInputFieldsRequest {
   optional ModelSource modelSource = 1;	// Optional model source. Default: GENERATED.
 }
 
+/**
+ * Response that includes the valid mechanical shock input fields.
+ */
 message GetMechanicalShockInputFieldsResponse {
   repeated string fieldName = 1; // List of Mechanical Shock input fields for a model source.
 }
@@ -300,6 +309,9 @@ message GetMechanicalShockInputFieldsResponse {
 message GetSolderFatigueInputFieldsRequest {
 }
 
+/**
+ * Response that includes the valid solder fatigue input fields.
+ */
 message GetSolderFatigueInputFieldsResponse {
   repeated string fieldName = 1;  // List of Solder Fatigue input fields.
 }
@@ -315,7 +327,7 @@ message UpdateSolderFatiguePropsRequest {
 	optional string solderMaterial = 2;						// Name of the solder material.
 	optional double partTemp = 3;							// Part temperature rise.
 	optional string partTempUnits = 4;						// Part temperature rise units.
-	optional bool partTempRiseMinEnabled = 5;				// Flag indicating if part temperature minimum rise should be enabled.
+	optional bool partTempRiseMinEnabled = 5;				// Whether part temperature rise value is applied to the minimum temperature defined in the thermal cycle.
 	optional bool partValidationEnabled = 6;				// Flag indicating if part validation should be performed.
   }
   
@@ -370,7 +382,7 @@ message UpdateICTAnalysisPropsRequest {
 }
 
 /**
- * Request to update the Parts List Validation properties.
+ * Request to update the parts list validation properties.
  */
 message UpdatePartsListValidationPropsRequest {
   string project = 1;												// Sherlock Project name.
@@ -392,7 +404,7 @@ message UpdatePartsListValidationPropsRequest {
 }
 
 /**
- * Request to retrieve the Parts List Validation properties.
+ * Request to retrieve the parts list validation properties.
  */
 message GetPartsListValidationPropsRequest {
   string project = 1;				// Sherlock Project name.
@@ -400,7 +412,7 @@ message GetPartsListValidationPropsRequest {
 }
 
 /**
- * Response that includes Parts List Validation properties.
+ * Response that includes parts list validation properties.
  */
 message PartsListValidationPropsResponse {
   ReturnCode returnCode = 1;										// Status code of response.
@@ -413,6 +425,69 @@ message PartsListValidationPropsResponse {
   bool avlRequireInternalPartNumber = 8;							// AVL option to require internal part number.
   bool avlRequireApprovedDescription = 9;							// AVL option to require approved description.
   bool avlRequireApprovedManufacturer = 10;							// AVL option to require approved manufacturer.
+}
+
+/**
+ * Request to update the component failure mechanism properties.
+ */
+message UpdateComponentFailureMechanismPropsRequest {
+  string project = 1;												// Sherlock Project name.
+  
+  message ComponentFailureMechanism {
+    string ccaName = 1;												// The CCA name.
+    optional double defaultPartTempRise = 2;						// Default part temperature rise.
+    optional string defaultPartTempRiseUnits = 3;					// Default part temperature rise units.
+    optional bool partTempRiseMinEnabled = 4;						// Whether part temperature rise value is applied to the minimum temperature defined in the thermal cycle.
+    optional bool partValidationEnabled = 5;						// Flag indicating if part validation should be performed.
+  }
+  
+  repeated ComponentFailureMechanism componentFailureMechanismProperties = 2;	// Properties for each CCA in the project.
+}
+
+/**
+ * Request to update Semiconductor Wearout Analysis properties.
+ */
+ message UpdateSemiconductorWearoutAnalysisPropsRequest {
+  string project = 1;									          // Sherlock Project name.
+  
+  message SemiconductorWearoutAnalysis {
+    string ccaName                        = 1;  // The CCA name.
+    optional double maxFeatureSize        = 2;	// Maximum feature size.
+    optional string maxFeatureSizeUnits   = 3;	// Maximum feature size units.
+    optional double partTempRise          = 4;	// Part temperature rise.
+    optional string partTempRiseUnits     = 5;  // Part temperature rise units.
+    optional bool partTempRiseMinEnabled  = 6;	// Whether part temperature rise value is applied to the minimum temperature defined in the thermal cycle.
+    optional bool partValidationEnabled   = 7;	// Flag indicating if part validation should be performed.
+  }
+  
+  repeated SemiconductorWearoutAnalysis semiconductorWearoutAnalysisProperties = 2;		// List of SemiconductorWearoutAnalysis properties to update for each CCA in a project.
+}
+
+/**
+ * Request to update Plated Through Hole Analysis properties.
+ */
+ message UpdatePTHFatiguePropsRequest {
+  string project  = 1; // Sherlock Project name.
+  
+  message PTHFatigueAnalysis {
+    enum Qualification {
+      NONE        = 0; // No qualification.
+      PER_LOT     = 1; // Qualification per lot.
+      PRODUCT     = 2; // Qualification by product.
+      SUPPLIER    = 3; // Qualification by supplier.
+    }
+    string ccaName                                                    = 1;  // The CCA name.
+    optional Qualification qualification                              = 2; // Qualification choice for IST/HATS.
+    optional string pthQualityFactor                                  = 3; // Quality factor for PTH.
+    optional double pthWallThickness                                  = 4; // Wall thickness of PTH.
+    optional string pthWallThicknessUnits                             = 5; // Units for PTH wall thickness.
+    optional double minHoleSize                                       = 6; // Minimum hole size.
+    optional string minHoleSizeUnits                                  = 7; // Units for minimum hole size.
+    optional double maxHoleSize                                       = 8; // Maximum hole size.
+    optional string maxHoleSizeUnits                                  = 9; // Units for maximum hole size.
+  }
+  
+  repeated PTHFatigueAnalysis pthFatigueAnalysisProperties = 2;		// List of PTHFatigueAnalysis properties to update for each CCA in a project.
 }
 
 service SherlockAnalysisService {
@@ -476,4 +551,12 @@ service SherlockAnalysisService {
   // Returns the parts list validation properties.
   rpc getPartsListValidationProps(GetPartsListValidationPropsRequest) returns (PartsListValidationPropsResponse);
   
+  // Updates the analysis properties for component failure mechanism analysis.
+  rpc updateComponentFailureMechanismProps(UpdateComponentFailureMechanismPropsRequest) returns (stream ReturnCode);
+
+  // Updates the analysis properties for semiconductor wearout analysis.
+  rpc updateSemiconductorWearoutAnalysisProps(UpdateSemiconductorWearoutAnalysisPropsRequest) returns (stream ReturnCode);
+
+  // Updates the analysis properties for plated through hole fatigue analysis.
+  rpc updatePTHFatigueProps(UpdatePTHFatiguePropsRequest) returns (stream ReturnCode);
 }

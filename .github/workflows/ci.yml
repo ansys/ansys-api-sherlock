@@ -44,7 +44,7 @@ jobs:
           python -c "from ansys.api.sherlock import __version__; print(__version__)"
 
       - name: Upload packages
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ansys-api-sherlock-packages
           path: dist/
@@ -61,7 +61,7 @@ jobs:
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
 
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
 
       - name: Display structure of downloaded files
         run: ls -R
