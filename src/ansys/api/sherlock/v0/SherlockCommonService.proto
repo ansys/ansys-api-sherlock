@@ -1,4 +1,4 @@
-// Copyright 2023-2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2025 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 option java_package = "sherlock.grpc";
@@ -90,21 +90,90 @@ message ListUnitsResponse {
   repeated string units		= 2;	// List of valid units for the requested type.
 }
 
+
+/**
+ * Represents solder information given to the client.
+ */
+message SolderInfo {
+  string activationEnergy = 1;            // Activation energy.
+  string ccCalibrationFactor = 2;         // CC Calibration factor.
+  string correctionFactors = 3;           // Correction factors.
+  string createdBy = 4;                   // Who created this solder.
+  string criticalDwellTime = 5;           // Critical dwell time.
+  string criticalDwellTimeUnits = 6;      // Critical dwell time units.
+  string criticalMaxTemp = 7;             // Critical max temperature.
+  string criticalMaxTempUnits = 8;        // Critical max temperature units.
+  string criticalStrain = 9;              // Critical strain.
+  string cte = 10;                         // CTE.
+  string cteUnits = 11;                    // CTE units.
+  string density = 12;                    // Solder density.
+  string densityUnits = 13;               // Solder density units.
+  string elasticModulus = 14;             // Elastic Modulus, may be a single value or a curve.
+  string elasticModulusUnits = 15;        // Elastic Modulus units.
+  string feaPower = 16;                   // FEA power.
+  string leadedCalibrationFactor = 17;    // Leaded calibration factor.
+  string materialFatigueCoefficient = 18; // Fatigue coefficient.
+  string materialFatigueExponent = 19;    // Fatigue exponent.
+  string modifiedBy = 20;                 // Who last modified this solder.
+  string poissonRatio = 21;               // Poisson ratio.
+  string secantModulus = 22;              // Secant modulus.
+  string secantModulusUnits = 23;         // Secant modulus units.
+  string secantFatigueCoefficient = 24;   // Secant fatigue coefficient.
+  string secantFatigueExponent = 25;      // Secant fatigue exponent.
+  string shockStrain = 26;                // Shock strain.
+  string solderName = 27;                 // Name of solder.
+  string solderType = 28;                 // Type of solder.
+  string strainEnergyCoefficient = 29;    // Strain energy coefficient.
+  string thermalConductivity = 30;        // Solder thermal conductivity.
+  string thermalConductivityUnits = 31;   // Solder thermal conductivity units.
+  string thermalShockFactorBGA = 32;      // Thermal shock factor for BGA.
+  string thermalShockFactorCC = 33;       // Thermal shock factor for CC.
+  string thermalShockFactorDEFAULT = 34;  // Thermal shock factor default.
+  string thermalShockFactorLCCC = 35;     // Thermal shock factor for LCCC.
+  string thermalShockFactorLeaded = 36;   // Thermal shock factor for Leaded.
+  string thermalShockFactorQFN = 37;      // Thermal shock factor for QFN.
+  string thermalShockFactorThruHole = 38; // Thermal shock factor for Through hole.
+  string userNotes = 39;                  // Notes written by the user.
+  string weibullBetaBGA = 40;             // Weibull for BGA.
+  string weibullBetaCBGA = 41;            // Weibull fpr CBGA.
+  string weibullBetaCC = 42;              // Weibull for CC.
+  string weibullBetaLCCC = 43;            // Weibull for LCCC.
+  string weibullBetaLeaded = 44;          // Weibull for Leaded.
+  string weibullBetaQFN = 45;             // Weibull for QFN.
+  string weibullBetaThruHole = 46;        // Weibull for through hole.
+}
+
+/**
+  * Represents a list of valid solder materials.
+  */
+message SolderInfoResponse {
+  repeated SolderInfo solders = 1; // Solder information.
+}
+
+/**
+  * Request for a list of valid solder materials.
+  */
+message SolderInfoRequest {
+
+}
+
 /**
   * Request for a list of valid solder materials.
   */
 message GetSoldersRequest {
+  option deprecated = true;  // Signifies this message is being deprecated for SolderInfoRequest as of 25R2.
 }
 
 /**
   * Represents a list of valid solder materials.
   */
 message GetSoldersResponse {
+  option deprecated = true;       // Signifies this message is being deprecated for SolderResponse.
 	repeated string solderName = 1; // List of valid solder materials.
 }
 
 /**
- * Represents a common measurement with a value and a unit
+ * Represents a common measurement with a value and a unit.
  */
 message Measurement {
   double value = 1;  // Numerical value of a measurement.
@@ -112,7 +181,7 @@ message Measurement {
 }
 
 /**
- * Types of delimiters that can be used for exporting tables
+ * Types of delimiters that can be used for exporting tables.
  */
  enum TableDelimiter {
   COMMA = 0;  		// Represents ',' delimiter.
@@ -133,17 +202,18 @@ enum MatchingMode {
 /**
  * Request to receive Sherlock version and configuration data.
  */
- message SherlockInfoRequest {
+message SherlockInfoRequest {
 }
 
 /*
  * Represents Sherlock version and configuration data.
  */
 message SherlockInfoResponse {
-  string releaseVersion = 1;    // The current version of Sherlock, formatted as: YYYY R# (Ex. "2025 R1")
+  string releaseVersion = 1;    // The current version of Sherlock, formatted as: YYYY R# (Ex. "2025 R1").
   string defaultProjectDir = 2; // The project directory currently used by Sherlock.
   bool isSingleProjectMode = 3; // When true, indicates that Sherlock is in single-project mode. When false, indicates that Sherlock is in multi-project mode.
 }
+
 
 service SherlockCommonService {
 
@@ -159,8 +229,13 @@ service SherlockCommonService {
   // Returns a list of valid units of the provided unit type.
   rpc listUnits(ListUnitsRequest) returns (ListUnitsResponse);
   
-  // Returns a list of valid solder materials.
-  rpc getSolders(GetSoldersRequest) returns (GetSoldersResponse);
+  // Returns a list of valid solder materials. This is deprecated as of 25R2.
+  rpc getSolders(GetSoldersRequest) returns (GetSoldersResponse) {
+    option deprecated = true;
+  }
+
+  // Returns a list of valid solder material information.
+  rpc getSolderInfo(SolderInfoRequest) returns (SolderInfoResponse);
 
   // Returns meta data about Sherlock.
   rpc getSherlockInfo(SherlockInfoRequest) returns (SherlockInfoResponse);
