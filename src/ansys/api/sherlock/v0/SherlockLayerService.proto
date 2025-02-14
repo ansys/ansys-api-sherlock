@@ -482,6 +482,9 @@ message CopyModelingRegionRequest {
 	repeated CopyModelingRegionInfo copyRegions = 2;		// List of modeling regions to copy along with their corresponding "copy to" parameters.	
 }
 
+/**
+* Format of a layer viewer folder and layer names within the folder.
+*/
 message LayerInfo {
     enum LayerFolder {
     	Unknown = 0;
