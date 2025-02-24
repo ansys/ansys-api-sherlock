@@ -133,7 +133,7 @@ message DeleteProjectRequest{
 	  string referenceIDColumn	          = 4;	// Reference ID column name.
 	  string strainColumn				          = 5;	// Strain column name.
 	  string strainUnits				          = 6;	// Strain units used in the strain map file. Valid units: µε, ε.
-    repeated string cca				          = 7;	// Project CCA names to to add the file to.
+    repeated string cca				          = 7;	// Project CCA names to add the file to.
     string numericFormat		            = 8;	// Numeric format for values.
     FileType fileType			              = 9;	// Type of the strain map file.
     StrainMapImageFile imageFile			  = 10;	// Image strain map file properties.
