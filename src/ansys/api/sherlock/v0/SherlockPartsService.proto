@@ -248,19 +248,16 @@ message GetPartsListPropertiesRequest {
 }
 
 /**
- * Represents the properties for a list of parts.
+ * Represents the properties for a part.
  */
 message GetPartsListPropertiesResponse {
-  ReturnCode returnCode        = 1;           // Status code of response.
-  message PartProperties {
-    string refDes = 1;                        // The reference designator of the part.
-    message Property {
-      string name  = 1;                       // Name of the property.
-      string value = 2;                       // Value of the property.
-    }
-    repeated Property properties = 2;         // All properties applicable to the part.
+  ReturnCode returnCode        = 1;         // Status code of response.
+  string refDes                = 2;         // The reference designator of the part.
+  message Property {
+    string name  = 1; // Name of the property.
+    string value = 2; // Value of the property.
   }
-  repeated PartProperties partProperties = 2; // List of parts with properties.
+  repeated Property properties = 3;         // All properties applicable to the part.
 }
 
 /**
@@ -365,11 +362,11 @@ service SherlockPartsService {
   }
 
   // Get the properties for a list of parts
-  rpc getPartsListProperties(GetPartsListPropertiesRequest) returns (GetPartsListPropertiesResponse);
+  rpc getPartsListProperties(GetPartsListPropertiesRequest) returns (stream GetPartsListPropertiesResponse);
   
   // Export the net list to a file
   rpc exportNetList(ExportNetListRequest) returns (ReturnCode);
 
   // Updates the pad properties for one or more parts for a given project's CCA.
-  rpc updatePadProperties (UpdatePadPropertiesRequest) returns (stream UpdatePadPropertiesResponse);
+  rpc updatePadProperties(UpdatePadPropertiesRequest) returns (stream UpdatePadPropertiesResponse);
 }
