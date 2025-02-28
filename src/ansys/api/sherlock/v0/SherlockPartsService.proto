@@ -1,4 +1,4 @@
-// Copyright 2023-2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2025 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -19,13 +19,13 @@ message ListPartsLibrariesRequest {
 enum DuplicationMode {
   First	= 0;					// Uses first matched when there is duplication.
   Error	= 1;					// Generates an error when there is duplication.
-  Ignore	= 2;				// Ignore the matches when there is duplication.
+  Ignore = 2;					// Ignore the matches when there is duplication.
 }
 
 /**
  * Determines what fields in the part list will get updated by the AVL.
  */
-enum AVLPartNum{
+enum AVLPartNum {
   AssignInternalPartNum = 0;      // Assign internal part number.
   AssignVendorAndPartNum = 1;     // Assign vendor & part number.
   DoNotChangeVendorOrPartNum = 2; // Do not change vendor / part number.
@@ -35,7 +35,7 @@ enum AVLPartNum{
  * Determines if the part description in the parts list 
  * will be updated by the AVL.
  */
-enum AVLDescription{
+enum AVLDescription {
   AssignApprovedDescription = 0;  // Assign approved description.
   DoNotChangeDescription = 1;     // Do not change description.
 }
@@ -213,6 +213,7 @@ message GetBoardSidesResponse {
  * Request to get a part's location.
  */
 message GetPartLocationRequest {
+  option deprecated = true; // Signifies this message is being deprecated as of 25R2.
   string project       = 1; // Sherlock project name.
   string ccaName       = 2; // The CCA name.
   string refDes        = 3; // A comma separated list of reference designators for a list of parts, or a Ref Des for one part.
@@ -220,20 +221,46 @@ message GetPartLocationRequest {
 }
 
 /**
- * Represents one or multiple parts' location properties
+ * Represents one or multiple parts' location properties.
  */
 message GetPartLocationResponse {
-  ReturnCode returnCode 		= 1;	// Status code of response.
+  option deprecated                  = true; // Signifies this message is being deprecated as of 25R2.
+  ReturnCode returnCode              = 1;    // Status code of response.
   message LocationData {
-    double x				= 1;	// Location of the part along the X axis.
-    double y				= 2;	// Location of the part along the Y axis.
-    double rotation			= 3;	// Rotation of the part on the board in degrees.
-    string locationUnits	= 4;	// Unit of length for the part location.
-    string boardSide		= 5;	// Side of board on which the component exists.
-    bool	mirrored		= 6;	// Indicates if the component is mirrored across the Y-axis.
-    string refDes			= 7;	// Ref Des for the corresponding part.
+    double x                = 1;      // Location of the part along the X axis.
+    double y                = 2;      // Location of the part along the Y axis.
+    double rotation         = 3;      // Rotation of the part on the board in degrees.
+    string locationUnits    = 4;      // Unit of length for the part location.
+    string boardSide        = 5;      // Side of board on which the component exists.
+    bool mirrored           = 6;      // Indicates if the component is mirrored across the Y-axis.
+    string refDes           = 7;      // Ref Des for the corresponding part.
   }
-  repeated LocationData locationData = 2;  // List of location data for a part or list of parts in a specified project and CCA.
+  repeated LocationData locationData = 2;    // List of location data for a part or list of parts in a specified project and CCA.
+}
+
+/**
+ * Request to get the properties for a list of parts.
+ */
+message GetPartsListPropertiesRequest {
+  string project         = 1; // Sherlock project name.
+  string ccaName         = 2; // The CCA name.
+  repeated string refDes = 3; // The reference designator for each part to get properties for. If not included, get properties for all parts in the CCA.
+}
+
+/**
+ * Represents the properties for a list of parts.
+ */
+message GetPartsListPropertiesResponse {
+  ReturnCode returnCode        = 1;           // Status code of response.
+  message PartProperties {
+    string refDes = 1;                        // The reference designator of the part.
+    message Property {
+      string name  = 1;                       // Name of the property.
+      string value = 2;                       // Value of the property.
+    }
+    repeated Property properties = 2;         // All properties applicable to the part.
+  }
+  repeated PartProperties partProperties = 2; // List of parts with properties.
 }
 
 /**
@@ -266,7 +293,7 @@ message UpdatePartsListPropertiesResponse {
 }
 
 /**
- * Contains the options needed to export a net list to a delimited output file (csv but can have delimiters other than a comma)
+ * Contains the options needed to export a net list to a delimited output file (csv but can have delimiters other than a comma).
  */
 message ExportNetListRequest {
   string project = 1; // Sherlock project name.
@@ -275,6 +302,23 @@ message ExportNetListRequest {
   bool overwriteExisting = 4; // Flag to determine if existing files should be overwritten if they match the outputFilePath. False by default.
   TableDelimiter colDelimiter = 5; // Enum that specifies supported delimiter character to be used. Set to COMMA by default. Not applicable to Excel files like xls, xlsx.
   bool utf8Enabled = 6; // Flag that specifies if UTF-8 will be used. False by default. Not applicable to Excel files like xls, xlsx.
+}
+
+/**
+ * Request to update one or more pad properties of one or more parts in a parts list.
+ */
+ message UpdatePadPropertiesRequest {
+  string project         = 1; // Sherlock project name.
+  string ccaName         = 2; // The CCA name for which pad properties will be updated.         
+  repeated string refDes = 3; // The reference designator of the associated part to be updated.
+}
+
+/**
+ * Contains the status of the pad properties update as well as all the update error messages.
+ */
+message UpdatePadPropertiesResponse {
+  ReturnCode returnCode	 = 1;	// Status code of response.
+  string refDes          = 2; // The reference designator of the associated part.
 }
 
 service SherlockPartsService {
@@ -315,9 +359,17 @@ service SherlockPartsService {
   // Get a list of valid board side values.
   rpc getBoardSides(GetBoardSidesRequest) returns (GetBoardSidesResponse);
   
-  // Get the location properties for a part.
-  rpc getPartLocation(GetPartLocationRequest) returns (GetPartLocationResponse);
+  // Get the location properties for a part. This is deprecated as of 25R2.
+  rpc getPartLocation(GetPartLocationRequest) returns (GetPartLocationResponse) {
+    option deprecated = true;
+  }
 
+  // Get the properties for a list of parts
+  rpc getPartsListProperties(GetPartsListPropertiesRequest) returns (GetPartsListPropertiesResponse);
+  
   // Export the net list to a file
   rpc exportNetList(ExportNetListRequest) returns (ReturnCode);
+
+  // Updates the pad properties for one or more parts for a given project's CCA.
+  rpc updatePadProperties (UpdatePadPropertiesRequest) returns (stream UpdatePadPropertiesResponse);
 }
