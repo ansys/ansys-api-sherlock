@@ -318,6 +318,23 @@ message UpdatePadPropertiesResponse {
   string refDes          = 2; // The reference designator of the associated part.
 }
 
+/**
+ * Request to delete parts from the parts list for a given project's CCA.
+ */
+ message DeletePartsFromPartsListRequest {
+  string project         = 1; // Sherlock project name.
+  string ccaName         = 2; // The CCA name for which parts will be deleted.         
+  repeated string refDes = 3; // The reference designator of the associated part to be deleted.
+}
+
+/**
+ * Contains the status of the delete parts operation as well as all the delete error messages.
+ */
+message DeletePartsFromPartsListResponse {
+  ReturnCode returnCode	 = 1;	// Status code of response.
+  string refDes          = 2; // The reference designator of the associated part.
+}
+
 service SherlockPartsService {
 
   // List the available parts libraries.
@@ -369,4 +386,7 @@ service SherlockPartsService {
 
   // Updates the pad properties for one or more parts for a given project's CCA.
   rpc updatePadProperties(UpdatePadPropertiesRequest) returns (stream UpdatePadPropertiesResponse);
+
+  // Delete parts from the parts list for a given project's CCA.
+  rpc deletePartsFromPartsList(DeletePartsFromPartsListRequest) returns (stream DeletePartsFromPartsListResponse);
 }
