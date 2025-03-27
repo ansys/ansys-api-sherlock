@@ -1,4 +1,4 @@
-// Copyright 2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2024-2025 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -308,6 +308,11 @@ message ThermalMapFile {
     string numericFormat            = 5;      // Numeric format for values.
   }
 
+  message IcepakFile {
+    double temperatureOffset        = 1;      // Temperature offset.
+    string temperatureOffsetUnits   = 2;      // Units for temperature offset values.
+  }
+
   string fileName                   = 1;      // The name of the thermal file to update.
   FileType fileType                 = 2;      // Thermal file type.
   string fileComment                = 3;      // Include a comment or description for the file.
@@ -316,6 +321,7 @@ message ThermalMapFile {
   oneof fileData {
     CsvExcelFile csvExcelFile       = 5;      // Used to CSV and Excel files.
     ImageFile imageFile             = 6;      // Used to add properties to Image files.
+    IcepakFile icepakFile           = 9;      // Used to add properties to Icepak TMAP files.
   }
   repeated string thermalProfiles   = 7;      // List of thermal profiles.
   repeated string cca               = 8;      // Project CCA Name.
