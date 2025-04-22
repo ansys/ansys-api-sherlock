@@ -426,6 +426,48 @@ message CreateCcaFromModelingRegionRequest {
 	repeated CCAFromModelingRegion cCAsFromModelingRegions = 2;		// CCAs from modeling regions to add.
 }
 
+/**
+ * Defines an outline file and its properties to add to a Sherlock project.
+ */
+message OutlineFile {
+  enum FileType {
+    UNKNOWN		= 0;		// Default enum to catch invalid file type.
+    CsvExcel	= 1;        // CSV or Excel outline file.
+    Gerber		= 2;        // Gerber outline file.
+    IPC2581 	= 3;        // IPC2581 outline file.
+  }
+
+  message CsvExcelOutlineFile {
+    int32 headerRowCount		= 1;	// Number of rows before the column header in the file.
+    string xLocationColumn		= 2;	// X location column name.
+    string yLocationColumn		= 3;	// Y location column name.
+    string locationUnits		= 4;	// Units for location values.
+  }
+  
+  message GerberOutlineFile {
+    bool parseDecimalFirst = 1;		// Option to parse decimals based on the length of the format specifier.
+  } 
+  
+  string fileName		= 1;	// The name of the outline file to add.
+  string fileComment	= 2;	// Comment or description for the file.
+  FileType fileType		= 3;	// Type of outline file.
+
+  oneof outlineFileData {
+    CsvExcelOutlineFile csvExcelFile	= 4;      // Used to add CSV and Excel outline files.
+    GerberOutlineFile gerberFile		= 5;      // Used to add Gerber outline files.
+  }
+
+  repeated string cca = 6;      // List of CCA names to add the file to.
+}
+
+/**
+ * Request to add outline files to a Sherlock project.
+ */
+message AddOutlineFileRequest {
+  string project					= 1;	// Sherlock project name.	
+  repeated OutlineFile outlineFiles	= 2;	// Outline files and properties to add to a Sherlock project.
+}
+
 service SherlockProjectService {
   // Generates the project report and return it via streaming.
   rpc genReport(GenReportRequest) returns (stream GenReportResponse);
@@ -438,7 +480,7 @@ service SherlockProjectService {
   
   // Imports an IPC-2581 archive.
   rpc importIPC2581Archive(ImportIPC2581Request) returns (ReturnCode);
-  
+
   // Delete a project from Sherlock.
   rpc deleteProject(DeleteProjectRequest) returns (ReturnCode);
   
@@ -480,4 +522,7 @@ service SherlockProjectService {
 
   // Creates a CCA from a given modeling region.
   rpc createCCAFromModelingRegion(CreateCcaFromModelingRegionRequest) returns (ReturnCode);
+  
+  // Add outline files to Sherlock project CCA's.
+  rpc addOutlineFiles(AddOutlineFileRequest) returns (stream ReturnCode);
 }
