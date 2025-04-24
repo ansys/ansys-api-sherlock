@@ -1,4 +1,4 @@
-// Copyright 2023 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -26,9 +26,9 @@ message ListLCEventsResponse {
       string description	= 2;				// Life cycle event description.
       string type			= 3;				// Life cycle type. For example: "Thermal Event", "Shock Event", "Random Vibe", "Harmonic Vibe".
     }
-    repeated LifeCycleEvent lcEvents = 3;
+    repeated LifeCycleEvent lcEvents = 3;    	// List of LifeCycleEvents for a project phase.
   }
-  repeated LifeCyclePhase lcPhases		= 2;
+  repeated LifeCyclePhase lcPhases		= 2;    // List of LifeCyclePhases for a specified project.
 }
 
 /**
@@ -153,9 +153,9 @@ message AddThermalProfilesRequest {
       double time		= 3;	// Time duration of the step.
       double temp		= 4;	// Temperature of the step.
     }
-    repeated Entry thermalProfileEntries	= 6;
+    repeated Entry thermalProfileEntries	= 6;  	// List of step entries for a life cycle event and/or phase.
   }
-  repeated ThermalProfile thermalProfiles	= 2;
+  repeated ThermalProfile thermalProfiles	= 2;	// List of thermal life cycle event profiles for a specified project.	
 }
 
 /**
@@ -246,7 +246,7 @@ message AddShockProfilesRequest {
     }
     repeated Entry shockProfileEntries	= 10;		// Primary shape entry for the shock profile.
   }
-  repeated ShockProfile shockProfiles = 2;
+  repeated ShockProfile shockProfiles = 2;			// List of shock life cycle event profiles for a specified project.
 }
 
 /**
@@ -372,10 +372,10 @@ message AddHarmonicVibeProfilesRequest {
       double freq		= 1;	// Frequency.
       double load		= 2;	// Load.
     }
-    repeated Entry harmonicVibeProfileEntries	= 6;
+    repeated Entry harmonicVibeProfileEntries	= 6;		// List of frequency and load values for a harmonic vibe life cycle phase.
     string triaxialAxis							= 7;		// If the harmonic profile type is "Triaxial", the axis this profile should be assigned to. Valid values are: x, y, z.
   }
-  repeated HarmonicVibeProfile harmonicVibeProfiles = 2;
+  repeated HarmonicVibeProfile harmonicVibeProfiles = 2;  	// List of harmonic vibe life cycle event profiles for a specified project.
 }
 
 /**
@@ -478,9 +478,9 @@ message AddRandomVibeProfilesRequest {
       double freq		= 1;	// Frequency.
       double ampl		= 2;	// Amplitude.
     }
-    repeated Entry randomVibeProfileEntries	= 6;
+    repeated Entry randomVibeProfileEntries	= 6;  		// List of frequency and amplitude values for a random vibe life cycle event.
   }
-  repeated RandomVibeProfile randomVibeProfiles = 2;
+  repeated RandomVibeProfile randomVibeProfiles = 2;	// List of random vibe life cycle event profiles for a specified project.
 }
 
 /**
@@ -647,7 +647,7 @@ message DeletePhaseRequest {
  * Response for deleting a life phase
  */
 message DeleteLifePhaseResponse {
-  ReturnCode returnCode 	= 1;
+  ReturnCode returnCode 	= 1;	// Status code of response.
 }
 
 service SherlockLifeCycleService {

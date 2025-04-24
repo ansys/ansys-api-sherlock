@@ -141,6 +141,8 @@ message SolderInfo {
   string weibullBetaLeaded = 44;          // Weibull for Leaded.
   string weibullBetaQFN = 45;             // Weibull for QFN.
   string weibullBetaThruHole = 46;        // Weibull for through hole.
+  string cgaCalibrationFactor = 47;       // CGA calibration factor.
+  string bgaCalibrationFactor = 48;    	  // BGA calibration factor.
 }
 
 /**

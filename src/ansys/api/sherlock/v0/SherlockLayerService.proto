@@ -1,4 +1,4 @@
-// Copyright 2023-2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2025 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -533,10 +533,11 @@ message ListLayersRequest {
 /**
  * Contains the list of layers.
  */
- message ListLayersResponse {
+message ListLayersResponse {
   ReturnCode returnCode = 1;			// Status code of response.
   repeated LayerInfo layerInfos = 2;	// List of layer information.
 }
+
 
 /**
  * Request to export one or more 2D Layer Viewer images from a project CCA.
@@ -651,10 +652,10 @@ service SherlockLayerService {
   
   // Copy one or more existing modeling regions.
   rpc copyModelingRegion(CopyModelingRegionRequest) returns (ReturnCode);
-
+  
   // List all the available layers as seen in the layer viewer for a project CCA.
   rpc listLayers(ListLayersRequest) returns (ListLayersResponse);
-
+  
   // Export one or more 2D Layer Viewer images from a project CCA.
   rpc exportLayerImage(ExportLayerImageRequest) returns (stream ExportLayerImageResponse);
 }
