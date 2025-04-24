@@ -1,4 +1,4 @@
-// Copyright 2023 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -31,16 +31,16 @@ message ListLaminatesResponse {
       string thicknessUnit			= 6;	// Laminate thickness unit.
       string constructionStyle		= 7;	// Construction style.
  
-/**
- * Represents the layers with a glass construction. 
- */
-message GlassConstruction {
+	/**
+ 	 * Represents the layers with a glass construction. 
+ 	 */
+	message GlassConstruction {
         string style 			= 1;	// Glass construction style.
         double resinPercentage  = 2;	// Glass construction resin percentage.
         double thickness 		= 3;	// Glass construction thickness.
         string thicknessUnit 	= 4;	// Glass construction thickness unit.
       }
-      repeated GlassConstruction glassConstructions = 8;
+      repeated GlassConstruction glassConstructions = 8; // List of Glass Construction info for a laminate layer.
       string fiberMaterial			= 9;	// Fiber material if the construction style is glass.
       string conductorMaterial 		= 10;	// Conductor material.
       string conductorPercent 		= 11;	// Conductor percentage.
@@ -50,9 +50,9 @@ message GlassConstruction {
       double Exy					= 15;	// Exy.
       double Ez						= 16;	// Ez.
     }
-    repeated LaminateProp laminateProps = 2;
+    repeated LaminateProp laminateProps = 2;	// List of laminate layers with associated properties for a specified CCA.
   }
-  repeated CCALaminateProp ccaLaminateProps = 2;
+  repeated CCALaminateProp ccaLaminateProps = 2;  // List of CCAs and their corresponding laminate layers.
 }
 
 /**
@@ -79,7 +79,7 @@ message UpdateLaminateRequest {
     double thickness 		= 3;	// Glass construction thickness.
     string thicknessUnit 	= 4;	// Glass construction thickness unit.
   }
-  repeated GlassConstruction glassConstruction = 10;
+  repeated GlassConstruction glassConstruction = 10;  // List of Glass Construction info for a laminate layer.
   string fiberMaterial			= 11;	// Fiber material. Only updated if glass construction is selected.
   string conductorMaterial		= 12;	// Conductor material.
   string conductorPercent		= 13;	// Conductor percentage.
@@ -161,9 +161,9 @@ message ListLaminateMaterialsResponse {
       string grade = 1;							// Grade.
       repeated string laminateMaterial	= 2;	// Material name.
     }
-    repeated GradeMaterials gradeMaterials = 2;
+    repeated GradeMaterials gradeMaterials = 2; // List of Grades and their associated materials.
   }
-  repeated ManufacturerMaterials manufacturerMaterials = 2;
+  repeated ManufacturerMaterials manufacturerMaterials = 2;  // List of manufacturers and their associated grades and materials.
 }
 
 /**
@@ -210,9 +210,9 @@ message ListConductorLayersResponse {
       double Exy					= 11;	// Exy.
       double Ez						= 12;	// Ez.
     }
-    repeated ConductorLayerProp conductorLayerProps 	= 2;
+    repeated ConductorLayerProp conductorLayerProps 	= 2;	// List of conductor layers and their associated properties for a specified CCA.
   }
-  repeated CCAConductorLayerProp ccaConductorLayerProps 	= 2;
+  repeated CCAConductorLayerProp ccaConductorLayerProps 	= 2; 	// List of CCAs and their associated conductor layers for a specified project.
 }
 
 /**

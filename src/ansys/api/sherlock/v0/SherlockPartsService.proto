@@ -321,7 +321,7 @@ message UpdatePadPropertiesResponse {
 /**
  * Request to delete parts from the parts list for a given project's CCA.
  */
- message DeletePartsFromPartsListRequest {
+message DeletePartsFromPartsListRequest {
   string project         = 1; // Sherlock project name.
   string ccaName         = 2; // The CCA name for which parts will be deleted.         
   repeated string refDes = 3; // The reference designator of the associated part to be deleted.
