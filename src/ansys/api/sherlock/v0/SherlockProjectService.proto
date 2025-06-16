@@ -470,6 +470,76 @@ message AddOutlineFileRequest {
   repeated OutlineFile outlineFiles	= 2;	// Outline files and properties to add to a Sherlock project.
 }
 
+/**
+ * Defines a copper file and its properties to add to a Sherlock project.
+ */
+ message CopperFile {
+  enum FileType {
+    CADIF      = 0; // Copper Layer CADIF file.
+    EDB        = 1; // Copper Layer EDB file.
+    Gerber     = 2; // Copper Layer GERBER file.
+    IPC2581    = 3; // Copper Layer IPC2581 file.
+    Image      = 4; // Copper Layer IMAGE file.
+    ODB_XML    = 5; // Copper Layer ODB XML file.
+    ODB_PLUS   = 6; // Copper Layer ODB++ file.
+    Trace      = 7; // Copper Layer TRACE file.
+  }
+
+  enum Polarity {
+    Positive = 0; // Positive polarity.
+    Negative = 1; // Negative polarity.
+  }
+
+  enum ImageType {
+    Background = 0; // Background image.
+    Foreground = 1; // Foreground image.
+  }
+
+  oneof fileData {
+    GerberFile gerberFile       = 7; // Additional properties for Gerber files.
+    ImageFile imageFile         = 8; // Additional properties for Image files.
+  }
+
+  message GerberFile {
+    bool parseDecimalFirstEnabled = 1; // Whether to parse decimal first is enabled.
+  }
+
+  message ImageFile {
+    ImageType imageType   = 1; // Background or Foreground image.
+    string imageColor     = 2; // Color of the image.
+  }
+
+  string fileName               = 1; // The name of the copper file to import.
+  FileType fileType             = 2; // Type of Copper file.
+  string fileComment            = 3; // Comment or description of the file.
+  string copperLayer            = 4; // Name of the copper layer.
+  Polarity polarity             = 5; // Polarity of the copper layer.
+  bool layerSnapshotEnabled     = 6; // Whether a layer snapshot is enabled.
+  repeated string cca           = 9; // Project CCA Name.
+}
+
+/**
+ * Request to import copper layer files to a Sherlock project.
+ */
+message ImportCopperFilesRequest {
+  string project = 1; // Sherlock project name.
+
+  message ImportCopperFile {
+    string copperFile                   = 1; // Full path to the Copper file to be imported.
+    CopperFile copperFileProperties     = 2; // Copper file properties.
+  }
+
+  repeated ImportCopperFile copperFiles = 2; // Copper files and associated properties to be imported.
+}
+
+/**
+ * Response from importing Copper files.
+ */
+message ImportCopperFilesResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  string fileName   	    = 2;	// The name of the copper file to import.
+}
+
 service SherlockProjectService {
   // Generates the project report and return it via streaming.
   rpc genReport(GenReportRequest) returns (stream GenReportResponse);
@@ -527,5 +597,8 @@ service SherlockProjectService {
   
   // Add outline files to Sherlock project CCA's.
   rpc addOutlineFiles(AddOutlineFileRequest) returns (stream ReturnCode);
+
+  // Import copper files to a Sherlock project.
+  rpc importCopperFiles(ImportCopperFilesRequest) returns (stream ImportCopperFilesResponse);
 }
 
