@@ -1,4 +1,4 @@
-// Copyright 2023-2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2025 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -245,8 +245,44 @@ message UpdateTestPointsByFileRequest {
  * Contains the status of the update as well as all the update error messages.
  */
 message UpdateTestPointsResponse {
-  ReturnCode returnCode 		= 1;	// Status code of response.
+  ReturnCode returnCode 		  = 1;	// Status code of response.
   repeated string updateError	= 2;	// Test Points update error messages.
+}
+
+/**
+ * Request to return the properties for each test point given a comma-separated list of test point ids.
+ */
+message GetTestPointPropertiesRequest {
+  string project					      = 1;	// Sherlock project name.
+  string ccaName					      = 2;	// The CCA name.
+  optional string testPointIDs	= 3;	// A comma-separated list of test point ids representing one or more test points. If a list is not included then the entire list of test points for a given CCA will have their properties returned.
+}
+
+/**
+ * Represents the test point properties for a specific test point id.
+ */
+message GetTestPointPropertiesResponse {
+  ReturnCode returnCode 						      = 1;	// Status code of response.
+  TestPointProperties testPointProperties = 2;	// The test point properties for a given test point id.
+}
+
+/**
+ * Properties of a test point.
+ */
+message TestPointProperties {
+  enum LoadType {
+    Force 		   = 0;	// Numeric load value and associated units represents force.
+	  Displacement = 1;	// Numeric load value and associated units represents displacement.
+  }
+  string   ID		      = 1;	// Test point ID.
+  string   side	      = 2;	// Test point side, i.e., Top or Bottom.
+  string   units      = 3;	// Test point units.
+  double   centerX 	  = 4;	// Center X.
+  double   centerY 	  = 5;	// Center Y.
+  double   radius		  = 6;  // Radius.
+  LoadType loadType   = 7;  // Load Type enum with acceptable values being either Force or Displacement.
+  double   loadValue  = 8;  // Load value.
+  string   loadUnits  = 9;  // Load units.
 }
 
 message PolygonalShape {
@@ -533,10 +569,11 @@ message ListLayersRequest {
 /**
  * Contains the list of layers.
  */
- message ListLayersResponse {
+message ListLayersResponse {
   ReturnCode returnCode = 1;			// Status code of response.
   repeated LayerInfo layerInfos = 2;	// List of layer information.
 }
+
 
 /**
  * Request to export one or more 2D Layer Viewer images from a project CCA.
@@ -618,6 +655,9 @@ service SherlockLayerService {
 
   // Get a list of valid mount point units.
   rpc getMountPointUnits(GetMountPointUnitsRequest) returns (GetMountPointUnitsResponse);
+
+  //Get a series of valid test point properties.
+  rpc getTestPointProperties(GetTestPointPropertiesRequest) returns (stream GetTestPointPropertiesResponse);
   
   // Update the ICT fixtures properties of a CCA from a CSV formatted file. This API could be used to add new ICT fixtures or update existing ones depending on the file contents.
   // If the ID specified already exists, then the properties for that ICT fixture will be updated.
@@ -651,10 +691,10 @@ service SherlockLayerService {
   
   // Copy one or more existing modeling regions.
   rpc copyModelingRegion(CopyModelingRegionRequest) returns (ReturnCode);
-
+  
   // List all the available layers as seen in the layer viewer for a project CCA.
   rpc listLayers(ListLayersRequest) returns (ListLayersResponse);
-
+  
   // Export one or more 2D Layer Viewer images from a project CCA.
   rpc exportLayerImage(ExportLayerImageRequest) returns (stream ExportLayerImageResponse);
 }

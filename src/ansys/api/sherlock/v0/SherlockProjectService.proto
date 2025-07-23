@@ -76,18 +76,35 @@ message ImportIPC2581Request {
 }
 
 /**
+ * Request for importing a .zip project archive when Sherlock is in multiple project mode.
+ */
+message ImportProjectZipRequest {
+  string project				= 1;		// Sherlock project name.
+  string category				= 2;		// Sherlock project category.
+  string archiveFile			= 3;		// Full path to the .zip archive file containing the project data.
+}
+
+/**
+ * Request for importing a .zip project archive when Sherlock is in single project mode.
+ */
+message ImportProjectZipSingleModeRequest {
+  ImportProjectZipRequest projZipRequest   		= 1;  // Encapsulates project name, category and full path to project .zip archive. 
+  string destFileDir							= 2;  // Directory in which the Sherlock project folder will be created. 
+}
+
+/**
  * Request for importing a GDSII project file and any optional config files.
  */
- message ImportGDSIIRequest {
-  string gdsiiFile						          = 1;		// Full path to the GDSII file (.gds, .sf, or .strm) to be imported.
-  string technologyFile					        = 2;		// Full path to the optional technology file (.xml, .tech. or .layermap) to be imported. A file with a .tech extension also requires a valid layer map file (.map) to be imported.
-  string layerMapFile					          = 3;    // Full path to the optional layer map file (.map) to be imported.     
-  string project						            = 4;		// Sherlock project name. If empty, the filename will be used for the project name.
-  string ccaName						            = 5;		// Project CCA name. If empty, the filename will be used for the CCA name.	
-  bool guessPartProperties				      = 6;		// Option to guess part properties.
-  bool polylineSimplificationEnabled	  = 7;		// Option to enable polyline simplification.
-  double polylineTolerance				      = 8;		// Polyline simplification tolerance, if enabled.
-  string polylineToleranceUnits			    = 9;		// Polyline simplification tolerance units, if enabled.
+message ImportGDSIIRequest {
+  string gdsiiFile						= 1;		// Full path to the GDSII file (.gds, .sf, or .strm) to be imported.
+  string technologyFile					= 2;		// Full path to the optional technology file (.xml, .tech. or .layermap) to be imported. A file with a .tech extension also requires a valid layer map file (.map) to be imported.
+  string layerMapFile					= 3;        // Full path to the optional layer map file (.map) to be imported.     
+  string project						= 4;		// Sherlock project name. If empty, the filename will be used for the project name.
+  string ccaName						= 5;		// Project CCA name. If empty, the filename will be used for the CCA name.	
+  bool guessPartProperties				= 6;		// Option to guess part properties.
+  bool polylineSimplificationEnabled	= 7;		// Option to enable polyline simplification.
+  double polylineTolerance				= 8;		// Polyline simplification tolerance, if enabled.
+  string polylineToleranceUnits			= 9;		// Polyline simplification tolerance units, if enabled.
 }
 
 /**
@@ -100,7 +117,7 @@ message DeleteProjectRequest{
 /**
  * Request to add strain map files to CCAs in a Sherlock project.
  */
- message AddStrainMapRequest {
+message AddStrainMapRequest {
   message StrainMapFile {
     enum FileType {
       CSV     = 0; // Csv file.
@@ -371,26 +388,9 @@ message ThermalMapFile {
 }
 
 /**
- * Request for importing a .zip project archive when Sherlock is in multiple project mode.
- */
- message ImportProjectZipRequest {
-  string project				= 1;		// Sherlock project name.
-  string category				= 2;		// Sherlock project category.
-  string archiveFile			= 3;		// Full path to the .zip archive file containing the project data.
-}
-
-/**
- * Request for importing a .zip project archive when Sherlock is in single project mode.
- */
- message ImportProjectZipSingleModeRequest {
-  ImportProjectZipRequest projZipRequest   		= 1;  // Encapsulates project name, category and full path to project .zip archive. 
-  string destFileDir							= 2;  // Directory in which the Sherlock project folder will be created. 
-}
-
-/**
  * Request for exporting the designated Sherlock project as a .zip file.
  */
- message ExportProjectRequest {
+message ExportProjectRequest {
   string project				= 1; 	// Sherlock project name.
   bool exportDesignFiles		= 2; 	// If true, export all design files assigned to the project.
   bool exportResultFiles		= 3; 	// If true, export all analysis module results.
@@ -403,13 +403,15 @@ message ThermalMapFile {
   bool overwriteExistingFile 	= 10;   // If true, an existing file will be overwritten.
 }
 
+
+
 /**
  * Request for creating CCA from a specified modeling region.
  */
 message CreateCcaFromModelingRegionRequest {
-	string project										   = 1; 	// Sherlock project name.
+	string project										   = 1; 	// Sherlock project name.	
 	/**
- 	 * Request for each individual property of cca.
+ 	 * Request for each individual property of cca
  	 */
 	message CCAFromModelingRegion {
   		string ccaName									= 1;  	// Project CCA name.
@@ -421,9 +423,9 @@ message CreateCcaFromModelingRegionRequest {
   		optional double defaultPartTempRise 			= 7; 	// Default part temp rise.
   		optional string defaultPartTempRiseUnits 		= 8; 	// Default part temp rise units.
   		optional bool guessPartProperties 				= 9; 	// Whether to enable guess part properties.
-  		optional bool generateImageLayers				= 10;	// Whether to generate image layers
-	}
-	repeated CCAFromModelingRegion cCAsFromModelingRegions = 2;		// CCAs from modeling regions to add.
+  		optional bool generateImageLayers				= 10;	// Whether to generate image layers	
+	}	
+	repeated CCAFromModelingRegion cCAsFromModelingRegions = 2;		// CCAs from modeling regions to add.	
 }
 
 /**
@@ -468,6 +470,76 @@ message AddOutlineFileRequest {
   repeated OutlineFile outlineFiles	= 2;	// Outline files and properties to add to a Sherlock project.
 }
 
+/**
+ * Defines a copper file and its properties to add to a Sherlock project.
+ */
+ message CopperFile {
+  enum FileType {
+    CADIF      = 0; // Copper Layer CADIF file.
+    EDB        = 1; // Copper Layer EDB file.
+    Gerber     = 2; // Copper Layer GERBER file.
+    IPC2581    = 3; // Copper Layer IPC2581 file.
+    Image      = 4; // Copper Layer IMAGE file.
+    ODB_XML    = 5; // Copper Layer ODB XML file.
+    ODB_PLUS   = 6; // Copper Layer ODB++ file.
+    Trace      = 7; // Copper Layer TRACE file.
+  }
+
+  enum Polarity {
+    Positive = 0; // Positive polarity.
+    Negative = 1; // Negative polarity.
+  }
+
+  enum ImageType {
+    Background = 0; // Background image.
+    Foreground = 1; // Foreground image.
+  }
+
+  oneof fileData {
+    GerberFile gerberFile       = 7; // Additional properties for Gerber files.
+    ImageFile imageFile         = 8; // Additional properties for Image files.
+  }
+
+  message GerberFile {
+    bool parseDecimalFirstEnabled = 1; // Whether to parse decimal first is enabled.
+  }
+
+  message ImageFile {
+    ImageType imageType   = 1; // Background or Foreground image.
+    string imageColor     = 2; // Color of the image.
+  }
+
+  string fileName               = 1; // The name of the copper file to import.
+  FileType fileType             = 2; // Type of Copper file.
+  string fileComment            = 3; // Comment or description of the file.
+  string copperLayer            = 4; // Name of the copper layer.
+  Polarity polarity             = 5; // Polarity of the copper layer.
+  bool layerSnapshotEnabled     = 6; // Whether a layer snapshot is enabled.
+  repeated string cca           = 9; // Project CCA Name.
+}
+
+/**
+ * Request to import copper layer files to a Sherlock project.
+ */
+message ImportCopperFilesRequest {
+  string project = 1; // Sherlock project name.
+
+  message ImportCopperFile {
+    string copperFile                   = 1; // Full path to the Copper file to be imported.
+    CopperFile copperFileProperties     = 2; // Copper file properties.
+  }
+
+  repeated ImportCopperFile copperFiles = 2; // Copper files and associated properties to be imported.
+}
+
+/**
+ * Response from importing Copper files.
+ */
+message ImportCopperFilesResponse {
+  ReturnCode returnCode		= 1;	// Status code of response.
+  string fileName   	    = 2;	// The name of the copper file to import.
+}
+
 service SherlockProjectService {
   // Generates the project report and return it via streaming.
   rpc genReport(GenReportRequest) returns (stream GenReportResponse);
@@ -480,7 +552,16 @@ service SherlockProjectService {
   
   // Imports an IPC-2581 archive.
   rpc importIPC2581Archive(ImportIPC2581Request) returns (ReturnCode);
-
+  
+  // Imports a zipped project archive -- multiple project mode.
+  rpc importProjectZipArchive(ImportProjectZipRequest) returns (ReturnCode);
+  
+  // Imports a zipped project archive -- single project mode.
+  rpc importProjectZipArchiveSingleMode(ImportProjectZipSingleModeRequest) returns (ReturnCode);
+  
+  // Imports a GDSII project file and any optional config file.
+  rpc importGDSIIFile(ImportGDSIIRequest) returns (ReturnCode);
+  
   // Delete a project from Sherlock.
   rpc deleteProject(DeleteProjectRequest) returns (ReturnCode);
   
@@ -507,22 +588,17 @@ service SherlockProjectService {
 
   // Add a thermal map to a Sherlock project.
   rpc addThermalMaps(AddThermalMapRequest) returns (AddThermalMapResponse);
-
-  // Imports a zipped project archive -- multiple project mode.
-  rpc importProjectZipArchive(ImportProjectZipRequest) returns (ReturnCode);
-
-  // Imports a zipped project archive -- single project mode.
-  rpc importProjectZipArchiveSingleMode(ImportProjectZipSingleModeRequest) returns (ReturnCode);
-
-  // Imports a GDSII project file and any optional config file.
-  rpc importGDSIIFile(ImportGDSIIRequest) returns (ReturnCode);
-
+  
   // Exports project to a zipped archive file.
   rpc exportProject(ExportProjectRequest) returns (ReturnCode);
-
-  // Creates a CCA from a given modeling region.
+  
+  // Creates a CCA from a given modeling region
   rpc createCCAFromModelingRegion(CreateCcaFromModelingRegionRequest) returns (ReturnCode);
   
   // Add outline files to Sherlock project CCA's.
   rpc addOutlineFiles(AddOutlineFileRequest) returns (stream ReturnCode);
+
+  // Import copper files to a Sherlock project.
+  rpc importCopperFiles(ImportCopperFilesRequest) returns (stream ImportCopperFilesResponse);
 }
+
