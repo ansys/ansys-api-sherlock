@@ -475,14 +475,13 @@ message AddOutlineFileRequest {
  */
  message CopperFile {
   enum FileType {
-    CADIF      = 0; // Copper Layer CADIF file.
-    EDB        = 1; // Copper Layer EDB file.
-    Gerber     = 2; // Copper Layer GERBER file.
-    IPC2581    = 3; // Copper Layer IPC2581 file.
-    Image      = 4; // Copper Layer IMAGE file.
-    ODB_XML    = 5; // Copper Layer ODB XML file.
-    ODB_PLUS   = 6; // Copper Layer ODB++ file.
-    Trace      = 7; // Copper Layer TRACE file.
+    EDB        = 0; // Copper Layer EDB file.
+    Gerber     = 1; // Copper Layer GERBER file.
+    IPC2581    = 2; // Copper Layer IPC2581 file.
+    Image      = 3; // Copper Layer IMAGE file.
+    ODB_XML    = 4; // Copper Layer ODB XML file.
+    ODB_PLUS   = 5; // Copper Layer ODB++ file.
+    Trace      = 6; // Copper Layer TRACE file.
   }
 
   enum Polarity {
