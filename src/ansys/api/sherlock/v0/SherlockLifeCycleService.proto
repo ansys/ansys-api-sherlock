@@ -1,4 +1,4 @@
-// Copyright 2023-2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2025 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -650,6 +650,31 @@ message DeleteLifePhaseResponse {
   ReturnCode returnCode 	= 1;	// Status code of response.
 }
 
+/**
+ * Request for importing a thermal signal file.
+ */
+message ImportThermalSignalRequest {
+  message ThermalSignalFileProperties {
+    int32 headerRowCount		= 1;	// Number of rows before the column header in the file.
+    string numericFormat		= 2;	// Numeric format for values.
+    string columnDelimiter		= 3;	// Delimiter to separate the columns.
+    string timeColumn			= 4;	// Time column name.
+    string timeUnits			= 5;	// Time units column name.
+    string temperatureColumn	= 6;	// Temperature column name.
+    string temperatureUnits		= 7;	// Temperature units column name.
+  }
+
+  string thermalSignalFile						= 1;	// The full path to the CSV thermal signal file to be imported.
+  string project								= 2;	// Sherlock project name in which the thermal signal is imported.
+  string phaseName								= 3;	// The name of the life cycle phase this thermal signal is associated.
+  ThermalSignalFileProperties fileProperties	= 4;	// Thermal signal CSV file properties.
+  bool timeRemoval								= 5;	// Option to indicate that time results with shorter half-cycle durations are removed.
+  double loadRangePercentage					= 6;	// Defines the fraction of the range near peaks and valleys considered as a dwell region.
+  int32 numberOfBins							= 7;	// Number of bins for binning cycles, 0 for no binning.
+  double filteringLimit							= 8;	// Minimum cycle range to include in results, 0 for no filtering.
+  string generatedCyclesLabel					= 9;	// Label used to define the name of all generated thermal events.
+}
+
 service SherlockLifeCycleService {
   
   // Define and add a new harmonic vibe life cycle event.
@@ -744,4 +769,7 @@ service SherlockLifeCycleService {
   
   // Delete a life phase for a project.
   rpc deletePhase(DeletePhaseRequest) returns (ReturnCode);
+  
+  // Import thermal signal from a CSV file.
+  rpc importThermalSignal(ImportThermalSignalRequest) returns (ReturnCode);
 }
