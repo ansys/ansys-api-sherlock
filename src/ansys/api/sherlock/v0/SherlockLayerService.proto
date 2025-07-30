@@ -162,6 +162,48 @@ message MountPointProperties{
 }
 
 /**
+ * Request to list the valid ICT fixture properties.
+ */
+message GetICTFixturesPropertiesRequest {
+  string project				= 1;	// Sherlock project name.
+  string ccaName				= 2;	// The CCA name.
+  string ICTFixtureIDs			= 3;	// A comma separated list of ICT fixture ids, or an ICT fixture id for one part.
+}
+
+/**
+ * Represents a list of valid ICT fixture properties.
+ */
+message GetICTFixturesPropertiesResponse {
+  ReturnCode returnCode 		= 1;	// Status code of response.
+  repeated ICTFixtureProperties ICTFixtureProperties 	= 2;	// ICT fixture properties.
+}
+
+/**
+ * Properties of ICT fixture, the properties may vary depending on the fixture type and fixture shape.
+ */
+message ICTFixtureProperties{
+  string ID					= 1;	// Fixture ID.
+  string type				= 2;	// Fixture type.
+  string units				= 3;	// Fixture units.
+  string side				= 4;	// Fixture side.
+  string height				= 5; 	// Fixture height.
+  string material			= 6; 	// Fixture material.
+  string state				= 7; 	// Fixture state.
+  string shape				= 8;	// Shape type.
+  string x					= 9;	// Center X.
+  string y					= 10;	// Center Y.
+  string length 			= 11;	// Length.
+  string width				= 12;	// Width.
+  string diameter			= 13;	// Circle diameter.
+  string nodes				= 14; 	// # of nodes.
+  string rotation			= 15; 	// Rotation (degrees).
+  string polygon 			= 16;	// Coordinates of points.
+  string boundary			= 17;	// Boundary Pt(s).
+  string constraints		= 18; 	// FEA constraints.
+  string chassisMaterial	= 19;	// Chassis material.
+}
+
+/**
  * Request to update mount points properties of a CCA from a CSV formatted file.
  */
 message UpdateMountPointsByFileRequest {
@@ -171,7 +213,7 @@ message UpdateMountPointsByFileRequest {
 }
 
 /**
- * Request to update mount points properties of a CCA from a CSV formatted file.
+ * Request to update mount points properties of a CCA from input parameters.
  */
 message UpdateMountPointsRequest {
   string project 										= 1;	// Sherlock project name.
@@ -213,6 +255,15 @@ message UpdateICTFixturesByFileRequest {
 }
 
 /**
+ * Request to update ICT fixtures properties of a CCA from input parameters.
+ */
+message UpdateICTFixturesRequest {
+  string project 										= 1;	// Sherlock project name.
+  string ccaName 										= 2;	// The CCA name.
+  repeated ICTFixtureProperties ICTFixtureProperties 	= 3;	// ICT Fixture properties.
+}
+
+/**
  * Contains the status of the update as well as all the update error messages.
  */
 message UpdateICTFixturesResponse {
@@ -242,10 +293,19 @@ message UpdateTestPointsByFileRequest {
 }
 
 /**
+ * Request to update test points properties of a CCA from input parameters.
+ */
+message UpdateTestPointsRequest {
+  string project										= 1;	// Sherlock project name.
+  string ccaName										= 2;	// The CCA name.
+  repeated TestPointProperties testPointProperties 		= 3;	// List of data needed to update each test point.
+}
+
+/**
  * Contains the status of the update as well as all the update error messages.
  */
 message UpdateTestPointsResponse {
-  ReturnCode returnCode 		  = 1;	// Status code of response.
+  ReturnCode returnCode 		= 1;	// Status code of response.
   repeated string updateError	= 2;	// Test Points update error messages.
 }
 
@@ -253,17 +313,17 @@ message UpdateTestPointsResponse {
  * Request to return the properties for each test point given a comma-separated list of test point ids.
  */
 message GetTestPointPropertiesRequest {
-  string project					      = 1;	// Sherlock project name.
-  string ccaName					      = 2;	// The CCA name.
-  optional string testPointIDs	= 3;	// A comma-separated list of test point ids representing one or more test points. If a list is not included then the entire list of test points for a given CCA will have their properties returned.
+  string project					= 1;	// Sherlock project name.
+  string ccaName					= 2;	// The CCA name.
+  optional string testPointIDs		= 3;	// A comma-separated list of test point ids representing one or more test points. If a list is not included then the entire list of test points for a given CCA will have their properties returned.
 }
 
 /**
  * Represents the test point properties for a specific test point id.
  */
 message GetTestPointPropertiesResponse {
-  ReturnCode returnCode 						      = 1;	// Status code of response.
-  TestPointProperties testPointProperties = 2;	// The test point properties for a given test point id.
+  ReturnCode returnCode 						= 1;	// Status code of response.
+  TestPointProperties testPointProperties 	    = 2;	// The test point properties for a given test point id.
 }
 
 /**
@@ -271,31 +331,31 @@ message GetTestPointPropertiesResponse {
  */
 message TestPointProperties {
   enum LoadType {
-    Force 		   = 0;	// Numeric load value and associated units represents force.
-	  Displacement = 1;	// Numeric load value and associated units represents displacement.
+    Force 		 = 0;	// Numeric load value and associated units represents force.
+	Displacement = 1;	// Numeric load value and associated units represents displacement.
   }
-  string   ID		      = 1;	// Test point ID.
-  string   side	      = 2;	// Test point side, i.e., Top or Bottom.
-  string   units      = 3;	// Test point units.
-  double   centerX 	  = 4;	// Center X.
-  double   centerY 	  = 5;	// Center Y.
-  double   radius		  = 6;  // Radius.
-  LoadType loadType   = 7;  // Load Type enum with acceptable values being either Force or Displacement.
-  double   loadValue  = 8;  // Load value.
-  string   loadUnits  = 9;  // Load units.
+  string   ID				= 1;	// Test point ID.
+  string   side				= 2;	// Test point side, i.e., Top or Bottom.
+  string   units 			= 3;	// Test point units.
+  double   centerX 			= 4;	// Center X.
+  double   centerY 			= 5;	// Center Y.
+  double   radius			= 6;    // Radius.
+  LoadType loadType         = 7;    // Load Type enum with acceptable values being either Force or Displacement.
+  double   loadValue      	= 8;    // Load value.
+  string   loadUnits     	= 9;    // Load units.
 }
 
 message PolygonalShape {
-    
+
   message Point {
     double x = 1;					// The x coordinate of the point.
     double y = 2;					// The y coordinate of the point.
   }
-    
+
   repeated Point points = 1;		// The points used to define the polygonal shape, must be >= 3.
   optional double rotation = 2;		// The rotation of the shape in degrees.
 }
-  
+
 message RectangularShape {
   optional double length = 1;		// The length of the rectangle.
   optional double width = 2;		// The width of the rectangle.
@@ -303,7 +363,7 @@ message RectangularShape {
   optional double centerY = 4;		// The y coordinate of the center of the rectangle.
   optional double rotation = 5;		// The rotation of the rectangle in degrees.
 }
-  
+
 message SlotShape {
   optional double length = 1;		// The length of the slot shape.
   optional double width = 2;		// The width of the slot shape.
@@ -312,7 +372,7 @@ message SlotShape {
   optional double centerY = 5;		// The x coordinate of the center of the slot shape.
   optional double rotation = 6;		// The rotation of the shape in degrees.
 }
-  
+
 message CircularShape {
   optional double diameter = 1;		// The diameter of the circle.
   optional uint32 nodeCount = 2;	// The number of nodes.
@@ -320,7 +380,7 @@ message CircularShape {
   optional double centerY = 4;		// The x coordinate of the center of the circle.
   optional double rotation = 5;		// The rotation of the shape in degrees.
 }
-  
+
 message PCBShape {
 }
 
@@ -348,7 +408,7 @@ message PCBShape {
 /**
  * Request to add a potting region.
  */
-message AddPottingRegionRequest {  
+message AddPottingRegionRequest {
   message PottingRegion {
     option deprecated = true;
     string ccaName = 1;							// The name of the CCA.
@@ -358,7 +418,7 @@ message AddPottingRegionRequest {
     optional string pottingUnits = 5;			// The units to use for the potting region.
     optional double pottingThickness = 6;		// The potting thickness.
     optional double pottingStandoff = 7;		// The potting standoff.
-  
+
     oneof Shape {
       PolygonalShape polygonalShape = 8;		// Used to add a region with a polygonal shape.
   	  RectangularShape rectangularShape = 9;	// Used to add a region with a rectangular shape.
@@ -367,7 +427,7 @@ message AddPottingRegionRequest {
   	  PCBShape pCBShape = 12;					// Used to add a region with a PCB shape.
     }
   }
-  
+
   string project = 1;							// The name of the Sherlock project to add the potting regions to.
   repeated PottingRegion pottingRegions = 2;	// The potting regions to add.
 }
@@ -469,12 +529,12 @@ message ModelingRegion {
 	  	  CircularShape circularShape = 8;					// Defined by N points that form a circle.
 	}
 	optional PCBModelingProperties pcbModelProps = 9;   	// Mesh properties for the modeling region.
-	optional TraceModelingProperties traceModelProps = 10;	// Trace modeling properties for the region.	
-	optional string regionIdReplacement = 11;				// Represents a unique region id that will replace the existing regionId value during 
+	optional TraceModelingProperties traceModelProps = 10;	// Trace modeling properties for the region.
+	optional string regionIdReplacement = 11;				// Represents a unique region id that will replace the existing regionId value during
 															// a modeling region update if a value exists.
 }
 
-/** 
+/**
  * Request to add one or more modeling regions to a specific project.
  */
 message AddModelingRegionRequest {
@@ -482,16 +542,16 @@ message AddModelingRegionRequest {
 	repeated ModelingRegion modelingRegions = 2;	// List of modeling regions to add to the project.
 }
 
-/** 
+/**
  * Request to update one or more modeling regions for a specific project.
  */
 message UpdateModelingRegionRequest {
 	string project = 1;								// The name of the Sherlock project.
-	repeated ModelingRegion modelingRegions = 2;	// List of modeling regions to update in the project.  The regionId for 
+	repeated ModelingRegion modelingRegions = 2;	// List of modeling regions to update in the project.  The regionId for
 													// each modeling region must already exist in the project.
 }
 
-/** 
+/**
  * Request to delete one or more modeling regions for a specific project.
  */
 message DeleteModelingRegionRequest {
@@ -500,7 +560,7 @@ message DeleteModelingRegionRequest {
 		string regionId = 2;	// Unique region ID of the modeling region to delete.
 	}
 	string project = 1;									    // The name of the Sherlock project.
-	repeated DeleteModelingRegionInfo deleteRegions = 2;	// List of modeling regions to delete in the project.  
+	repeated DeleteModelingRegionInfo deleteRegions = 2;	// List of modeling regions to delete in the project.
 }
 
 /**
@@ -511,11 +571,11 @@ message CopyModelingRegionRequest {
 		string ccaName = 1;	 		// Name of the CCA.
 		string regionId = 2;		// Region ID of the existing modeling region to copy.
 		string regionIdCopy = 3;    // Region ID of the modeling region copy. Must be unique.
-		double centerX = 4;			// The center x coordinate of the modeling region copy -- used for location placement in the Layer Viewer. 
+		double centerX = 4;			// The center x coordinate of the modeling region copy -- used for location placement in the Layer Viewer.
 		double centerY = 5;			// The center y coordinate of the modeling region copy -- used for location placement in the Layer Viewer.
 	}
 	string project = 1;									    // The name of the Sherlock project.
-	repeated CopyModelingRegionInfo copyRegions = 2;		// List of modeling regions to copy along with their corresponding "copy to" parameters.	
+	repeated CopyModelingRegionInfo copyRegions = 2;		// List of modeling regions to copy along with their corresponding "copy to" parameters.
 }
 
 /**
@@ -622,13 +682,13 @@ service SherlockLayerService {
 
   // Delete all mount points in specific CCA of specific project.
   rpc deleteAllMountPoints(DeleteAllMountPointsRequest) returns (ReturnCode);
-  
+
   // Delete all test points in specific CCA of specific project.
   rpc deleteAllTestPoints(DeleteAllTestPointsRequest) returns (ReturnCode);
-  
+
   // Export all mount points and their properties into a CSV formatted file.
   rpc exportAllMountPoints(ExportAllMountPointsRequest) returns (ReturnCode);
-  
+
   // Export all ICT fixtures and their properties into a CSV formatted file.
   rpc exportAllICTFixtures(ExportAllICTFixturesRequest) returns (ReturnCode);
 
@@ -640,13 +700,16 @@ service SherlockLayerService {
 
   // Get a list of valid mount point chassis materials.
   rpc getMountPointChassisMaterials(GetMountPointChassisMaterialsRequest) returns (GetMountPointChassisMaterialsResponse);
-  
+
   // Get a list of valid mount point properties.
   rpc getMountPointsProperties(GetMountPointsPropertiesRequest) returns (GetMountPointsPropertiesResponse);
 
+  // Get a list of valid ICT fixture properties.
+  rpc getICTFixturesProperties(GetICTFixturesPropertiesRequest) returns (GetICTFixturesPropertiesResponse);
+
   // Get a list of valid mount point shape type values.
   rpc getMountPointShapeTypes(GetMountPointShapeTypesRequest) returns (GetMountPointShapeTypesResponse);
-  
+
   // Get a list of valid mount point sides.
   rpc getMountPointSides(GetMountPointSidesRequest) returns (GetMountPointSidesResponse);
 
@@ -658,7 +721,12 @@ service SherlockLayerService {
 
   //Get a series of valid test point properties.
   rpc getTestPointProperties(GetTestPointPropertiesRequest) returns (stream GetTestPointPropertiesResponse);
-  
+
+  // Update the ICT fixtures properties of a CCA using input parameters.
+  // If the ID specified already exists, then the properties for that ICT fixture will be updated.
+  // If the ID specified does not already exist, or if the field is empty, then a new ICT fixture will be added with the specified properties.
+  rpc updateICTFixtures(UpdateICTFixturesRequest) returns (UpdateICTFixturesResponse);
+
   // Update the ICT fixtures properties of a CCA from a CSV formatted file. This API could be used to add new ICT fixtures or update existing ones depending on the file contents.
   // If the ID specified already exists, then the properties for that ICT fixture will be updated.
   // If the ID specified does not already exist, or if the field is empty, then a new ICT fixture will be added with the specified properties.
@@ -666,6 +734,8 @@ service SherlockLayerService {
   rpc updateICTFixturesByFile(UpdateICTFixturesByFileRequest) returns (UpdateICTFixturesResponse);
 
   // Update mount points with specified properties.
+  // If the ID specified already exists, then the properties for that mount point will be updated.
+  // If the ID specified does not already exist, or if the field is empty, then a new mount point will be added with the specified properties.
   rpc updateMountPoints(UpdateMountPointsRequest) returns (UpdateMountPointsResponse);
 
   // Update the mount points properties of a CCA from a CSV formatted file. This API could be used to add new mount points or update existing ones depending on the file contents.
@@ -673,6 +743,11 @@ service SherlockLayerService {
   // If the ID specified does not already exist, or if the field is empty, then a new mount point will be added with the specified properties.
   // The file format should be the same as the one produced from CCA -> Export Mount Points.
   rpc updateMountPointsByFile(UpdateMountPointsByFileRequest) returns (UpdateMountPointsResponse);
+
+  // Update the test points properties of a CCA from input parameters.
+  // If the ID specified already exists, then the properties for that test point will be updated.
+  // If the ID specified does not already exist, or if the field is empty, then a new test point will be added with the specified properties.
+  rpc updateTestPoints(UpdateTestPointsRequest) returns (UpdateTestPointsResponse);
   
   // Update the test points properties of a CCA from a CSV formatted file. This API could be used to add new test points or update existing ones depending on the file contents.
   // If the ID specified already exists, then the properties for that test point will be updated.
