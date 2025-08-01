@@ -671,8 +671,10 @@ message ImportThermalSignalRequest {
   bool timeRemoval								= 5;	// Option to indicate that time results with shorter half-cycle durations are removed.
   double loadRangePercentage					= 6;	// Defines the fraction of the range near peaks and valleys considered as a dwell region.
   int32 numberOfBins							= 7;	// Number of bins for binning cycles, 0 for no binning.
-  double filteringLimit							= 8;	// Minimum cycle range to include in results, 0 for no filtering.
-  string generatedCyclesLabel					= 9;	// Label used to define the name of all generated thermal events.
+  double temperatureRangeFilteringLimit			= 8;	// Minimum cycle range to include in results, 0 for no filtering.
+  double timeFilteringLimit						= 9;	// Maximum cycle time to include in results, default is 72 hours.
+  string timeFilteringLimitUnits				= 10;	// Time filtering limit units.
+  string generatedCyclesLabel					= 11;	// Label used to define the name of all generated thermal events.
 }
 
 service SherlockLifeCycleService {

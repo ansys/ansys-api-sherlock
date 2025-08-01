@@ -335,6 +335,23 @@ message DeletePartsFromPartsListResponse {
   string refDes          = 2; // The reference designator of the associated part.
 }
 
+/**
+ * Defines the supported AVL (Approved Vendor List) import modes.
+ */
+ enum AVLImportType {
+  Replace = 0; // Replace Existing AVL By File Contents.
+  Update  = 1; // Add New Parts & Update Existing Parts.
+  Add     = 2; // Add New Parts Only.
+}
+
+/**
+ * Request to import parts into the AVL (Approved Vendor List).
+ */
+message ImportPartsToAVLRequest {
+  string importFile         = 1; // Full file path to the AVL file.
+  AVLImportType importType  = 2; // Import mode to use for AVL data.
+}
+
 service SherlockPartsService {
 
   // List the available parts libraries.
@@ -389,4 +406,7 @@ service SherlockPartsService {
 
   // Delete parts from the parts list for a given project's CCA.
   rpc deletePartsFromPartsList(DeletePartsFromPartsListRequest) returns (stream DeletePartsFromPartsListResponse);
+
+  // Import a support file containing parts to be added to the Approved Vendor List (AVL).
+  rpc importPartsToAVL(ImportPartsToAVLRequest) returns (ReturnCode);
 }
