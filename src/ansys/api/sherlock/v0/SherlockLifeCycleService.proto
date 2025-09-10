@@ -679,6 +679,47 @@ message ImportThermalSignalRequest {
   string generatedCyclesLabel					= 13;	// Label used to define the name of all generated thermal events.
 }
 
+/**
+ * Request to save a harmonic life cycle event profile to a .dat or .csv file.
+ */
+ message SaveHarmonicProfileRequest {
+  string project              = 1;    // Sherlock project name.
+  string phaseName            = 2;    // The name of the life cycle phase this event is associated with.
+  string eventName            = 3;    // Harmonic event name.
+  string triaxialAxis				  = 4;		// If the harmonic profile type is "Triaxial", the axis this profile should be assigned to. Valid values are: x, y, z.
+  string filePath             = 5;    // Full destination path for the .dat or .csv file.
+}
+
+/**
+* Request to save a random vibe profile to a .dat or .csv file.
+*/
+ message SaveRandomVibeProfileRequest {
+  string project              = 1;    // Sherlock project name.
+  string phaseName            = 2;    // The name of the life cycle phase this event is associated with.
+  string eventName            = 3;    // Random vibe event name.
+  string filePath             = 4;    // Full destination path for the .dat or .csv file.
+}
+
+/**
+* Request to save a pulse shock profile to a .dat or .csv file.
+*/
+message SaveShockPulseProfileRequest {
+  string project              = 1;    // Sherlock project name.
+  string phaseName            = 2;    // The name of the life cycle phase this event is associated with.
+  string eventName            = 3;    // Shock event name.
+  string filePath             = 4;    // Full destination path for the .dat or .csv file.
+}
+
+/**
+* Request to save a thermal profile to a .dat or .csv file.
+*/
+message SaveThermalProfileRequest {
+  string project              = 1;    // Sherlock project name.
+  string phaseName            = 2;    // The name of the life cycle phase this event is associated with.
+  string eventName            = 3;    // Thermal event name.
+  string filePath             = 4;    // Full destination path for the .dat or .csv file.
+}
+
 service SherlockLifeCycleService {
   
   // Define and add a new harmonic vibe life cycle event.
@@ -776,4 +817,16 @@ service SherlockLifeCycleService {
   
   // Import thermal signal from a CSV file.
   rpc importThermalSignal(ImportThermalSignalRequest) returns (ReturnCode);
+
+  // Save harmonic profile to a .csv  or a .dat file.
+  rpc saveHarmonicProfile(SaveHarmonicProfileRequest) returns (ReturnCode);
+
+  // Save random vibe profile to a .csv or a .dat file.
+  rpc saveRandomVibeProfile(SaveRandomVibeProfileRequest) returns (ReturnCode);
+
+  // Save shock pulse profile to a .csv or a .dat file.
+  rpc saveShockPulseProfile(SaveShockPulseProfileRequest) returns (ReturnCode);
+
+  // Save thermal profile to a .csv or a .dat file.
+  rpc saveThermalProfile(SaveThermalProfileRequest) returns (ReturnCode);
 }
