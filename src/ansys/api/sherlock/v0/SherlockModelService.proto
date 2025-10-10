@@ -1,4 +1,4 @@
-// Copyright 2023-2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2025 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -7,6 +7,12 @@ import "ansys/api/sherlock/v0/SherlockAnalysisService.proto";
 option java_package = "sherlock.grpc";
 option java_outer_classname = "SherlockModelServiceProto";
 
+enum PcbMaterialElasticity {
+  UnknownElasticity	= 0;	// Default enum to catch invalid elasticity.
+  Isotropic			= 1;	// Isotropic elasticity.
+  Orthotropic		= 2;	// Orthotropic elasticity.
+}
+  
 /**
  * Request to export an FEA model.
  */
@@ -23,46 +29,42 @@ message ExportFEAModelRequest {
   }
   ExportAnalysis analysis					= 4;  	// The ExportAnalysis enum representing the type of analysis that is being exported.
   message DrillHoleParam {
-    string drillHoleModeling		= 1;			// Enables or disables drill hole modeling, valid values are ENABLED/enabled or DISABLED/disabled.
+    string drillHoleModeling		= 1;	// Enables or disables drill hole modeling, valid values are ENABLED/enabled or DISABLED/disabled.
     message MinHoleDiameter {
       double value = 1;		// Minimum hole diameter value.
       string unit  = 2;		// Minimum hole diameter unit.
     }
-    MinHoleDiameter minHoleDiameter	= 2;			//	Minimum hole diameter info for a drill hole.
+    MinHoleDiameter minHoleDiameter	= 2;	//	Minimum hole diameter info for a drill hole.
     message MaxEdgeLength {
       double value = 1;		// Maximum edge length value.
       string unit  = 2;		// Maximum edge length unit.
     }
-    MaxEdgeLength maxEdgeLength		= 3;			// Maximum edge length info for a drill hole.
+    MaxEdgeLength maxEdgeLength		= 3;	// Maximum edge length info for a drill hole.
   }
-  DrillHoleParam drillHoleParam				= 5;	// Drill Holes modeling parameters - Min Hole Diameter and Max. Edge Length. If any of this parameter is provided, drill hole modeling will be enabled.
-  string detectLeadModeling					= 6;	// If enabled, automatically enable lead modeling if any part has lead geometry defined, valid values are ENABLED/enabled or DISABLED/disabled.
+  DrillHoleParam drillHoleParam	= 5;	// Drill Holes modeling parameters - Min Hole Diameter and Max. Edge Length. If any of this parameter is provided, drill hole modeling will be enabled.
+  string detectLeadModeling		= 6;	// If enabled, automatically enable lead modeling if any part has lead geometry defined, valid values are ENABLED/enabled or DISABLED/disabled.
   message LeadModelParam {
-    string leadModeling					= 1;		// Enables or disables lead modeling, valid values are ENABLED/enabled or DISABLED/disabled.
-    string leadElemOrder				= 2;		// Element order, valid values are "First Order (Linear)", "Second Order (Quadratic)", or "Solid Shell".
+    string leadModeling			= 1;	// Enables or disables lead modeling, valid values are ENABLED/enabled or DISABLED/disabled.
+    string leadElemOrder		= 2;	// Element order, valid values are "First Order (Linear)", "Second Order (Quadratic)", or "Solid Shell".
     message MaxMeshSize {
       double value	= 1;	// Max mesh size value.
       string unit	= 2;	// Max mesh size unit.			
     }
-    MaxMeshSize maxMeshSize				= 3;		// Max mesh size info for a lead model param.
+    MaxMeshSize maxMeshSize		= 3;	// Max mesh size info for a lead model param.
     message VerticalMeshSize {
       double value	= 1;	// Vertical mesh size value.
       string unit	= 2;	// Vertical mesh size unit.
     }
-    VerticalMeshSize verticalMeshSize	= 4;		// Vertical mesh size info for a lead model param.
-    int32 thicknessCount = 5;   // The number of elements through the lead thickness that will be created per lead. 
-    							// The default value is 3 and the maximum is 5.
-    							// Only used when the advanced lead mesh setting is enabled.
-    
-    int32 aspectRatio = 6;		// The aspect ratio is multiplied by the lead thickness divided by the through thickness count to give the lead element height. 
-    							// The default value is 2 and the maximum is 10.
-    							// Only used when the advanced lead mesh setting is enabled.
+    VerticalMeshSize verticalMeshSize	= 4;	// Vertical mesh size info for a lead model param.
+    int32 thicknessCount				= 5;	// The number of elements through the lead thickness that will be created per lead. The default value is 3 and the maximum is 5. Only used when the advanced lead mesh setting is enabled.
+    int32 aspectRatio					= 6;	// The aspect ratio is multiplied by the lead thickness divided by the through thickness count to give the lead element height. The default value is 2 and the maximum is 10. Only used when the advanced lead mesh setting is enabled.
   }
-  LeadModelParam leadModelParam				= 7;	// Lead modeling parameter.
-  bool displayModel							= 8;	// Display model after export.
-  bool clearFEADatabase						= 9;	// Clear FEA Database before defining model.
-  bool useFEAModelID						= 10;	// Use FEA Model ID.
-  string coordinateUnits					= 11;	// Units of exported model coordinates, valid values are "in", "mm", "m", "mil", "micron", "nm".
+  LeadModelParam leadModelParam	= 7;	// Lead modeling parameter.
+  bool displayModel				= 8;	// Display model after export.
+  bool clearFEADatabase			= 9;	// Clear FEA Database before defining model.
+  bool useFEAModelID			= 10;	// Use FEA Model ID.
+  string coordinateUnits		= 11;	// Units of exported model coordinates, valid values are "in", "mm", "m", "mil", "micron", "nm".
+  PcbMaterialElasticity pcbMaterialElasticity = 12;	// The PCB material elasticity. For WBJN export only.
 }
 
 /**
