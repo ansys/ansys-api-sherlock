@@ -269,8 +269,9 @@ message GetTotalConductorThicknessResponse {
  * Request a summary of the stackup properties.
  */
 message GetStackupPropsRequest {
-  string project				= 1;	// Sherlock project name.
-  string ccaName				= 2;	// The CCA name.
+  string project				          = 1;	// Sherlock project name.
+  string ccaName				          = 2;	// The CCA name.
+  bool improveStackupModelEnabled = 3;  // Flag indicating if improved stackup modeling should be applied.
 }
 
 /**
