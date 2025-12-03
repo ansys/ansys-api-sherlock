@@ -123,15 +123,17 @@ message ListRandomVibeProfileTypesResponse {
 }
 
 /**
- * Request for a list of shock load units.
+ * Request for a list of shock load units. This is deprecated as of 26R1.
  */
 message ListShockLoadUnitsRequest {
+  option deprecated = true;
 }
 
 /**
- * Represents a list of shock load units.
+ * Represents a list of shock load units. This is deprecated as of 26R1.
  */
 message ListShockLoadUnitsResponse {
+  option deprecated = true;
   ReturnCode returnCode 	= 1;           // Status code of response.
   repeated string units 	= 2;           // List of shock load units. For example: "G", "m/s2", "mm/s2".
 }
@@ -258,15 +260,17 @@ message AddShockProfilesResponse {
 }
 
 /**
- * Request for a list of temperature units.
+ * Request for a list of temperature units. This is deprecated as of 26R1.
  */
 message ListTempUnitsRequest {
+  option deprecated = true;
 }
 
 /**
- * Represents a list of temperature units.
+ * Represents a list of temperature units. This is deprecated as of 26R1.
  */
 message ListTempUnitsResponse {
+  option deprecated = true;
   ReturnCode returnCode 	= 1;           // Status code of response.
   repeated string tempUnits = 2;           // List of temperature units. For example: "C", "F", "K".
 }
@@ -298,15 +302,17 @@ message AddHarmonicEventResponse {
 }
 
 /**
- * Request for a list of frequency units.
+ * Request for a list of frequency units. This is deprecated as of 26R1.
  */
 message ListFreqUnitsRequest {
+  option deprecated = true;	
 }
 
 /**
- * Represents a list of frequency units.
+ * Represents a list of frequency units. This is deprecated as of 26R1.
  */
 message ListFreqUnitsResponse {
+  option deprecated = true;	
   ReturnCode returnCode 	= 1;           // Status code of response.
   repeated string freqUnits = 2;           // List of frequency units. For example: "HZ", "KHZ", "MHZ", "GHZ".
 }
@@ -355,6 +361,21 @@ message CreateLifePhaseRequest{
 message CreateLifePhaseResponse{	
   ReturnCode returnCode		= 1;			// Status code of response.
   repeated string errors	= 2;			// List of error messages.
+}
+
+/**
+ * Request for updating an existing life phase in a specified project's life cycle. 
+ */
+message UpdateLifePhaseRequest {
+  string project						= 1;	// Sherlock project name.
+  string phaseName						= 2;	// Name of life phase to update.
+  optional string newPhaseName      	= 3;    // Updated name of life phase.
+  optional string newDescription		= 4;	// Updated description of life phase.
+  optional double newDuration			= 5;	// Updated event duration length.
+  optional string newDurationUnits		= 6;	// Updated event duration length units.
+  optional double newNumOfCycles		= 7;	// Updated number of cycles defined for life phase.
+  optional string newCycleType			= 8;	// Updated cycle type. Acceptable values are "COUNT", "DUTY CYCLE", "PER YEAR", "PER DAY", "PER HOUR"  "PER MIN", and "PER SEC"
+  optional string resultArchiveFileName = 9; 	// File name for saving analysis results and life cycle data, including any sub-assembly results. Any existing results will be overwritten.  If this file name is omitted, then analysis results will not be saved during the update.
 }
 
 /**
@@ -560,15 +581,17 @@ message LoadShockProfilePulsesResponse {
 }
 
 /**
- * Request for a list of amplitude units.
+ * Request for a list of amplitude units. This is deprecated as of 26R1.
  */
 message ListAmplUnitsRequest {
+  option deprecated = true;
 }
 
 /**
- * Represents a list of amplitude units.
+ * Represents a list of amplitude units. This is deprecated as of 26R1.
  */
 message ListAmplUnitsResponse{
+  option deprecated = true;
   ReturnCode returnCode 	= 1;           // Status code of response.
   repeated string amplUnits = 2;           // List of amplitude units.
 }
@@ -680,6 +703,20 @@ message ImportThermalSignalRequest {
 }
 
 /**
+ * Request for updating the life cycle in a specified project.
+ */
+message UpdateLifeCycleRequest {
+  string project                            = 1; // The name of the project which contains the life cycle to update.
+  optional string newName                   = 2; // The new name of the life cycle.
+  optional string newDescription            = 3; // The new description of the life cycle.
+  optional double newReliabilityMetric      = 4; // The new reliability metric value.
+  optional string newReliabilityMetricUnits = 5; // The new reliability metric units.
+  optional double newServiceLife            = 6; // The new service life value.
+  optional string newServiceLifeUnits       = 7; // The new service life units.
+  optional string resultArchiveFileName     = 8; // File name for saved results. File names will be overwritten. Sub-Assembly results will be saved.
+}
+
+/**
  * Request to save a harmonic life cycle event profile to a .dat or .csv file.
  */
  message SaveHarmonicProfileRequest {
@@ -752,17 +789,24 @@ service SherlockLifeCycleService {
   // Define and add a new life phase.
   rpc createLifePhase(CreateLifePhaseRequest) returns (CreateLifePhaseResponse);
   
+  // Update an existing life phase.
+  rpc updateLifePhase(UpdateLifePhaseRequest) returns (ReturnCode);
+  
   // Delete a life cycle event.
   rpc deleteEvent(DeleteEventRequest) returns (ReturnCode);
     
-  // Returns a list of amplitude units when adding a random vibe profile.
-  rpc listAmplUnits(ListAmplUnitsRequest) returns (ListAmplUnitsResponse);
+  // Returns a list of amplitude units when adding a random vibe profile. This is deprecated as of 26R1.
+  rpc listAmplUnits(ListAmplUnitsRequest) returns (ListAmplUnitsResponse) {
+    option deprecated = true;
+  }
   
   // Returns a list of duration units when adding a life cycle event.
   rpc listDurationUnits(ListDurationUnitsRequest) returns (ListDurationUnitsResponse);
   
-  // Returns a list of frequency units.
-  rpc listFreqUnits(ListFreqUnitsRequest) returns (ListFreqUnitsResponse);
+  // Returns a list of frequency units. This is deprecated as of 26R1.
+  rpc listFreqUnits(ListFreqUnitsRequest) returns (ListFreqUnitsResponse) {
+    option deprecated = true;	
+  }
   
   // Returns a list of harmonic events defined for a project.
   rpc listHarmonicEvents(ListHarmonicEventsRequest) returns (ListHarmonicEventsResponse);
@@ -788,14 +832,18 @@ service SherlockLifeCycleService {
   // Returns a list of shock events defined for a project.
   rpc listShockEvents(ListShockEventsRequest) returns (ListShockEventsResponse);
 
-  // Returns a list of shock load units.
-  rpc listShockLoadUnits(ListShockLoadUnitsRequest) returns (ListShockLoadUnitsResponse);
+  // Returns a list of shock load units. This is deprecated as of 26R1.
+  rpc listShockLoadUnits(ListShockLoadUnitsRequest) returns (ListShockLoadUnitsResponse) {
+    option deprecated = true;
+  }
   
   // Returns a list of shock pulses.
   rpc listShockPulses(ListShockPulsesRequest) returns (ListShockPulsesResponse);
   
-  // Returns a list of temperature units.
-  rpc listTempUnits(ListTempUnitsRequest) returns (ListTempUnitsResponse);
+  // Returns a list of temperature units. This is deprecated as of 26R1.
+  rpc listTempUnits(ListTempUnitsRequest) returns (ListTempUnitsResponse) {
+    option deprecated = true;
+  }
     
   // Loads a harmonic profile from a .dat or .csv file.
   rpc loadHarmonicProfile(LoadHarmonicProfileRequest) returns (LoadHarmonicProfileResponse);
@@ -817,6 +865,9 @@ service SherlockLifeCycleService {
   
   // Import thermal signal from a CSV file.
   rpc importThermalSignal(ImportThermalSignalRequest) returns (ReturnCode);
+
+  // Update existing life cycle.
+  rpc updateLifeCycle(UpdateLifeCycleRequest) returns (ReturnCode);
 
   // Save harmonic profile to a .csv  or a .dat file.
   rpc saveHarmonicProfile(SaveHarmonicProfileRequest) returns (ReturnCode);
