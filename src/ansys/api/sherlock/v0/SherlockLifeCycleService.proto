@@ -363,7 +363,7 @@ message CreateLifePhaseResponse{
 message UpdateLifePhaseRequest {
   string project						            = 1;	// Sherlock project name.
   string phaseName						          = 2;	// Name of life phase to update.
-  optional string newPhaseName      	  = 3;   // Updated name of life phase.
+  optional string newPhaseName      	  = 3;  // Updated name of life phase.
   optional string newDescription		    = 4;	// Updated description of life phase.
   optional double newDuration			      = 5;	// Updated event duration length.
   optional string newDurationUnits		  = 6;	// Updated event duration length units.
