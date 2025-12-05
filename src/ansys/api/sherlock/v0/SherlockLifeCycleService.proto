@@ -358,6 +358,21 @@ message CreateLifePhaseResponse{
 }
 
 /**
+ * Request for updating an existing life phase in a specified project's life cycle.
+ */
+message UpdateLifePhaseRequest {
+  string project						            = 1;	// Sherlock project name.
+  string phaseName						          = 2;	// Name of life phase to update.
+  optional string newPhaseName      	  = 3;   // Updated name of life phase.
+  optional string newDescription		    = 4;	// Updated description of life phase.
+  optional double newDuration			      = 5;	// Updated event duration length.
+  optional string newDurationUnits		  = 6;	// Updated event duration length units.
+  optional double newNumOfCycles		    = 7;	// Updated number of cycles defined for life phase.
+  optional string newCycleType			    = 8;	// Updated cycle type. Acceptable values are "COUNT", "DUTY CYCLE", "PER YEAR", "PER DAY", "PER HOUR"  "PER MIN", and "PER SEC"
+  optional string resultArchiveFileName = 9; 	// File name for saving analysis results and life cycle data, including any sub-assembly results. Any existing results will be overwritten.  If this file name is omitted, then analysis results will not be saved during the update.
+}
+
+/**
  * Request to define and add new harmonic vibe life cycle event profiles.
  */
 message AddHarmonicVibeProfilesRequest {
@@ -751,7 +766,10 @@ service SherlockLifeCycleService {
   
   // Define and add a new life phase.
   rpc createLifePhase(CreateLifePhaseRequest) returns (CreateLifePhaseResponse);
-  
+
+  // Update an existing life phase.
+  rpc updateLifePhase(UpdateLifePhaseRequest) returns (ReturnCode);
+
   // Delete a life cycle event.
   rpc deleteEvent(DeleteEventRequest) returns (ReturnCode);
     
