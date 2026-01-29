@@ -1,4 +1,4 @@
-// Copyright 2023-2025 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2026 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -717,6 +717,15 @@ message UpdateLifeCycleRequest {
 }
 
 /**
+ * Request to save the current life cycle in a specific project to a .dfr-lc file.
+ */
+message SaveLifeCycleRequest {
+  string project       = 1;    // Sherlock project name.
+  string filePath      = 2;    // Full directory path + file name for where the life cycle file should be saved. The file name should include the .dfr-lc extension.
+  bool   overwriteFile = 3;    // If true and the file already exists, then it will be overwritten. If false and the file exists, then an error will be returned.
+}
+
+/**
  * Request to save a harmonic life cycle event profile to a .dat or .csv file.
  */
  message SaveHarmonicProfileRequest {
@@ -868,6 +877,9 @@ service SherlockLifeCycleService {
 
   // Update existing life cycle.
   rpc updateLifeCycle(UpdateLifeCycleRequest) returns (ReturnCode);
+
+  // Save a project's life cycle to a .dfr-lc file.
+  rpc saveLifeCycle(SaveLifeCycleRequest) returns (ReturnCode);
 
   // Save harmonic profile to a .csv  or a .dat file.
   rpc saveHarmonicProfile(SaveHarmonicProfileRequest) returns (ReturnCode);
