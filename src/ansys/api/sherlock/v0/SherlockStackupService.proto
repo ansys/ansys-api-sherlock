@@ -269,23 +269,24 @@ message GetTotalConductorThicknessResponse {
  * Request a summary of the stackup properties.
  */
 message GetStackupPropsRequest {
-  string project				= 1;	// Sherlock project name.
-  string ccaName				= 2;	// The CCA name.
+  string project				          = 1;	// Sherlock project name.
+  string ccaName				          = 2;	// The CCA name.
 }
 
 /**
  * Represents a summary of the stackup properties.
  */
 message GetStackupPropsResponse {
-  ReturnCode returnCode			= 1;	// Status code of response.
-  string boardDimension			= 2;	// Board dimension.
-  string boardThickness			= 3;	// Board thickness.
-  string density				= 4;	// Board density.
-  string conductorLayersCnt		= 5;	// Number of conductor layers.
-  string ctExy					= 6;	// CTExy.
-  string ctEz					= 7;	// CTEz.
-  string exy					= 8;	// Exy.
-  string ez						= 9;	// Ez.
+  ReturnCode returnCode			      = 1;	// Status code of response.
+  string boardDimension			      = 2;	// Board dimension.
+  string boardThickness			      = 3;	// Board thickness.
+  string density				          = 4;	// Board density.
+  string conductorLayersCnt		    = 5;	// Number of conductor layers.
+  string ctExy					          = 6;	// CTExy.
+  string ctEz					            = 7;	// CTEz.
+  string exy					            = 8;	// Exy.
+  string ez						            = 9;	// Ez.
+  bool improveStackupModelEnabled = 10; // Indicator signaling whether or not the improved stacking model is applied.
 }
 
 /**
