@@ -1,4 +1,4 @@
-// Copyright 2023-2025 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2026 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -586,8 +586,8 @@ message LayerInfo {
     	Unknown = 0;
         Components = 1;
         Copper_Layers = 2;
-        DFMEA_Bot = 3;
-        DFMEA_Top = 4;
+        reserved = 3;
+        reserved = 4;
         Drill_Holes = 5;
         Harmonic_Vibe = 6;
         Heat_Sinks = 7;
