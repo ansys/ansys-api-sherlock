@@ -586,8 +586,8 @@ message LayerInfo {
     	Unknown = 0;
         Components = 1;
         Copper_Layers = 2;
-        reserved = 3;
-        reserved = 4;
+        reserved 3;
+        reserved 4;
         Drill_Holes = 5;
         Harmonic_Vibe = 6;
         Heat_Sinks = 7;

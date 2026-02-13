@@ -29,7 +29,7 @@ message RunAnalysisRequest {
       MechanicalShock 		= 4;	// Enum for the Mechanical Shock analysis.
       RandomVibe 			= 5;	// Enum for the Random Vibe analysis.
       ComponentFailureMode	= 7;	// Enum for the Component Failure Mechanism analysis.
-      reserved			    = 8;
+      reserved 8;
       PTHFatigue			= 9;	// Enum for the PTH Fatigue analysis.
       PartValidation		= 10;	// Enum for the Part Validation analysis.
       SemiconductorWearout	= 11;	// Enum for the Semiconductor Wearout analysis.
