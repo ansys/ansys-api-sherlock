@@ -1,4 +1,4 @@
-// Copyright 2023-2025 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2026 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -12,7 +12,16 @@ enum PcbMaterialElasticity {
   Isotropic			= 1;	// Isotropic elasticity.
   Orthotropic		= 2;	// Orthotropic elasticity.
 }
-  
+ 
+ /*
+  * Geometry type for Workbench journal exports.
+  */
+enum GeometryType {
+  UnknownGeometryType = 0;	// Default enum to catch invalid geometry type.
+  Step = 1;					// STEP geometry type.
+  PartManager = 2;			// ANSYS Part Manager Database geometry type.
+} 
+
 /**
  * Request to export an FEA model.
  */
@@ -64,7 +73,8 @@ message ExportFEAModelRequest {
   bool clearFEADatabase			= 9;	// Clear FEA Database before defining model.
   bool useFEAModelID			= 10;	// Use FEA Model ID.
   string coordinateUnits		= 11;	// Units of exported model coordinates, valid values are "in", "mm", "m", "mil", "micron", "nm".
-  PcbMaterialElasticity pcbMaterialElasticity = 12;	// The PCB material elasticity. For WBJN export only.
+  PcbMaterialElasticity pcbMaterialElasticity = 12;	// The PCB material elasticity. For WBJN and PMDB export only.
+  GeometryType geometryType 	= 13;	// The geometry type for Workbench journal exports. For WBJN export only.
 }
 
 /**
@@ -111,7 +121,8 @@ message ExportTraceReinforcementModelRequest {
     DrillHoleModeling drillHoleModeling = 11; // Properties used for exporting drill holes.
   }
  
-  string coordinateUnits					= 10;	// Units of exported model coordinates, valid values are "in", "mm", "m", "mil", "micron", "nm".
+  string coordinateUnits		= 10;	// Units of exported model coordinates, valid values are "in", "mm", "m", "mil", "micron", "nm".
+  GeometryType geometryType 	= 13;	// The geometry type for Workbench journal exports. For WBJN export only.
 }
 
 /**
@@ -198,8 +209,9 @@ message TraceModelExportParams {
     Measurement maxMeshSize = 3; // Value passed to FEA meshing tool to indicate the desired element sizes.
     int32 maxHolesPerTrace = 4; // Maximum number of holes allowed in a trace before partitioning it into multiple traces.
   }
-  TracePropParam tracePropParam = 11;  // Properties used for exporting the traces.
-  DrillHoleModeling drillHoleModeling = 12; // Properties used for exporting drill holes.
+  TracePropParam tracePropParam			= 11;	// Properties used for exporting the traces.
+  DrillHoleModeling drillHoleModeling	= 12;	// Properties used for exporting drill holes.
+  GeometryType geometryType				= 13;	// The geometry type for Workbench journal exports. For WBJN export only.
 }
 
 /**
