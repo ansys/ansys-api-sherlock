@@ -35,6 +35,7 @@ message ExportFEAModelRequest {
     ICTAnalysis 		= 2;	// ICT Analysis.
     MechanicalShock 	= 3;	// Mechanical Shock Analysis.
     RandomVibe 			= 4;	// Random Vibe Analysis.
+    ThermalMech         = 5;	// Thermal Mech Analysis.
   }
   ExportAnalysis analysis					= 4;  	// The ExportAnalysis enum representing the type of analysis that is being exported.
   message DrillHoleParam {
@@ -54,7 +55,7 @@ message ExportFEAModelRequest {
   string detectLeadModeling		= 6;	// If enabled, automatically enable lead modeling if any part has lead geometry defined, valid values are ENABLED/enabled or DISABLED/disabled.
   message LeadModelParam {
     string leadModeling			= 1;	// Enables or disables lead modeling, valid values are ENABLED/enabled or DISABLED/disabled.
-    string leadElemOrder		= 2;	// Element order, valid values are "First Order (Linear)", "Second Order (Quadratic)", or "Solid Shell".
+    string leadElemOrder		= 2;	// Element order, valid values are "First Order (Linear)", "Second Order (Quadratic)", "Solid Shell", or "Shells and Beam" for CDB export only.
     message MaxMeshSize {
       double value	= 1;	// Max mesh size value.
       string unit	= 2;	// Max mesh size unit.			
