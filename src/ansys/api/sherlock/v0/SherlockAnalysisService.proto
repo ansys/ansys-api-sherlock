@@ -220,7 +220,7 @@ message GetPcbModelingInputFieldsResponse {
  * Request to update FEA analysis PCB Modeling properties.
  */
 message UpdatePcbModelingPropsRequest {
-  string project			= 1;	// Sherlock project name.
+  string project				= 1;	// Sherlock project name.
   repeated string ccaNames	= 2;	// The CCA names for which to assign the PCB modeling parameters.
 
   message Analysis { 
@@ -247,20 +247,66 @@ message UpdatePcbModelingPropsRequest {
       LayeredElements	= 4;	// Enum for layered elements PCB model.
     }
 
-    AnalysisType type					= 1;	// The type of analysis for which PCB modeling properties apply.
-    PcbModelType modelType				= 2;	// The PCB modeling mesh type.
-    bool modelingRegionEnabled			= 3;	// Indicates if modeling regions are enabled.
-    PcbMaterialModel pcbMaterialModel	= 4;	// The PCB modeling PCB model type.
-    optional int32 pcbMaxMaterials		= 5;	// The number of PCB materials for Uniform Elements and Layered Elements PCB model types.
-    ElementOrder pcbElemOrder			= 6;	// The element order for PCB elements.
-    double pcbMaxEdgeLength				= 7;	// The maximum mesh size for PCB elements.
-    string pcbMaxEdgeLengthUnits		= 8;	// The length units for the maximum mesh size.
-    double pcbMaxVertical				= 9;	// The maximum vertical mesh size for PCB elements.
+    AnalysisType type					= 1;		// The type of analysis for which PCB modeling properties apply.
+    PcbModelType modelType				= 2;		// The PCB modeling mesh type.
+    bool modelingRegionEnabled			= 3;		// Indicates if modeling regions are enabled.
+    PcbMaterialModel pcbMaterialModel	= 4;		// The PCB modeling PCB model type.
+    optional int32 pcbMaxMaterials		= 5;		// The number of PCB materials for Uniform Elements and Layered Elements PCB model types.
+    ElementOrder pcbElemOrder			= 6;		// The element order for PCB elements.
+    double pcbMaxEdgeLength				= 7;		// The maximum mesh size for PCB elements.
+    string pcbMaxEdgeLengthUnits			= 8;		// The length units for the maximum mesh size.
+    double pcbMaxVertical				= 9;		// The maximum vertical mesh size for PCB elements.
     string pcbMaxVerticalUnits			= 10;	// The length units for the maximum vertical mesh size.
     bool quadsPreferred					= 11;	// Indicates that the meshing engine should attempt to generate quad-shaped elements when creating the mesh.
   }
   
   repeated Analysis analyses	= 3;  // List of Analysis message types.
+}
+
+/**
+ * Request to update FEA analysis Mount Points properties.
+ */
+message UpdateMountPointsPropsRequest {
+  string project				= 1;	// Sherlock project name.
+  repeated string ccaNames	= 2;	// The CCA names for which to assign the PCB modeling parameters.
+
+  message Analysis { 
+    enum AnalysisType {
+      UnknownAnalysisType	= 0;	// Default enum to catch invalid analysis.
+      HarmonicVibe			= 1;// Enum for Harmonic Vibe analysis.
+      ICTAnalysis 			= 2;	// Enum for the ICT analysis.
+      MechanicalShock		= 3;	// Enum for the Mechanical Shock analysis.
+      NaturalFreq 			= 4;	// Enum for the Natural Frequency analysis.
+      RandomVibe 			= 5;	// Enum for the Random Vibe analysis.
+      ThermalMech			= 6;	// Enum for the Thermal Mech analysis.
+    }
+
+    AnalysisType type					= 1;	// The type of analysis for which mount points properties apply.
+    ElementOrder mountPtElemOrder		= 2;	// The element order for mount point elements.
+    double mountPtMaxEdgeLength			= 3;	// The maximum mesh size for mount point elements.
+    string mountPtMaxEdgeLengthUnits		= 4;	// The length units for the maximum mesh size.
+    double mountPtMaxVertical			= 5;	// The maximum vertical mesh size for mount point elements.
+    string mountPtMaxVerticalUnits		= 6;	// The length units for the maximum vertical mesh size.
+  }
+  
+  repeated Analysis analyses	= 3;  // List of Analysis message types.
+}
+
+/**
+ * Request to update FEA part modeling properties.
+ */
+message UpdatePartModelingRequest {
+  string project	 						= 1;	// Sherlock project name.
+  string ccaName 							= 2;	// The CCA name.
+  bool partEnabled			 				= 3;	// Whether to enable part modeling. Ignores all other fields if part modeling is disabled.
+  optional double partMinSize 				= 4;	// The minimum part size.
+  optional string partMinSizeUnits 			= 5;	// Units for minimum part size.
+  optional string partElemOrder 			= 6;	// Element order.
+  optional double partMaxEdgeLength 		= 7;	// Maximum mesh size.
+  optional string partMaxEdgeLengthUnits 	= 8;	// Units for maximum mesh size.
+  optional double partMaxVertical 			= 9;	// Vertical mesh size.
+  optional string partMaxVerticalUnits 		= 10;	// Units for vertical mesh size.
+  optional bool partResultsFiltered 		= 11;	// Whether to enable filtered part results.
 }
 
 /**
@@ -332,23 +378,6 @@ message UpdateSolderFatiguePropsRequest {
   }
   
   repeated SolderFatigue solderFatigueProperties = 2;		// List of SolderFatigue properties to update for a CCA.
-}
-
-/**
- * Request to update FEA part modeling properties.
- */
-message UpdatePartModelingRequest {
-  string project	 						= 1;	// Sherlock project name.
-  string ccaName 							= 2;	// The CCA name.
-  bool partEnabled			 				= 3;	// Whether to enable part modeling. Ignores all other fields if part modeling is disabled.
-  optional double partMinSize 				= 4;	// The minimum part size.
-  optional string partMinSizeUnits 			= 5;	// Units for minimum part size.
-  optional string partElemOrder 			= 6;	// Element order.
-  optional double partMaxEdgeLength 		= 7;	// Maximum mesh size.
-  optional string partMaxEdgeLengthUnits 	= 8;	// Units for maximum mesh size.
-  optional double partMaxVertical 			= 9;	// Vertical mesh size.
-  optional string partMaxVerticalUnits 		= 10;	// Units for vertical mesh size.
-  optional bool partResultsFiltered 		= 11;	// Whether to enable filtered part results.
 }
 
 /**
@@ -530,15 +559,18 @@ service SherlockAnalysisService {
   // Returns the list of valid PCB modeling property field.
   rpc getPcbModelingInputFields(GetPcbModelingInputFieldsRequest) returns (GetPcbModelingInputFieldsResponse);
   
-  // Updates the PCB modeling properties for the provided analysis types.
+  // Updates the PCB modeling properties for the provided CCAs and analysis types for a project.
   rpc updatePcbModelingProps(UpdatePcbModelingPropsRequest) returns (ReturnCode);
   
-  // Returns the list of valid solder fatigue property fields given the user configuration.
-  rpc getSolderFatigueInputFields(GetSolderFatigueInputFieldsRequest) returns (GetSolderFatigueInputFieldsResponse);
+  // Updates the mount points properties for the provided CCAs and analysis types for a project.
+  rpc updateMountPointsProps(UpdateMountPointsPropsRequest) returns (ReturnCode);
   
   // Updates the part modeling properties for a given project's CCA.
   rpc updatePartModelingProperties(UpdatePartModelingRequest) returns (ReturnCode);
 
+  // Returns the list of valid solder fatigue property fields given the user configuration.
+  rpc getSolderFatigueInputFields(GetSolderFatigueInputFieldsRequest) returns (GetSolderFatigueInputFieldsResponse);
+  
   // Returns the list of valid ICT analysis property fields given the user configuration.
   rpc getICTAnalysisInputFields(GetICTAnalysisInputFieldsRequest) returns (GetICTAnalysisInputFieldsResponse);
   
