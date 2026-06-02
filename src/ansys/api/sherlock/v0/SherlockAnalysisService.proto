@@ -175,15 +175,15 @@ message RunStrainMapAnalysisRequest {
   string project			= 1;	// Sherlock project name.
   string ccaName			= 2;	// The CCA name of the main CCA for the analysis.
 
-  message StrainMapAnalysis { 
+  message StrainMapAnalysis {
     enum AnalysisType {
-      UNKNOWN	 		= 0;	// Default enum to catch invalid analysis.
+      UNKNOWN			= 0;	// Default enum to catch invalid analysis.
       RandomVibe 		= 1;	// Enum for the Random Vibe analysis.
       MechanicalShock	= 2;	// Enum for Mechanical Shock analysis.
       HarmonicVibe = 3;  // Enum for the Harmonic Vibe analysis.
     }
     AnalysisType type 		= 1;  // Type of Strain Map analysis to run.
-    message EventStrainMap {	
+    message EventStrainMap {
 	  string phaseName = 1;						// Life cycle phase name.
 	  string eventName = 2;						// Life cycle event name.
 	  string pcbSide = 3;						// PCB side for the strain map. Supported values are: TOP, BOTTOM.
@@ -221,7 +221,7 @@ message GetPcbModelingInputFieldsResponse {
  */
 message UpdatePcbModelingPropsRequest {
   string project				= 1;	// Sherlock project name.
-  repeated string ccaNames	= 2;	// The CCA names for which to assign the PCB modeling parameters.
+  repeated string ccaNames	= 2;	// The CCA names for which to assign the PCB modeling properties.
 
   message Analysis { 
     enum AnalysisType {
@@ -268,7 +268,7 @@ message UpdatePcbModelingPropsRequest {
  */
 message UpdateMountPointsPropsRequest {
   string project				= 1;	// Sherlock project name.
-  repeated string ccaNames	= 2;	// The CCA names for which to assign the PCB modeling parameters.
+  repeated string ccaNames	= 2;	// The CCA names for which to assign the mount points properties.
 
   message Analysis { 
     enum AnalysisType {
@@ -293,20 +293,50 @@ message UpdateMountPointsPropsRequest {
 }
 
 /**
- * Request to update FEA part modeling properties.
+ * Request to update FEA analysis Lead Modeling properties.
+ */
+message UpdateLeadModelingPropsRequest {
+  string project				= 1;	// Sherlock project name.
+  repeated string ccaNames	= 2;	// The CCA names for which to assign the lead modeling properties.
+
+  message Analysis { 
+    enum AnalysisType {
+      UnknownAnalysisType	= 0;	// Default enum to catch invalid analysis.
+      HarmonicVibe			= 1;// Enum for Harmonic Vibe analysis.
+      ICTAnalysis 			= 2;	// Enum for the ICT analysis.
+      MechanicalShock		= 3;	// Enum for the Mechanical Shock analysis.
+      NaturalFreq 			= 4;	// Enum for the Natural Frequency analysis.
+      RandomVibe 			= 5;	// Enum for the Random Vibe analysis.
+      ThermalMech			= 6;	// Enum for the Thermal Mech analysis.
+    }
+
+    AnalysisType type				= 1;	// The type of analysis for which lead modeling properties apply.
+    bool modelLeads					= 2;	// Whether to enabled lead modeling.
+    ElementOrder leadElemOrder		= 3;	// The element order for lead modeling elements.
+    double leadMaxEdgeLength			= 4;	// The maximum mesh size for lead modeling elements.
+    string leadMaxEdgeLengthUnits	= 5;	// The length units for the maximum mesh size.
+    double leadMaxVertical			= 6;	// The maximum vertical mesh size for lead modeling elements.
+    string leadMaxVerticalUnits		= 7;	// The length units for the maximum vertical mesh size.
+  }
+  
+  repeated Analysis analyses	= 3;  // List of Analysis message types.
+}
+
+/**
+ * Request to update FEA analysis part modeling properties.
  */
 message UpdatePartModelingRequest {
-  string project	 						= 1;	// Sherlock project name.
+  string project	 							= 1;	// Sherlock project name.
   string ccaName 							= 2;	// The CCA name.
   bool partEnabled			 				= 3;	// Whether to enable part modeling. Ignores all other fields if part modeling is disabled.
   optional double partMinSize 				= 4;	// The minimum part size.
   optional string partMinSizeUnits 			= 5;	// Units for minimum part size.
-  optional string partElemOrder 			= 6;	// Element order.
-  optional double partMaxEdgeLength 		= 7;	// Maximum mesh size.
-  optional string partMaxEdgeLengthUnits 	= 8;	// Units for maximum mesh size.
+  optional string partElemOrder 				= 6;	// Element order.
+  optional double partMaxEdgeLength			= 7;	// Maximum mesh size.
+  optional string partMaxEdgeLengthUnits		= 8;	// Units for maximum mesh size.
   optional double partMaxVertical 			= 9;	// Vertical mesh size.
-  optional string partMaxVerticalUnits 		= 10;	// Units for vertical mesh size.
-  optional bool partResultsFiltered 		= 11;	// Whether to enable filtered part results.
+  optional string partMaxVerticalUnits 		= 10;// Units for vertical mesh size.
+  optional bool partResultsFiltered 			= 11;// Whether to enable filtered part results.
 }
 
 /**
@@ -559,11 +589,14 @@ service SherlockAnalysisService {
   // Returns the list of valid PCB modeling property field.
   rpc getPcbModelingInputFields(GetPcbModelingInputFieldsRequest) returns (GetPcbModelingInputFieldsResponse);
   
-  // Updates the PCB modeling properties for the provided CCAs and analysis types for a project.
+  // Updates the PCB modeling FEA analysis properties for the provided CCAs and analysis types for a project.
   rpc updatePcbModelingProps(UpdatePcbModelingPropsRequest) returns (ReturnCode);
   
-  // Updates the mount points properties for the provided CCAs and analysis types for a project.
+  // Updates the mount points FEA analysis properties for the provided CCAs and analysis types for a project.
   rpc updateMountPointsProps(UpdateMountPointsPropsRequest) returns (ReturnCode);
+  
+  // Updates the lead modeling FEA analysis properties for the provided CCAs and analysis types for a project.
+  rpc updateLeadModelingProps(UpdateLeadModelingPropsRequest) returns (ReturnCode);
   
   // Updates the part modeling properties for a given project's CCA.
   rpc updatePartModelingProperties(UpdatePartModelingRequest) returns (ReturnCode);
