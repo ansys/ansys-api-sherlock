@@ -513,6 +513,14 @@ message AddRandomVibeProfilesResponse {
 }
 
 /**
+ * Request to load a life cycle to a specific project from a .dfr-lc or .dat file.
+ */
+message LoadLifeCycleRequest {
+  string project        = 1;    // Sherlock project name.
+  string filePath       = 2;    // The full path of the .dfr-lc or .dat file.
+}
+
+/**
  * Request to load a shock life cycle event profile using the dataset (time and load) from a .dat or .csv file.
  */
 message LoadShockProfileDatasetRequest {
@@ -521,7 +529,7 @@ message LoadShockProfileDatasetRequest {
   string eventName					= 3;		// Shock event name.
   string filePath					= 4;		// The full path for the .dat or .csv file.
 
- // .csv file properties. This is only required for a .csv file load.
+  // .csv file properties. This is only required for a .csv file load.
   message CSVProps {
     string profileName			= 1;		// Name of the shock profile.
     int32 headerRowNumber		= 2;		// Header row number in the .csv file.
@@ -693,9 +701,9 @@ message ImportThermalSignalRequest {
   ThermalSignalFileProperties fileProperties	= 4;	// Thermal signal CSV file properties.
   bool timeRemoval								= 5;	// Option to indicate that time results with shorter half-cycle durations are removed.
   double loadRangePercentage					= 6;	// Defines the fraction of the range near peaks and valleys considered as a dwell region.
-  int32 numberOfRangeBins						= 7;	// Number of range bins for binning cycles, 0 for no range binning.
-  int32 numberOfMeanBins						= 8;	// Number of mean bins for binning cycles, 0 for no mean binning.
-  int32 numberOfDwellBins						= 9;	// Number of dwell bins for binning cycles, 0 for no dwell binning.
+  int32 numberOfRangeBins						= 7;	// Number of range bins for binning cycles, 0 for no range binning, (a single range bin is still generated if other parameters are binned).
+  int32 numberOfMeanBins						= 8;	// Number of mean bins for binning cycles, 0 for no mean binning, (a single mean bin is still generated if other parameters are binned).
+  int32 numberOfDwellBins						= 9;	// Number of dwell bins for binning cycles, 0 for no dwell binning, (a single dwell bin is still generated if other parameters are binned).
   double temperatureRangeFilteringLimit			= 10;	// Minimum cycle range to include in results, 0 for no filtering.
   double timeFilteringLimit						= 11;	// Maximum cycle time to include in results, default is 72 hours.
   string timeFilteringLimitUnits				= 12;	// Time filtering limit units.
@@ -720,11 +728,11 @@ message UpdateLifeCycleRequest {
  * Request to save the current life cycle in a specific project to a .dfr-lc file.
  */
 message SaveLifeCycleRequest {
-  string project       = 1;    // Sherlock project name.
-  string filePath      = 2;    // Full directory path + file name for where the life cycle file should be saved. The file name should include the .dfr-lc extension.
-  bool   overwriteFile = 3;    // If true and the file already exists, then it will be overwritten. If false and the file exists, then an error will be returned.
+  string project        = 1;    // Sherlock project name.
+  string filePath       = 2;    // Full directory path + file name for where the life cycle file should be saved. The file name should include the .dfr-lc extension.
+  bool   overwriteFile  = 3;    // If true and the file already exists, then it will be overwritten. If false and the file exists, then an error will be returned.
 }
-
+ 
 /**
  * Request to save a harmonic life cycle event profile to a .dat or .csv file.
  */
@@ -732,7 +740,7 @@ message SaveLifeCycleRequest {
   string project              = 1;    // Sherlock project name.
   string phaseName            = 2;    // The name of the life cycle phase this event is associated with.
   string eventName            = 3;    // Harmonic event name.
-  string triaxialAxis				  = 4;		// If the harmonic profile type is "Triaxial", the axis this profile should be assigned to. Valid values are: x, y, z.
+  string triaxialAxis         = 4;    // If the harmonic profile type is "Triaxial", the axis this profile should be assigned to. Valid values are: x, y, z.
   string filePath             = 5;    // Full destination path for the .dat or .csv file.
 }
 
@@ -853,7 +861,10 @@ service SherlockLifeCycleService {
   rpc listTempUnits(ListTempUnitsRequest) returns (ListTempUnitsResponse) {
     option deprecated = true;
   }
-    
+  
+  // Load a project's life cycle from a .dfr-lc or .dat file.
+  rpc loadLifeCycle(LoadLifeCycleRequest) returns (ReturnCode);
+  
   // Loads a harmonic profile from a .dat or .csv file.
   rpc loadHarmonicProfile(LoadHarmonicProfileRequest) returns (LoadHarmonicProfileResponse);
   
@@ -877,7 +888,7 @@ service SherlockLifeCycleService {
 
   // Update existing life cycle.
   rpc updateLifeCycle(UpdateLifeCycleRequest) returns (ReturnCode);
-
+  
   // Save a project's life cycle to a .dfr-lc file.
   rpc saveLifeCycle(SaveLifeCycleRequest) returns (ReturnCode);
 
