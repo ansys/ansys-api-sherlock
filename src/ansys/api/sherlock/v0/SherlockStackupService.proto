@@ -1,4 +1,4 @@
-// Copyright 2023-2024 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2025 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -86,15 +86,17 @@ message UpdateLaminateRequest {
 }
 
 /**
- * Request to list valid laminate thickness units.
+ * Request to list valid laminate thickness units. This is deprecated as of 26R1.
  */
 message ListLaminateThicknessUnitsRequest {
+  option deprecated = true;
 }
 
 /**
- * Represents a list of valid laminate thickness units.
+ * Represents a list of valid laminate thickness units. This is deprecated as of 26R1.
  */
 message ListLaminateThicknessUnitsResponse {
+  option deprecated = true;
   ReturnCode returnCode = 1;	// Status code of response.
   repeated string unit	= 2;	// Thickness unit.
 }
@@ -318,8 +320,10 @@ service SherlockStackupService {
   // Update properties for a given laminate layer.
   rpc updateLaminate(UpdateLaminateRequest) returns (ReturnCode);
   
-  // List all the supported laminate layer thickness units.
-  rpc listLaminateThicknessUnits(ListLaminateThicknessUnitsRequest) returns (ListLaminateThicknessUnitsResponse);
+  // List all the supported laminate layer thickness units. This is deprecated as of 26R1.
+  rpc listLaminateThicknessUnits(ListLaminateThicknessUnitsRequest) returns (ListLaminateThicknessUnitsResponse) {
+    option deprecated = true;
+  }
   
   // List all conductor materials.
   rpc listConductorMaterials(ListConductorMaterialsRequest) returns (ListConductorMaterialsResponse);

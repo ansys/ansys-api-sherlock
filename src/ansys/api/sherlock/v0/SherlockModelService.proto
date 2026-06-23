@@ -76,6 +76,7 @@ message ExportFEAModelRequest {
   string coordinateUnits		= 11;	// Units of exported model coordinates, valid values are "in", "mm", "m", "mil", "micron", "nm".
   PcbMaterialElasticity pcbMaterialElasticity = 12;	// The PCB material elasticity. For WBJN and PMDB export only.
   GeometryType geometryType 	= 13;	// The geometry type for Workbench journal exports. For WBJN export only.
+  bool exportMaterialXML      = 14; // Flag to determine if a material xml should be generated. For PMDB export only.
 }
 
 /**
