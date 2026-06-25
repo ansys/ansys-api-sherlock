@@ -210,35 +210,6 @@ message GetBoardSidesResponse {
 }
 
 /**
- * Request to get a part's location.
- */
-message GetPartLocationRequest {
-  option deprecated = true; // Signifies this message is being deprecated as of 25R2.
-  string project       = 1; // Sherlock project name.
-  string ccaName       = 2; // The CCA name.
-  string refDes        = 3; // A comma separated list of reference designators for a list of parts, or a Ref Des for one part.
-  string locationUnits = 4; // Unit of length for the part location. Supported values are IN, MM, M, MIL, MICRON, and NM.
-}
-
-/**
- * Represents one or multiple parts' location properties.
- */
-message GetPartLocationResponse {
-  option deprecated                  = true; // Signifies this message is being deprecated as of 25R2.
-  ReturnCode returnCode              = 1;    // Status code of response.
-  message LocationData {
-    double x                = 1;      // Location of the part along the X axis.
-    double y                = 2;      // Location of the part along the Y axis.
-    double rotation         = 3;      // Rotation of the part on the board in degrees.
-    string locationUnits    = 4;      // Unit of length for the part location.
-    string boardSide        = 5;      // Side of board on which the component exists.
-    bool mirrored           = 6;      // Indicates if the component is mirrored across the Y-axis.
-    string refDes           = 7;      // Ref Des for the corresponding part.
-  }
-  repeated LocationData locationData = 2;    // List of location data for a part or list of parts in a specified project and CCA.
-}
-
-/**
  * Request to get the properties for a list of parts.
  */
 message GetPartsListPropertiesRequest {
@@ -389,11 +360,6 @@ service SherlockPartsService {
   
   // Get a list of valid board side values.
   rpc getBoardSides(GetBoardSidesRequest) returns (GetBoardSidesResponse);
-  
-  // Get the location properties for a part. This is deprecated as of 25R2.
-  rpc getPartLocation(GetPartLocationRequest) returns (GetPartLocationResponse) {
-    option deprecated = true;
-  }
 
   // Get the properties for a list of parts
   rpc getPartsListProperties(GetPartsListPropertiesRequest) returns (stream GetPartsListPropertiesResponse);

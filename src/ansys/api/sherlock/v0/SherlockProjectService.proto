@@ -1,4 +1,4 @@
-// Copyright 2024-2025 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2024-2026 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 import "ansys/api/sherlock/v0/SherlockCommonService.proto";
@@ -62,6 +62,25 @@ message ImportODBRequest {
 }
 
 /**
+ * Request for importing an ODB++ archive in single project mode.
+ */
+message ImportODBSingleProjectModeRequest{
+  string archiveFile			= 1;		// Full path to the ODB++ archive file to be imported.
+  string project				= 2;		// Sherlock project name. If empty, the filename will be used for the project name.
+  string ccaName				= 3;		// Project CCA name. If empty, the filename will be used for the CCA name.
+  bool processLayerThickness 	= 4;		// Option to assign stackup thickness.
+  bool includeOtherLayers 		= 5;		// Option to include other layers.
+  bool processCutoutFile 		= 6;		// Option to process cutouts.
+  bool guessPartProperties		= 7;		// Option to guess part properties.
+  bool imsStackup				= 8;		// Option to generate IMS stackup.
+  bool polylineSimplification	= 9;		// Option to enable polyline simplification.
+  double polylineTolerance		= 10;		// Polyline simplification tolerance.
+  string polylineToleranceUnits	= 11;		// Polyline simplification tolerance units.
+  string projectDir = 12;  // Location where the Sherlock project will be created.
+  bool overwrite = 13;     // Flag to overwrite project if a project with the same name already exists.
+}
+
+/**
  * Request for importing an IPC-2581 archive.
  */
 message ImportIPC2581Request {
@@ -73,6 +92,22 @@ message ImportIPC2581Request {
   bool polylineSimplification	= 6;		// Option to enable polyline simplification.
   double polylineTolerance		= 7;		// Polyline simplification tolerance.
   string polylineToleranceUnits	= 8;		// Polyline simplification tolerance units.
+}
+
+/**
+ * Request for importing an IPC-2581 archive in single project mode.
+ */
+message ImportIPC2581SingleProjectRequest {
+  string archiveFile			= 1;		// Full path to the IPC-2581 archive file to be imported.
+  string project				= 2;		// Sherlock project name. If empty, the filename will be used for the project name.
+  string ccaName				= 3;		// Project CCA name. If empty, the filename will be used for the CCA name.	
+  bool includeOtherLayers 		= 4;		// Option to include other layers.
+  bool guessPartProperties		= 5;		// Option to guess part properties.
+  bool polylineSimplification	= 6;		// Option to enable polyline simplification.
+  double polylineTolerance		= 7;		// Polyline simplification tolerance.
+  string polylineToleranceUnits	= 8;		// Polyline simplification tolerance units.
+  string projectDir = 9;  // Location where the Sherlock project will be created.
+  bool overwrite = 10;     // Flag to overwrite project if a project with the same name already exists.
 }
 
 /**
@@ -473,7 +508,7 @@ message AddOutlineFileRequest {
 /**
  * Defines a copper file and its properties to add to a Sherlock project.
  */
- message CopperFile {
+message CopperFile {
   enum FileType {
     EDB        = 0; // Copper Layer EDB file.
     Gerber     = 1; // Copper Layer GERBER file.
@@ -548,10 +583,16 @@ service SherlockProjectService {
   
   // Imports an ODB++ archive.
   rpc importODBArchive(ImportODBRequest) returns (ReturnCode);
-  
+
+  // Imports an ODB++ archive -- single project mode.
+  rpc importODBArchiveSingleMode(ImportODBSingleProjectModeRequest) returns (ReturnCode);
+
   // Imports an IPC-2581 archive.
   rpc importIPC2581Archive(ImportIPC2581Request) returns (ReturnCode);
   
+  // Imports an IPC-2581 archive in single project mode.option
+  rpc importIPC2581ArchiveSingleProjectMode(ImportIPC2581SingleProjectRequest) returns (ReturnCode);
+
   // Imports a zipped project archive -- multiple project mode.
   rpc importProjectZipArchive(ImportProjectZipRequest) returns (ReturnCode);
   

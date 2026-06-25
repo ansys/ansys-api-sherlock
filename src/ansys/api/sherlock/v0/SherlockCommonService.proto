@@ -1,4 +1,4 @@
-// Copyright 2023-2025 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
+// Copyright 2023-2026 ANSYS, Inc. Unauthorized use, distribution, or duplication is prohibited.
 syntax = "proto3";
 
 option java_package = "sherlock.grpc";
@@ -115,10 +115,10 @@ message SolderInfo {
   string materialFatigueCoefficient = 18; // Fatigue coefficient.
   string materialFatigueExponent = 19;    // Fatigue exponent.
   string modifiedBy = 20;                 // Who last modified this solder.
-  string poissonRatio = 21;               // Poisson ratio.
+  string poissonRatio = 21;               // Poisson's ratio.
   string secantModulus = 22;              // Secant modulus.
   string secantModulusUnits = 23;         // Secant modulus units.
-  string secantFatigueCoefficient = 24;   // Secant fatigue coefficient.
+  string secantFatigueCoefficient = 24 [deprecated = true];   // Secant fatigue coefficient.
   string secantFatigueExponent = 25;      // Secant fatigue exponent.
   string shockStrain = 26;                // Shock strain.
   string solderName = 27;                 // Name of solder.
@@ -135,7 +135,7 @@ message SolderInfo {
   string thermalShockFactorThruHole = 38; // Thermal shock factor for Through hole.
   string userNotes = 39;                  // Notes written by the user.
   string weibullBetaBGA = 40;             // Weibull for BGA.
-  string weibullBetaCBGA = 41;            // Weibull fpr CBGA.
+  string weibullBetaCBGA = 41;            // Weibull for CBGA.
   string weibullBetaCC = 42;              // Weibull for CC.
   string weibullBetaLCCC = 43;            // Weibull for LCCC.
   string weibullBetaLeaded = 44;          // Weibull for Leaded.
@@ -143,6 +143,12 @@ message SolderInfo {
   string weibullBetaThruHole = 46;        // Weibull for through hole.
   string cgaCalibrationFactor = 47;       // CGA calibration factor.
   string bgaCalibrationFactor = 48;    	  // BGA calibration factor.
+  string secantFatigueCoefficientAxialCold = 49;	// Secant fatigue coefficient axial cold.
+  string secantFatigueCoefficientAxialHot = 50;		// Secant fatigue coefficient axial hot.
+  string secantFatigueCoefficientShearCold = 51;	// Secant fatigue coefficient shear cold.
+  string secantFatigueCoefficientShearHot = 52;		// Secant fatigue coefficient shear hot.
+  string secantFatigueCoefficientMomentCold = 53;	// Secant fatigue coefficient moment cold.
+  string secantFatigueCoefficientMomentHot = 54;	// Secant fatigue coefficient moment hot.
 }
 
 /**
@@ -157,21 +163,6 @@ message SolderInfoResponse {
   */
 message SolderInfoRequest {
 
-}
-
-/**
-  * Request for a list of valid solder materials.
-  */
-message GetSoldersRequest {
-  option deprecated = true;  // Signifies this message is being deprecated for SolderInfoRequest as of 25R2.
-}
-
-/**
-  * Represents a list of valid solder materials.
-  */
-message GetSoldersResponse {
-  option deprecated = true;       // Signifies this message is being deprecated for SolderResponse.
-	repeated string solderName = 1; // List of valid solder materials.
 }
 
 /**
@@ -230,11 +221,6 @@ service SherlockCommonService {
   
   // Returns a list of valid units of the provided unit type.
   rpc listUnits(ListUnitsRequest) returns (ListUnitsResponse);
-  
-  // Returns a list of valid solder materials. This is deprecated as of 25R2.
-  rpc getSolders(GetSoldersRequest) returns (GetSoldersResponse) {
-    option deprecated = true;
-  }
 
   // Returns a list of valid solder material information.
   rpc getSolderInfo(SolderInfoRequest) returns (SolderInfoResponse);
