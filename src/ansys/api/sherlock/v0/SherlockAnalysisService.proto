@@ -254,7 +254,7 @@ message UpdatePcbModelingPropsRequest {
     optional int32 pcbMaxMaterials		= 5;		// The number of PCB materials for Uniform Elements and Layered Elements PCB model types.
     ElementOrder pcbElemOrder			= 6;		// The element order for PCB elements.
     double pcbMaxEdgeLength				= 7;		// The maximum mesh size for PCB elements.
-    string pcbMaxEdgeLengthUnits			= 8;		// The length units for the maximum mesh size.
+    string pcbMaxEdgeLengthUnits		= 8;		// The length units for the maximum mesh size.
     double pcbMaxVertical				= 9;		// The maximum vertical mesh size for PCB elements.
     string pcbMaxVerticalUnits			= 10;	// The length units for the maximum vertical mesh size.
     bool quadsPreferred					= 11;	// Indicates that the meshing engine should attempt to generate quad-shaped elements when creating the mesh.
@@ -264,16 +264,43 @@ message UpdatePcbModelingPropsRequest {
 }
 
 /**
+ * Request to update FEA analysis Trace Modeling properties.
+ */
+message UpdateTraceModelingPropsRequest {
+  string project			= 1;	// Sherlock project name.
+  repeated string ccaNames	= 2;	// The CCA names for which to assign the lead modeling properties.
+
+  message Analysis { 
+    enum AnalysisType {
+      UnknownAnalysisType	= 0;	// Default enum to catch invalid analysis.
+      HarmonicVibe			= 1;	// Enum for Harmonic Vibe analysis.
+      ICTAnalysis 			= 2;	// Enum for the ICT analysis.
+      MechanicalShock		= 3;	// Enum for the Mechanical Shock analysis.
+      NaturalFreq 			= 4;	// Enum for the Natural Frequency analysis.
+      RandomVibe 			= 5;	// Enum for the Random Vibe analysis.
+      ThermalMech			= 6;	// Enum for the Thermal Mech analysis.
+    }
+
+    AnalysisType type				= 1;	// The type of analysis for which lead modeling properties apply.
+    bool traceEnabled				= 2;	// Whether to enabled trace modeling.
+    ElementOrder traceElemOrder		= 3;	// The element order for lead modeling elements.
+    uint32 traceMaxHoles			= 4;	// The maximum holes per trace.
+  }
+  
+  repeated Analysis analyses	= 3;  // List of Analysis message types.
+}
+
+/**
  * Request to update FEA analysis Mount Points properties.
  */
 message UpdateMountPointsPropsRequest {
-  string project				= 1;	// Sherlock project name.
+  string project			= 1;	// Sherlock project name.
   repeated string ccaNames	= 2;	// The CCA names for which to assign the mount points properties.
 
   message Analysis { 
     enum AnalysisType {
       UnknownAnalysisType	= 0;	// Default enum to catch invalid analysis.
-      HarmonicVibe			= 1;// Enum for Harmonic Vibe analysis.
+      HarmonicVibe			= 1;	// Enum for Harmonic Vibe analysis.
       ICTAnalysis 			= 2;	// Enum for the ICT analysis.
       MechanicalShock		= 3;	// Enum for the Mechanical Shock analysis.
       NaturalFreq 			= 4;	// Enum for the Natural Frequency analysis.
@@ -284,7 +311,7 @@ message UpdateMountPointsPropsRequest {
     AnalysisType type					= 1;	// The type of analysis for which mount points properties apply.
     ElementOrder mountPtElemOrder		= 2;	// The element order for mount point elements.
     double mountPtMaxEdgeLength			= 3;	// The maximum mesh size for mount point elements.
-    string mountPtMaxEdgeLengthUnits		= 4;	// The length units for the maximum mesh size.
+    string mountPtMaxEdgeLengthUnits	= 4;	// The length units for the maximum mesh size.
     double mountPtMaxVertical			= 5;	// The maximum vertical mesh size for mount point elements.
     string mountPtMaxVerticalUnits		= 6;	// The length units for the maximum vertical mesh size.
   }
@@ -296,13 +323,13 @@ message UpdateMountPointsPropsRequest {
  * Request to update FEA analysis Lead Modeling properties.
  */
 message UpdateLeadModelingPropsRequest {
-  string project				= 1;	// Sherlock project name.
+  string project			= 1;	// Sherlock project name.
   repeated string ccaNames	= 2;	// The CCA names for which to assign the lead modeling properties.
 
   message Analysis { 
     enum AnalysisType {
       UnknownAnalysisType	= 0;	// Default enum to catch invalid analysis.
-      HarmonicVibe			= 1;// Enum for Harmonic Vibe analysis.
+      HarmonicVibe			= 1;	// Enum for Harmonic Vibe analysis.
       ICTAnalysis 			= 2;	// Enum for the ICT analysis.
       MechanicalShock		= 3;	// Enum for the Mechanical Shock analysis.
       NaturalFreq 			= 4;	// Enum for the Natural Frequency analysis.
@@ -313,7 +340,7 @@ message UpdateLeadModelingPropsRequest {
     AnalysisType type				= 1;	// The type of analysis for which lead modeling properties apply.
     bool modelLeads					= 2;	// Whether to enabled lead modeling.
     ElementOrder leadElemOrder		= 3;	// The element order for lead modeling elements.
-    double leadMaxEdgeLength			= 4;	// The maximum mesh size for lead modeling elements.
+    double leadMaxEdgeLength		= 4;	// The maximum mesh size for lead modeling elements.
     string leadMaxEdgeLengthUnits	= 5;	// The length units for the maximum mesh size.
     double leadMaxVertical			= 6;	// The maximum vertical mesh size for lead modeling elements.
     string leadMaxVerticalUnits		= 7;	// The length units for the maximum vertical mesh size.
@@ -591,6 +618,9 @@ service SherlockAnalysisService {
   
   // Updates the PCB modeling FEA analysis properties for the provided CCAs and analysis types for a project.
   rpc updatePcbModelingProps(UpdatePcbModelingPropsRequest) returns (ReturnCode);
+  
+  // Updates the trace modeling FEA analysis properties for the provided CCAs and analysis types for a project.
+  rpc updateTraceModelingProps(UpdateTraceModelingPropsRequest) returns (ReturnCode);
   
   // Updates the mount points FEA analysis properties for the provided CCAs and analysis types for a project.
   rpc updateMountPointsProps(UpdateMountPointsPropsRequest) returns (ReturnCode);
