@@ -7,10 +7,10 @@ import "ansys/api/sherlock/v0/SherlockAnalysisService.proto";
 option java_package = "sherlock.grpc";
 option java_outer_classname = "SherlockModelServiceProto";
 
-enum PcbMaterialElasticity {
-  UnknownElasticity	= 0;	// Default enum to catch invalid elasticity.
-  Isotropic			= 1;	// Isotropic elasticity.
-  Orthotropic		= 2;	// Orthotropic elasticity.
+enum PcbMaterialType {
+  UnknownMaterialType	= 0;	// Default enum to catch invalid material type.
+  Isotropic			= 1;	// Isotropic material type.
+  Orthotropic		= 2;	// Orthotropic material type.
 }
  
  /*
@@ -74,7 +74,7 @@ message ExportFEAModelRequest {
   bool clearFEADatabase			= 9;	// Clear FEA Database before defining model.
   bool useFEAModelID			= 10;	// Use FEA Model ID.
   string coordinateUnits		= 11;	// Units of exported model coordinates, valid values are "in", "mm", "m", "mil", "micron", "nm".
-  PcbMaterialElasticity pcbMaterialElasticity = 12;	// The PCB material elasticity. For WBJN and PMDB export only.
+  PcbMaterialType pcbMaterialType = 12;	// The PCB material type. For WBJN and PMDB export only.
   GeometryType geometryType 	= 13;	// The geometry type for Workbench journal exports. For WBJN export only.
   bool exportMaterialXML      = 14; // Flag to determine if a material xml should be generated. For PMDB export only.
 }
