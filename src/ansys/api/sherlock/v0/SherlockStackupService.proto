@@ -49,6 +49,8 @@ message ListLaminatesResponse {
       double CTEz					= 14;	// CTEz.
       double Exy					= 15;	// Exy.
       double Ez						= 16;	// Ez.
+      double thermalConductivityXY	= 17;	// In-plane thermal conductivity (XY direction) in W/m-K.
+      double thermalConductivityZ	= 18;	// Out-of-plane thermal conductivity (Z direction) in W/m-K.
     }
     repeated LaminateProp laminateProps = 2;	// List of laminate layers with associated properties for a specified CCA.
   }
@@ -211,6 +213,8 @@ message ListConductorLayersResponse {
       double CTEz					= 10;	// CTEz.
       double Exy					= 11;	// Exy.
       double Ez						= 12;	// Ez.
+      double thermalConductivityXY	= 13;	// In-plane thermal conductivity (XY direction) in W/m-K.
+      double thermalConductivityZ	= 14;	// Out-of-plane thermal conductivity (Z direction) in W/m-K.
     }
     repeated ConductorLayerProp conductorLayerProps 	= 2;	// List of conductor layers and their associated properties for a specified CCA.
   }
@@ -289,6 +293,9 @@ message GetStackupPropsResponse {
   string exy					            = 8;	// Exy.
   string ez						            = 9;	// Ez.
   bool improveStackupModelEnabled = 10; // Indicator signaling whether or not the improved stacking model is applied.
+  string thermalConductivityXY     = 11; // In-plane thermal conductivity (XY direction) in W/m-K.
+  string thermalConductivityZ      = 12; // Out-of-plane thermal conductivity (Z direction) in W/m-K.
+}
 }
 
 /**
