@@ -296,7 +296,7 @@ message GetStackupPropsResponse {
   string thermalConductivityXY     = 11; // In-plane thermal conductivity (XY direction) in W/m-K.
   string thermalConductivityZ      = 12; // Out-of-plane thermal conductivity (Z direction) in W/m-K.
 }
-}
+
 
 /**
  * Request to generate stackup layers for a CCA.
