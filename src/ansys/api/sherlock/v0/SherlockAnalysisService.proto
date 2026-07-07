@@ -268,7 +268,7 @@ message UpdatePcbModelingPropsRequest {
  */
 message UpdateTraceModelingPropsRequest {
   string project			= 1;	// Sherlock project name.
-  repeated string ccaNames	= 2;	// The CCA names for which to assign the lead modeling properties.
+  repeated string ccaNames	= 2;	// The CCA names for which to assign the trace modeling properties.
 
   message Analysis { 
     enum AnalysisType {
@@ -281,10 +281,12 @@ message UpdateTraceModelingPropsRequest {
       ThermalMech			= 6;	// Enum for the Thermal Mech analysis.
     }
 
-    AnalysisType type				= 1;	// The type of analysis for which lead modeling properties apply.
+    AnalysisType type				= 1;	// The type of analysis for which trace modeling properties apply.
     bool traceEnabled				= 2;	// Whether to enabled trace modeling.
-    ElementOrder traceElemOrder		= 3;	// The element order for lead modeling elements.
-    uint32 traceMaxHoles			= 4;	// The maximum holes per trace.
+    ElementOrder traceElemOrder		= 3;	// The element order for trace modeling elements.
+    double traceMaxEdgeLength		= 4;	// The maximum mesh size for trace modeling elements.
+    string traceMaxEdgeLengthUnits	= 5;	// The length units for the maximum mesh size.
+    uint32 traceMaxHoles			= 6;	// The maximum holes per trace.
   }
   
   repeated Analysis analyses	= 3;  // List of Analysis message types.
