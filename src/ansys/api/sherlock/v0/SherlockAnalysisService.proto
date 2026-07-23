@@ -223,7 +223,7 @@ message UpdatePcbModelingPropsRequest {
   string project				= 1;	// Sherlock project name.
   repeated string ccaNames	= 2;	// The CCA names for which to assign the PCB modeling properties.
 
-  message Analysis { 
+  message Analysis {
     enum AnalysisType {
       UnknownAnalysisType	= 0;	// Default enum to catch invalid analysis.
       HarmonicVibe			= 1;	// Enum for the Harmonic Vibe analysis.
@@ -270,7 +270,7 @@ message UpdateTraceModelingPropsRequest {
   string project			= 1;	// Sherlock project name.
   repeated string ccaNames	= 2;	// The CCA names for which to assign the trace modeling properties.
 
-  message Analysis { 
+  message Analysis {
     enum AnalysisType {
       UnknownAnalysisType	= 0;	// Default enum to catch invalid analysis.
       HarmonicVibe			= 1;	// Enum for Harmonic Vibe analysis.
@@ -282,7 +282,7 @@ message UpdateTraceModelingPropsRequest {
     }
 
     AnalysisType type				= 1;	// The type of analysis for which trace modeling properties apply.
-    bool traceEnabled				= 2;	// Whether to enabled trace modeling.
+    bool traceEnabled				= 2;	// Whether to enable trace modeling.
     ElementOrder traceElemOrder		= 3;	// The element order for trace modeling elements.
     double traceMaxEdgeLength		= 4;	// The maximum mesh size for trace modeling elements.
     string traceMaxEdgeLengthUnits	= 5;	// The length units for the maximum mesh size.
@@ -299,7 +299,7 @@ message UpdateMountPointsPropsRequest {
   string project			= 1;	// Sherlock project name.
   repeated string ccaNames	= 2;	// The CCA names for which to assign the mount points properties.
 
-  message Analysis { 
+  message Analysis {
     enum AnalysisType {
       UnknownAnalysisType	= 0;	// Default enum to catch invalid analysis.
       HarmonicVibe			= 1;	// Enum for Harmonic Vibe analysis.
@@ -328,7 +328,7 @@ message UpdateLeadModelingPropsRequest {
   string project			= 1;	// Sherlock project name.
   repeated string ccaNames	= 2;	// The CCA names for which to assign the lead modeling properties.
 
-  message Analysis { 
+  message Analysis {
     enum AnalysisType {
       UnknownAnalysisType	= 0;	// Default enum to catch invalid analysis.
       HarmonicVibe			= 1;	// Enum for Harmonic Vibe analysis.
@@ -340,12 +340,42 @@ message UpdateLeadModelingPropsRequest {
     }
 
     AnalysisType type				= 1;	// The type of analysis for which lead modeling properties apply.
-    bool modelLeads					= 2;	// Whether to enabled lead modeling.
+    bool modelLeads					= 2;	// Whether to enable lead modeling.
     ElementOrder leadElemOrder		= 3;	// The element order for lead modeling elements.
     double leadMaxEdgeLength		= 4;	// The maximum mesh size for lead modeling elements.
     string leadMaxEdgeLengthUnits	= 5;	// The length units for the maximum mesh size.
     double leadMaxVertical			= 6;	// The maximum vertical mesh size for lead modeling elements.
     string leadMaxVerticalUnits		= 7;	// The length units for the maximum vertical mesh size.
+  }
+  
+  repeated Analysis analyses	= 3;  // List of Analysis message types.
+}
+
+/**
+ * Request to update FEA analysis Mechanical Parts properties.
+ */
+message UpdateMechanicalPartsPropsRequest {
+  string project			= 1;	// Sherlock project name.
+  repeated string ccaNames	= 2;	// The CCA names for which to assign the lead modeling properties.
+
+  message Analysis {
+    enum AnalysisType {
+      UnknownAnalysisType	= 0;	// Default enum to catch invalid analysis.
+      HarmonicVibe			= 1;	// Enum for Harmonic Vibe analysis.
+      ICTAnalysis 			= 2;	// Enum for the ICT analysis.
+      MechanicalShock		= 3;	// Enum for the Mechanical Shock analysis.
+      NaturalFreq 			= 4;	// Enum for the Natural Frequency analysis.
+      RandomVibe 			= 5;	// Enum for the Random Vibe analysis.
+      ThermalMech			= 6;	// Enum for the Thermal Mech analysis.
+    }
+
+    AnalysisType type							= 1;	// The type of analysis for which lead modeling properties apply.
+    bool mechanicalPartsEnabled					= 2;	// Whether to enable mechanical parts.
+    ElementOrder mechanicalPartsElemOrder		= 3;	// The element order for mechanical parts elements.
+    double mechanicalPartsMaxEdgeLength			= 4;	// The maximum mesh size for mechanical parts elements.
+    string mechanicalPartsMaxEdgeLengthUnits	= 5;	// The length units for the maximum mesh size.
+    double mechanicalPartsMaxVertical			= 6;	// The maximum vertical mesh size for mechanical parts elements.
+    string mechanicalPartsMaxVerticalUnits		= 7;	// The length units for the maximum vertical mesh size.
   }
   
   repeated Analysis analyses	= 3;  // List of Analysis message types.
@@ -630,7 +660,10 @@ service SherlockAnalysisService {
   // Updates the lead modeling FEA analysis properties for the provided CCAs and analysis types for a project.
   rpc updateLeadModelingProps(UpdateLeadModelingPropsRequest) returns (ReturnCode);
   
-  // Updates the part modeling properties for a given project's CCA.
+  // Updates the mechanical parts FEA Analysis properties for the provided CCAs and analysis types for a project.
+  rpc updateMechanicalPartsProps(UpdateMechanicalPartsPropsRequest) returns (ReturnCode);
+  
+  // Updates the part modeling FEA Analysis properties for a given project's CCA.
   rpc updatePartModelingProperties(UpdatePartModelingRequest) returns (ReturnCode);
 
   // Returns the list of valid solder fatigue property fields given the user configuration.
