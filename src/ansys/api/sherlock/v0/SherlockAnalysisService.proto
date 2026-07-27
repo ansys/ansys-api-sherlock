@@ -356,7 +356,7 @@ message UpdateLeadModelingPropsRequest {
  */
 message UpdateMechanicalPartsPropsRequest {
   string project			= 1;	// Sherlock project name.
-  repeated string ccaNames	= 2;	// The CCA names for which to assign the lead modeling properties.
+  repeated string ccaNames	= 2;	// The CCA names for which to assign the mechanical parts properties.
 
   message Analysis {
     enum AnalysisType {
@@ -369,13 +369,43 @@ message UpdateMechanicalPartsPropsRequest {
       ThermalMech			= 6;	// Enum for the Thermal Mech analysis.
     }
 
-    AnalysisType type							= 1;	// The type of analysis for which lead modeling properties apply.
+    AnalysisType type							= 1;	// The type of analysis for which mechanical parts properties apply.
     bool mechanicalPartsEnabled					= 2;	// Whether to enable mechanical parts.
-    ElementOrder mechanicalPartsElemOrder		= 3;	// The element order for mechanical parts elements.
-    double mechanicalPartsMaxEdgeLength			= 4;	// The maximum mesh size for mechanical parts elements.
+    ElementOrder mechanicalPartsElemOrder		= 3;	// The element order for mechanical part elements.
+    double mechanicalPartsMaxEdgeLength			= 4;	// The maximum mesh size for mechanical part elements.
     string mechanicalPartsMaxEdgeLengthUnits	= 5;	// The length units for the maximum mesh size.
-    double mechanicalPartsMaxVertical			= 6;	// The maximum vertical mesh size for mechanical parts elements.
+    double mechanicalPartsMaxVertical			= 6;	// The maximum vertical mesh size for mechanical part elements.
     string mechanicalPartsMaxVerticalUnits		= 7;	// The length units for the maximum vertical mesh size.
+  }
+  
+  repeated Analysis analyses	= 3;  // List of Analysis message types.
+}
+
+/**
+ * Request to update FEA analysis Potting Regions properties.
+ */
+message UpdatePottingRegionsPropsRequest {
+  string project			= 1;	// Sherlock project name.
+  repeated string ccaNames	= 2;	// The CCA names for which to assign the potting regions properties.
+
+  message Analysis {
+    enum AnalysisType {
+      UnknownAnalysisType	= 0;	// Default enum to catch invalid analysis.
+      HarmonicVibe			= 1;	// Enum for Harmonic Vibe analysis.
+      ICTAnalysis 			= 2;	// Enum for the ICT analysis.
+      MechanicalShock		= 3;	// Enum for the Mechanical Shock analysis.
+      NaturalFreq 			= 4;	// Enum for the Natural Frequency analysis.
+      RandomVibe 			= 5;	// Enum for the Random Vibe analysis.
+      ThermalMech			= 6;	// Enum for the Thermal Mech analysis.
+    }
+
+    AnalysisType type					= 1;	// The type of analysis for which potting regions properties apply.
+    bool pottingEnabled					= 2;	// Whether to enable potting regions.
+    ElementOrder pottingElemOrder		= 3;	// The element order for potting region elements.
+    double pottingMaxEdgeLength			= 4;	// The maximum mesh size for potting region elements.
+    string pottingMaxEdgeLengthUnits	= 5;	// The length units for the maximum mesh size.
+    double pottingMaxVertical			= 6;	// The maximum vertical mesh size for potting region elements.
+    string pottingMaxVerticalUnits		= 7;	// The length units for the maximum vertical mesh size.
   }
   
   repeated Analysis analyses	= 3;  // List of Analysis message types.
@@ -662,6 +692,9 @@ service SherlockAnalysisService {
   
   // Updates the mechanical parts FEA Analysis properties for the provided CCAs and analysis types for a project.
   rpc updateMechanicalPartsProps(UpdateMechanicalPartsPropsRequest) returns (ReturnCode);
+  
+  // Updates the potting regions FEA Analysis properties for the provided CCAs and analysis types for a project.
+  rpc updatePottingRegionsProps(UpdatePottingRegionsPropsRequest) returns (ReturnCode);
   
   // Updates the part modeling FEA Analysis properties for a given project's CCA.
   rpc updatePartModelingProperties(UpdatePartModelingRequest) returns (ReturnCode);
