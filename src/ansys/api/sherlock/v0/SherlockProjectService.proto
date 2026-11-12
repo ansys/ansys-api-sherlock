@@ -66,8 +66,8 @@ message ImportODBRequest {
  */
 message ImportODBSingleProjectModeRequest{
   string archiveFile			= 1;		// Full path to the ODB++ archive file to be imported.
-  string project				= 2;		// Sherlock project name. If empty, the filename will be used for the project name.
-  string ccaName				= 3;		// Project CCA name. If empty, the filename will be used for the CCA name.
+  string project				= 2;		// Sherlock project name. Cannot be empty.
+  string ccaName				= 3;		// Project CCA name. Cannot be empty.
   bool processLayerThickness 	= 4;		// Option to assign stackup thickness.
   bool includeOtherLayers 		= 5;		// Option to include other layers.
   bool processCutoutFile 		= 6;		// Option to process cutouts.
